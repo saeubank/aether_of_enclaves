@@ -1,0 +1,7 @@
+[package]
+name = "aether_of_enclaves"
+version = "0.1.0"
+authors = ["samuel"]
+
+[dependencies]
+piston_window = "0.70.0"

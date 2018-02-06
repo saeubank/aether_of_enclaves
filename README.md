@@ -1,2 +1,2 @@
-# aether_of_enclaves
+# Aether of Enclaves
 game
