@@ -1,14 +1,14 @@
-[root]
+[[package]]
+name = "adler32"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "aether_of_enclaves"
 version = "0.1.0"
 dependencies = [
  "piston_window 0.70.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
-
-[[package]]
-name = "adler32"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "android_glue"
