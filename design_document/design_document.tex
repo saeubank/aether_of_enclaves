@@ -37,24 +37,48 @@ v0.0
 \section{Requirements}
 \begin{enumerate}
    \item Version Control: GitHub, Travis CI
-   \item Testing Framework: \href{https://github.com/reem/stainless}{Stainless}
+   \item Testing Framework: Stainless
    \item Design Patterns:
    \begin{enumerate}
-     \item Singleton
-     \item Flyweight
-     \item TBD
+     \item Singleton (Logger)
+     \item Flyweight (Graphics classes)
+     \item Command (Input handler)
+     \item Prototype (Enemy spawning - TBD)
+     \item Observer (Achievements - TBD)
    \end{enumerate}
    \item User Interface Method: GUI
 \end{enumerate}
 
  \section{Questions}
  \begin{enumerate}
-   \item What is your project? 
-   \item We plan to use rust (language, not familiar), piston (framework, not familiar)
-   \item My project won't work unless it has gameplay
-   \item No clue
-   \item Hopefully we have multiplayer
-   \item Plan goes here
+   \item \textbf {What is your project?}
+   \newline Aether of Enclaves will be a 32-bit exploration game, in which the user controls a main character and an airship and travels through the sky - picking up crew members, discovering new islands, interacting with NPCs, and exploring.
+   \item \textbf{What technologies will you use?}
+   \newline We intend to write the game in \href{https://www.rust-lang.org/en-US/}{Rust} and use a corresponding game engine framework called \href{https://github.com/PistonDevelopers/piston}{Piston}. The testing framework we will use will be \href{https://github.com/reem/stainless}{Stainless}, which has been developed for Rust. Most, if not all, of the graphics will be produced using \href{https://www.aseprite.org/}{Aesprite}, a pixel art editor.
+   \newline
+   \newline As of current, these are the technologies we anticipate using. We are unfamiliar with Rust as a whole, including its frameworks, and will be learning as we go. We both have a mild exposure to using Aesprite, but this program is rather straightforward.
+   \item \textbf {What are the essential parts of the project?}
+   \newline Clearly, since we are creating a game, there must be gameplay for the project to be successful. The essentials for the type of game we are trying to produce specifically are as follows: a main character, saved game data, a variety of NPCs and NPC data, a generated environment, and graphics. As a baseline, we will need to implement each of these even in their simplest forms (e.g., in a console with ASCII art). Of course, we would plan to maintain a large library of NPCs and procedurally generate the world.
+   \item \textbf {What outside resources will you require?}
+   \newline There is a possibility of the need for outside artwork (if we are unable to complete enough original art) and sound (background music, etc.). As of right now, this is all TBD.
+   \item \textbf {Make a proposal for your architecture.}
+   \newline Our back-end will handle the AI, generation of the game world, data storage (this will be saved locally), game mechanics, user input, logging, and interaction within the game world (e.g. with items or NPCs). This will not be written using a specific framework.
+   \newline
+   \newline Our front-end will be the user interface and game graphics respectively. This will be created using the Piston game engine, which allows incorporation / production of graphics.
+   \newline
+   \newline The front-end and back-end are in many ways incorporated in the application (i.e. we do not have something like a server / database that would require an RPC). They will not be asynchronous as a result. The back-end will load saved data locally (as mentioned previously) which is savestate functionality included with the game engine.
+   \newline
+   \newline The design patterns we will have are listed in 1.1.1. Objects will use composition over inheritance. Other objects include: Player, Creature (for NPCs / Enemies), Airship, World, and Game. (I would predict that we'll develop a few more as we move forward). There will additionally be structs for Items and smaller objects.
+   \item \textbf {Detailed Plan}
+   \newline 2/28 - I would like to have our classes written, but maybe not tested yet (TBD on the Game class, since this will the last to implement). There is going to be a lot of learning in this timeframe in order to understand Rust.
+   \newline
+   \newline 3/21 - I would like to have testing for each class completed. Additionally, if we could have the beginnings (or more) of the GUI completed...
+   \newline
+   \newline 4/4 - This is right after break. There's only 2 weeks between this due date and the previous due date, for most of which I won't be around. Not sure what should be accomplished here, except cleaning up / completion of the Game functionality. Inclusion of the savestate right away would be beneficial. This would be a great time for you to work on world generation.
+   \newline
+   \newline 4/18 - Let's try to be done with graphics (or have them imported from elsewhere). Having a full GUI by now would be awesome, so we can maybe user test / make further changes for the rest of the semester.
+   \newline
+   \newline 5/2 - Er, done?
  \end{enumerate}
 
 
