@@ -91,77 +91,97 @@ v0.0
 \chapter{Overview}
 
 \section{Main Concept}
-This is an exploration game where you are the captain of a ship and fly from island to island (hopefully procedurally generated) and go on the islands to explore the world.
-\\
-Hopefully multiplayer is a thing
-
-\section{Focus}
-
-
-% ______________________
-% chapter Game Details
-% ______________________
-
-
-\chapter{Gameplay and Game Setting}
-
-
-\section{Story}
-U have a ship
+This is an exploration game where you are the captain of a ship and fly from island to island (hopefully procedurally generated) gathering resources and items, explore the world, and manage your resources.
 
 \section{World/Environment}
-Steampunk with magical creatures\\
-insert map of your environment and picture of world here
+Steampunk with magical creatures
 
 \section{Objects in the Game}
 The goal of the game is to explore, grow your crew, and upgrade your ship.
 
-\section{Characters in the Game}
-Main character, crew, creatures
-
-\section{Main Objective}
-Stop the evil queen from exploiting her people
-
-\section{Mechanics}
-
-\subsection{Base}
-Ship that is upgradeable over time.
-
-\subsection{Crew}
-People around the world can be recruited to your team after a certain requirement is met.
-
-\subsection{Crafting}
-Use gathered resources to craft into potions and other items.
-
-\subsection{Creatures}
-Creatures are found around the world (both passive and agressive).
-
-\subsection{Combat}
-Topdown real time combat\\
-Go into battle screen like ultima but only for boss monsters?
-
-\subsection{World}
-Randomly generated islands with human settlements generated.
+\section{Art Style}
+Pixel art
 
 \section{Controls}
 insert controller diagram here
 
 
 % ______________________
-% chapter Front End
+% chapter Game Mechanics
 % ______________________
 
+\chapter{Mechanics}
+\textbf {The following is not planned to be added in the scope of this class}
+\newline Player must adapt to environment to be efficent
 
-\chapter{Front End}
+\section{Base}
+Ship that is upgradeable over time.
+\newline Ship is "leveled up" rather than main character
+\newline conveyor belts / mine tracks can be put around base for a cost to move things around
+\newline Made of modular parts that can be replaced / upgraded.
+\newline Different parts together create synergies.
+\newline Ship has a heart that needs to be defended or ship dies
 
-\section{Art Style}
-Pixel art
 
-\section{Start Screen}
+\section{Crew}
+People around the world can be recruited to your team after a certain requirement is met.
+\newline Playstyle is determined more by crew than character
 
-\section{Menus}
 
-\section{End Screen}
+\section{Crafting}
+Use gathered resources to craft into potions and other items.
+
+
+\section{Creatures}
+There are no words for communication in this game, only icons will be used to express how / what a creature is feeling / thinking.
+
+\subsection{Main character}
+Does not have many skills and not good at fighting but is able to recruite NPCs with skills to help
+\newline Can command team?
+
+\subsection{NPCs}
+Can be recruited to work on ship
+
+\subsection{Monsters}
+Creatures are found around the world (both passive and agressive).
+\newline Can capture monsters (enslave / capture bribe / hire breed farm), can also be trained to be stronger / better at what they do?
+\newline different types of monsters can do different things (produce crafting ingredient, work, fight)
+
+\subsection{Robots}
+Steampunk robots can be created to automate resource gathering, crafting, transportation, and fighting?
+
+
+\section{Combat}
+
+\subsection{Ship Combat}
+Shoot other ships by putting items into cannon
+
+\subsection{Player Combat}
+Topdown real time combat
+\newline Go into battle screen like ultima but only for boss monsters?
+
+
+\section{World}
+Randomly generated islands with creature settlements generated.
+
+\subsection{Islands}
+Some islands are good better for certain things
+\newline Some islands are more exploration focused, some are farming focused, some are combat focused
+
+\subsection{Caves}
+Use cellular automata to generate
+
+\subsection{Dungeon}
+\subsection{Settlement}
+
+
+\section{Agriculture}
+soil quality means that different plants thrive in different conditions
+\newline seeds can only be obtained by eating food or converting plants into seeds
+
+\section{Items}
+Craft / find items and level them up
+
 
 
 % ______________________
@@ -178,8 +198,8 @@ Windows / Mac / Linux
 Monitor, Keyboard / Controller
 
 \section{Development Systems/Tools}
-Language: Rust\\
-Libraries: Piston\\
-Graphics tools: Asprite
+Language: Rust
+\newline Libraries: Piston
+\newline Graphics tools: Asprite
 
 \end{document}
