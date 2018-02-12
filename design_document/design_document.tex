@@ -4,6 +4,7 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{amssymb}
 
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
@@ -68,17 +69,34 @@ v0.0
    \newline
    \newline The front-end and back-end are in many ways incorporated in the application (i.e. we do not have something like a server / database that would require an RPC). They will not be asynchronous as a result. The back-end will load saved data locally (as mentioned previously) which is savestate functionality included with the game engine.
    \newline
-   \newline The design patterns we will have are listed in 1.1.1. Objects will use composition over inheritance. Other objects include: Player, Creature (for NPCs / Enemies), Airship, World, and Game. (I would predict that we'll develop a few more as we move forward). There will additionally be structs for Items and smaller objects.
+   \newline The design patterns we will have are listed in 1.1.1. Objects will use composition over inheritance. Other objects include: Player, Creature (for NPCs / Enemies), Airship, World, and Game. (I would predict that we'll develop a few more as we move forward). The interface will be developed in a separate file. There will additionally be structs for Items and smaller objects.
    \item \textbf {Detailed Plan}
-   \newline 2/28 - I would like to have our classes written, but maybe not tested yet (TBD on the Game class, since this will the last to implement). There is going to be a lot of learning in this timeframe in order to understand Rust.
-   \newline
-   \newline 3/21 - I would like to have testing for each class completed. Additionally, if we could have the beginnings (or more) of the GUI completed...
-   \newline
-   \newline 4/4 - This is right after break. There's only 2 weeks between this due date and the previous due date, for most of which I won't be around. Not sure what should be accomplished here, except cleaning up / completion of the Game functionality. Inclusion of the savestate right away would be beneficial. This would be a great time for you to work on world generation.
-   \newline
-   \newline 4/18 - Let's try to be done with graphics (or have them imported from elsewhere). Having a full GUI by now would be awesome, so we can maybe user test / make further changes for the rest of the semester.
-   \newline
-   \newline 5/2 - Er, done?
+   \newline 2/28
+   \begin{itemize}
+   \item[$\square$] Generate basic graphical interface with simple menu, using Piston (one class/file).
+   \item[$\square$] Beginnings of the Command class (input handler) written and incorporate with above.
+   \item[$\square$] Have skeleton of Game loop written.
+   \item[$\square$] Have a list of NPCs/items we would like to include.
+   \end{itemize}
+   3/21
+   \begin{itemize}
+   \item[$\square$] Implementation of Airship and Player class integrated with the Game.
+   \item[$\square$] Graphics code for Airship and Player written in Flyweight class.
+   \item[$\square$] Testing for Airship, Player, and Input class developed.
+   \item[$\square$] If possible, beginnings of enumerations for NPC classes.
+   \end{itemize}
+   4/4 (after Spring Break)
+   \begin{itemize}
+   \item[$\square$] Successful inclusion of savestate, if not yet completed.
+   \item[$\square$] Testing and completion of the world generation we will be submitting.
+   \item[$\square$] When available, further development on Game class.
+   \end{itemize}
+   4/18 - \begin{itemize}
+   \item[$\square$] Continuing to add items, NPCs, graphics, and other features.
+   \item[$\square$] User testing, and then some more user testing.
+   \item[$\square$] Tie up any loose ends for final submission.
+   \end{itemize}
+   5/2 - Submission of game.
  \end{enumerate}
 
 
@@ -91,19 +109,19 @@ v0.0
 \chapter{Overview}
 
 \section{Main Concept}
-This is an exploration game where you are the captain of a ship and fly from island to island (hopefully procedurally generated) gathering resources and items, explore the world, and manage your resources.
+Aether of Enclaves will be a 32-bit exploration game, in which the user controls a main character and an airship and travels through the sky - picking up crew members, discovering new islands, interacting with NPCs, and exploring.
 
-\section{World/Environment}
-Steampunk with magical creatures
+\section{World/Environment Theme}
+The environment of AoE is a steampunk-themed alternative world, with industrial and magical influences. Its distinguishing characteristics include floating islands / landmasses, inhabited by non-humanoid creatures.
 
-\section{Objects in the Game}
-The goal of the game is to explore, grow your crew, and upgrade your ship.
+\section{Objective of the Game}
+The objective is to explore, expand your crew and ship capabilities, and collect resources to do so. It is very much a "make your own adventure" style game.
 
 \section{Art Style}
-Pixel art
+Art and graphics will primarily be 32-bit pixel art. In the future, we may incorporate conceptual art. Artwork will integrate a specific color scheme, utilizing earthy tones and low-saturated colors.
 
 \section{Controls}
-insert controller diagram here
+The user will have controls to: move, open a menu, direct the ship, and interact with the environment (in the form of a general 'action' button). TODO: Include a diagram / prototype of the control interface.
 
 
 % ______________________
@@ -111,76 +129,98 @@ insert controller diagram here
 % ______________________
 
 \chapter{Mechanics}
-\textbf {The following is not planned to be added in the scope of this class}
-\newline Player must adapt to environment to be efficent
+\textbf {Not all of the following are planned to be developed in the scope of CSCI 3010.}
 
 \section{Base}
-Ship that is upgradeable over time.
-\newline Ship is "leveled up" rather than main character
-\newline conveyor belts / mine tracks can be put around base for a cost to move things around
-\newline Made of modular parts that can be replaced / upgraded.
-\newline Different parts together create synergies.
-\newline Ship has a heart that needs to be defended or ship dies
-
-
-\section{Crew}
-People around the world can be recruited to your team after a certain requirement is met.
-\newline Playstyle is determined more by crew than character
-
+\begin{itemize}
+\item An airship which is upgradeable and "levels up", rather than the main character
+\item Conveyor belts / mine tracks can be installed around base to increase productivity, for a cost
+\item Airship is made of modular parts that can be replaced / upgraded
+\item Different components together create synergies
+\item Ship has a "heart" which needs to be defended
+\end{itemize}
 
 \section{Crafting}
-Use gathered resources to craft into potions and other items.
-
+\begin{itemize}
+\item Gathered resources can be used in production of upgrade parts, potions, food, and other items
+\item Crafting through use of crewmates increases their range of abilities
+\end{itemize}
 
 \section{Creatures}
-There are no words for communication in this game, only icons will be used to express how / what a creature is feeling / thinking.
+\begin{itemize}
+\item NPCs are non-humanoid creatures, which can either be friend or foe
+\item No direct words / conversations are exchanged between MC and creatures - instead pop-up "balloons" (icons) are used to indicate expressions and communication
+\end{itemize}
 
-\subsection{Main character}
-Does not have many skills and not good at fighting but is able to recruite NPCs with skills to help
-\newline Can command team?
+\subsection{Main Character}
+\begin{itemize}
+\item By default does not have many skills
+\item Actions include: Recruiting crew, coordinating upgrades and battles, commanding the crew, collecting items
+\end{itemize}
 
-\subsection{NPCs}
-Can be recruited to work on ship
+\subsection{Crew}
+\begin{itemize}
+\item NPCs in the world can be recruited to your team after a certain requirement is met
+\item Play-style is determined more by crew than main character (i.e. the type of crew determines the play-style instead of the MC having certain abilities - such as a fighter, mage, cook, and so on)
+\item Actions include: Crafting, developing skills
+\end{itemize}
 
 \subsection{Monsters}
-Creatures are found around the world (both passive and agressive).
-\newline Can capture monsters (enslave / capture bribe / hire breed farm), can also be trained to be stronger / better at what they do?
-\newline different types of monsters can do different things (produce crafting ingredient, work, fight)
+\begin{itemize}
+\item Monsters are found around the world (both passive and aggressive)
+\item Monsters can be captured / used on the airship (e.g. for battles), as well as be trained to be stronger
+\item Different monsters can perform different tasks (produce crafting ingredients, work, fight, etc.)
+\end{itemize}
 
 \subsection{Robots}
-Steampunk robots can be created to automate resource gathering, crafting, transportation, and fighting?
-
+\begin{itemize}
+\item Robots and other machinery can be created to automate resource gathering, crafting, transportation, and fighting
+\end{itemize}
 
 \section{Combat}
 
 \subsection{Ship Combat}
-Shoot other ships by putting items into cannon
+\begin{itemize}
+\item Cannon-based fighting using items as ammo
+\item TODO: To be developed further
+\end{itemize}
 
 \subsection{Player Combat}
-Topdown real time combat
-\newline Go into battle screen like ultima but only for boss monsters?
+\begin{itemize}
+\item Top-down, real time combat
+\item TBD: Separate combat screens
+\end{itemize}
 
 
 \section{World}
-Randomly generated islands with creature settlements generated.
 
-\subsection{Islands}
-Some islands are good better for certain things
-\newline Some islands are more exploration focused, some are farming focused, some are combat focused
+\subsection{Floating Islands}
+\begin{itemize}
+\item Some islands are more exploration focused, some are farming focused, some are combat focused, etc.
+\item Islands may or may not be inhabited with creature settlements
+\end{itemize}
 
 \subsection{Caves}
-Use cellular automata to generate
+TODO: Currently of scope for CSCI 3010
 
 \subsection{Dungeon}
-\subsection{Settlement}
+TODO: Currently out of scope for CSCI 3010
 
+\subsection{Settlement}
+TODO: Current out of scope for CSCI 3010
 
 \section{Agriculture}
-soil quality means that different plants thrive in different conditions
-\newline seeds can only be obtained by eating food or converting plants into seeds
+\begin{itemize}
+\item Islands may posses a certain soil quality which allows varying plants to thrive
+\item Seeds can be obtained by eating food or converting plants into seeds
+\item TODO: Further development on Agriculture
+\end{itemize}
 
 \section{Items}
-Craft / find items and level them up
+\begin{itemize}
+\item Items may be acquired via crafting, interaction with NPCs (fighting, trading), or exploration
+\item Items may be disposable (food, potions, seeds), or non-disposable and have potential to be leveled up (ship components, weapons, other tools)
+\end{itemize}
 
 
 
@@ -199,7 +239,7 @@ Monitor, Keyboard / Controller
 
 \section{Development Systems/Tools}
 Language: Rust
-\newline Libraries: Piston
-\newline Graphics tools: Asprite
+\newline Libraries: Piston, Stainless
+\newline Graphics tools: Aesprite, Gimp
 
 \end{document}
