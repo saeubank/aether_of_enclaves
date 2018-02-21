@@ -76,3 +76,65 @@ fn main() {
         }
     }
 }
+
+// extern crate piston_window;
+//
+// use piston_window::*;
+//
+// struct Player {
+//     x_pos: f64,
+//     y_pos: f64
+// }
+//
+// enum Direction{
+//     Up,
+//     Down,
+//     Left,
+//     Right
+// }
+//
+// impl Player {
+//     fn new() -> Player {
+//         Player{
+//             x_pos: 0.0,
+//             y_pos: 0.0
+//         }
+//     }
+//
+//     fn on_update(&mut self, dir: Direction, amount: f64) {
+//         match dir {
+//             Direction::Up => self.y_pos -= amount,
+//             Direction::Down => self.y_pos += amount,
+//             Direction::Left => self.x_pos -= amount,
+//             Direction::Right => self.x_pos += amount
+//         }
+//     }
+// }
+//
+// fn main() {
+//     let mut player = Player::new();
+//
+//     let mut window: PistonWindow = WindowSettings::new("Hello Piston!", (500, 500))
+//         .exit_on_esc(true)
+//         .build()
+//         .unwrap();
+//
+//     while let Some(e) = window.next() {
+//         if let Some(button) = e.press_args(){
+//             match button {
+//                 Button::Keyboard(Key::W) => player.on_update(Direction::Up, 5.0),
+//                 Button::Keyboard(Key::S) => player.on_update(Direction::Down, 5.0),
+//                 Button::Keyboard(Key::A) => player.on_update(Direction::Left, 5.0),
+//                 Button::Keyboard(Key::D) => player.on_update(Direction::Right, 5.0),
+//                 _ => {}
+//             }
+//         }
+//
+//         window.draw_2d(&e, |context, graphics| {
+//             clear([0.0, 0.0, 0.0, 1.0], graphics);
+//             let red = [1.0, 0.0, 0.0, 1.0];
+//             let square = [player.x_pos, player.y_pos, 100.0, 100.0];
+//             rectangle(red, square, context.transform, graphics);
+//         });
+//     }
+// }
