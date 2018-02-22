@@ -8,10 +8,9 @@ use self::Direction::*;
 	@field x Player's horizontal position on screen.
 	@field y Player's vertical position on screen.
 */
-
-pub struct Player {
-	pub x: f64,
-	pub y: f64
+pub struct Player { 
+	pub x: f64, 
+	pub y: f64 
 }
 
 impl Player {

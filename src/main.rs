@@ -17,8 +17,9 @@ mod user_interface;
 mod game;
 mod player;
 
-fn main() {
-    let mut game = game::Game::new();
+use game::{Game};
 
+fn main() {
+    let mut game = Game::new();
     game.run();
 }

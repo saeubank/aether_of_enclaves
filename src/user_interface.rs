@@ -52,20 +52,23 @@ impl Interface {
 	// Displays the interface depending on Game State.
 	// @param e PistonWindow Generic Event trait.
 	pub fn display(&mut self, e: Event) {
-			self.window.draw_2d(&e, |context, graphics| {
-		        clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
-		        unsafe {
-					match GAME_STATE {
-						Main => {
-							// Draw Player.
-							let red = [1.0, 0.0, 0.0, 1.0];
-	           				let player_image = [PLAYER.x, PLAYER.y, 15.0, 15.0];
-	           				rectangle(red, player_image, context.transform, graphics);
-						},
-						_ => {}
-					}
+		self.window.draw_2d(&e, |context, graphics| {
+	        clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
+	        unsafe {
+				match GAME_STATE {
+					Main => {
+						// Draw Player.
+						let red = [1.0, 0.0, 0.0, 1.0];
+           				let player_image = [PLAYER.x, PLAYER.y, 15.0, 15.0];
+           				rectangle(red, player_image, context.transform, graphics);
+					},
+					Title => {
+
+					},
+					_ => {}
 				}
-	   	    });
+			}
+   	    });
 	}
 
 }

@@ -8,6 +8,7 @@ use self::GameState::*;
 pub static mut GAME_STATE: GameState = Title;
 pub static mut PLAYER: Player = Player { x: 0.0, y: 0.0 };
 
+
 /**
 	Implementation of the Game object.
 
@@ -17,12 +18,8 @@ pub struct Game { u_i: Interface, }
 
 impl Game {
 	// Constructor of the Game.
-	pub fn new() -> Self {
-		Game { u_i: Interface::new(), }
-	}
+	pub fn new() -> Self { Game { u_i: Interface::new(), } }
 
 	// The game loop.
-	pub fn run(&mut self) {
-		while self.u_i.update() { }
-	}
+	pub fn run(&mut self) { while self.u_i.update() {} }
 }
