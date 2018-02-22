@@ -14,7 +14,6 @@ trait Command {
 	fn new() -> Self;	
 
 	// Execute actions based on type of Command.
-	// @param self A mutable version of self.
 	// @param Option<Key> And optional key value.
 	fn execute(&mut self, Option<Key>);
 }
@@ -110,7 +109,6 @@ impl InputHandler {
 		} 
 	}
 
-	// @param self A mutable version of self.
 	// @param button The input button arguments.
     pub fn handle_input(&mut self, button: Button) {
     	use self::Key::*;

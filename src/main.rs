@@ -14,11 +14,10 @@ extern crate piston_window;
 use piston_window::*;
 mod input_handler;
 mod user_interface;
+mod game;
 
 fn main() {
-    let mut u_i = user_interface::Interface::new();
+    let mut game = game::Game::new();
 
-    while u_i.update() {
-
-    }
+    game.run();
 }
