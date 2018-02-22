@@ -15,6 +15,7 @@ use piston_window::*;
 mod input_handler;
 mod user_interface;
 mod game;
+mod player;
 
 fn main() {
     let mut game = game::Game::new();

@@ -1,5 +1,8 @@
 use piston_window::*;
-use input_handler;
+use input_handler::{InputHandler};
+use game::{GameState, GAME_STATE, PLAYER};
+
+use self::GameState::*;
 
 
 /**
@@ -10,7 +13,7 @@ use input_handler;
 */
 pub struct Interface {
 	window: PistonWindow,
-	input_hnd: input_handler::InputHandler,
+	input_hnd: InputHandler,
 }
 
 impl Interface {
@@ -18,11 +21,11 @@ impl Interface {
 	// fixed size and a new Input Handler.
 	pub fn new() -> Self {
 		Interface {
-			window: WindowSettings::new("AOE", (200, 200))
+			window: WindowSettings::new("AOE", (400, 400))
 				.exit_on_esc(true)
 		        .build()
 		        .unwrap(),
-		    input_hnd: input_handler::InputHandler::new(),
+		    input_hnd: InputHandler::new(),
 		}
 	}
 
@@ -30,7 +33,7 @@ impl Interface {
 	// game updates.
 	// @return bool Whether updating continues.
 	pub fn update(&mut self) -> bool {
-		if let Some(e) = self.window.next() {
+		while let Some(e) = self.window.next() {
 	        if let Some(button) = e.press_args(){
 	            self.input_hnd.handle_input(button);
 
@@ -39,10 +42,30 @@ impl Interface {
 		        	return false;
 		        }
 	        }
+	        self.display(e);
+	        break;
 	    }
 	    true
 	}
 
 
-	pub fn display() {}
+	// Displays the interface depending on Game State.
+	// @param e PistonWindow Generic Event trait.
+	pub fn display(&mut self, e: Event) {
+			self.window.draw_2d(&e, |context, graphics| {
+		        clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
+		        unsafe {
+					match GAME_STATE {
+						Main => {
+							// Draw Player.
+							let red = [1.0, 0.0, 0.0, 1.0];
+	           				let player_image = [PLAYER.x, PLAYER.y, 15.0, 15.0];
+	           				rectangle(red, player_image, context.transform, graphics);
+						},
+						_ => {}
+					}
+				}
+	   	    });
+	}
+
 }

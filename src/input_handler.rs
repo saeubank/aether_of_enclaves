@@ -1,9 +1,21 @@
+/**
+	Input Handler uses *inheritance to handle the sets of
+	commands which might be inputted from the Game and user.
+
+	Modeled with the Command programming design pattern.
+
+	*Rust doesn't truly support inheritance & classes, so this
+	has been manually recreated to the best of our ability.
+*/
+
 use piston_window::{Button,Key};
+use game::{GameState, GAME_STATE, PLAYER};
+use self::GameState::*;
 
 #[derive(Debug)]
 
 // Used for Move sub-struct.
-enum Direction { Up, Down, Left, Right, Nil, }
+pub enum Direction { Up, Down, Left, Right, Nil }
 
 
 /** 
@@ -31,7 +43,19 @@ impl Command for OpenMenu {
 
 	// Unused param _key.
 	fn execute(&mut self, _key: Option<Key>) {
-		println!("Menu opened.");
+		unsafe {
+			match GAME_STATE {
+				Main => {
+					println!("Menu opened.");
+					GAME_STATE = InMenu;
+				},
+				InMenu => {
+					println!("Menu closed.");
+					GAME_STATE = Main;
+				}
+				_ => {}
+			}
+		}
 	}
 }
 
@@ -49,7 +73,15 @@ impl Command for Action {
 
 	// Unused param _key.
 	fn execute(&mut self, _key: Option<Key>) {
-		println!("Hit enter.");
+		unsafe {
+			match GAME_STATE {
+				Title => {
+					println!("Changing state to Main.");
+					GAME_STATE = Main;
+				},
+				_ => {}
+			}
+		}
 	}
 }
 
@@ -61,26 +93,28 @@ impl Command for Action {
 
 	@field dir The direction of the Command.
 */
-struct Move { dir: Direction, }
+struct Move {}
 
 impl Move {
-	pub fn new() -> Self { Move { dir: Direction::Nil, } }
+	pub fn new() -> Self { Move { } }
 }
 
 impl Command for Move {
-	fn new() -> Self { Move { dir: Direction::Nil } }
+	fn new() -> Self { Move { } }
 
 	// @param key The input key.
 	fn execute(&mut self, key: Option<Key>) {
 		use self::Direction::*;
+		let mut dir = Nil;
 		match key {
-			Some(Key::W) => self.dir = Up,
-			Some(Key::A) => self.dir = Left,
-			Some(Key::S) => self.dir = Down,
-			Some(Key::D) => self.dir = Right,
-			_ => self.dir = Nil,
+			Some(Key::W) => dir = Up,
+			Some(Key::A) => dir = Left,
+			Some(Key::S) => dir = Down,
+			Some(Key::D) => dir = Right,
+			_ => {},
 		}
-		println!("Moving {:?}.", self.dir);
+		println!("Moving {:?}.", dir);
+		unsafe { PLAYER.update_position(dir, 15.0); }
 	}
 }
 
