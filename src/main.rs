@@ -13,18 +13,12 @@ extern crate piston;
 extern crate piston_window;
 use piston_window::*;
 mod input_handler;
+mod user_interface;
 
 fn main() {
-    let mut input_hnd = input_handler::InputHandler::new();
+    let mut u_i = user_interface::Interface::new();
 
-    let mut window: PistonWindow = WindowSettings::new("AOE", (200, 200))
-        .exit_on_esc(true)
-        .build()
-        .unwrap();
-
-    while let Some(e) = window.next() {
-        if let Some(button) = e.press_args(){
-            input_hnd.handle_input(button);
-        }
+    loop {
+        u_i.update();
     }
 }
