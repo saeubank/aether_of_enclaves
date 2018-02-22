@@ -29,14 +29,20 @@ impl Interface {
 	// Updates the interface fields with input and other
 	// game updates.
 	// @param self A mutable version of the self.
-	pub fn update(&mut self) {
+	pub fn update(&mut self) -> bool {
 		if let Some(e) = self.window.next() {
 	        if let Some(button) = e.press_args(){
 	            self.input_hnd.handle_input(button);
+	            
+	            // Need to manually implement exit on escape.
+	            if button == Button::Keyboard(Key::Escape) {
+		        	return false;
+		        }
 	        }
 	    }
+	    true
 	}
 
-	
+
 	pub fn display() {}
 }

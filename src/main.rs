@@ -18,7 +18,7 @@ mod user_interface;
 fn main() {
     let mut u_i = user_interface::Interface::new();
 
-    loop {
-        u_i.update();
+    while u_i.update() {
+
     }
 }
