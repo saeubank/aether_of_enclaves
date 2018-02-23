@@ -15,15 +15,15 @@ use self::GameState::*;
 #[derive(Debug)]
 
 // Used for Move sub-struct.
-pub enum Direction { Up, Down, Left, Right, Nil }
+pub enum Direction { Up, Down, Left, Right }
 
 
-/** 
-	Ancestor object for different types of input Commands. 
+/**
+	Ancestor object for different types of input Commands.
 */
 trait Command {
 	// Initializer for Command.
-	fn new() -> Self;	
+	fn new() -> Self;
 
 	// Execute actions based on type of Command.
 	// @param Option<Key> And optional key value.
@@ -105,12 +105,12 @@ impl Command for Move {
 	// @param key The input key.
 	fn execute(&mut self, key: Option<Key>) {
 		use self::Direction::*;
-		let mut dir = Nil;
+		let mut dir = None;
 		match key {
-			Some(Key::W) => dir = Up,
-			Some(Key::A) => dir = Left,
-			Some(Key::S) => dir = Down,
-			Some(Key::D) => dir = Right,
+			Some(Key::W) => dir = Some(Up),
+			Some(Key::A) => dir = Some(Left),
+			Some(Key::S) => dir = Some(Down),
+			Some(Key::D) => dir = Some(Right),
 			_ => {},
 		}
 		println!("Moving {:?}.", dir);
@@ -135,12 +135,12 @@ pub struct InputHandler {
 
 impl InputHandler {
 	// Constructor.
-	pub fn new() -> Self { 
+	pub fn new() -> Self {
 		InputHandler {
 			move_dir: Move::new(),
 			action: Action::new(),
 			open_menu: OpenMenu::new(),
-		} 
+		}
 	}
 
 	// @param button The input button arguments.
