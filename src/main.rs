@@ -1,7 +1,7 @@
 /**
-    Aether of Enclaves will be a 32-bit exploration game, in which the user 
-    controls a main character and an airship and travels through the sky - 
-    picking up crew members, discovering new islands, interacting with NPCs, 
+    Aether of Enclaves will be a 32-bit exploration game, in which the user
+    controls a main character and an airship and travels through the sky -
+    picking up crew members, discovering new islands, interacting with NPCs,
     and exploring.
 
     V 0.0.0

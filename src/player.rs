@@ -10,10 +10,17 @@ use self::Direction::*;
 */
 pub struct Player {
 	pub x: f64,
-	pub y: f64
+	pub y: f64,
 }
 
 impl Player {
+
+	pub fn new() -> Player {
+		Player {
+			x: 0.0,
+			y: 0.0,
+		}
+	}
 
 	// Updates the player's position.
 	// @param dir The direction player will move.
