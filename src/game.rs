@@ -17,7 +17,6 @@ use self::GameState::*;
 	@field u_i The user interface.
 */
 pub struct Game {
-	window: PistonWindow,
 	input_hnd: InputHandler,
 	player: Player,
 	game_state: GameState,
@@ -27,10 +26,6 @@ impl Game {
 	// Constructor of the Game.
 	pub fn new() -> Self {
 		Game {
-			window: WindowSettings::new("AOE", (400, 400))
-				.exit_on_esc(true)
-		        .build()
-		        .unwrap(),
 		    input_hnd: InputHandler::new(),
 			player: Player::new(),
 			game_state: GameState::Title
@@ -38,10 +33,10 @@ impl Game {
 	}
 
 	// The game loop.
-	pub fn run(&mut self) {
+	pub fn run(&mut self, window: &mut PistonWindow) {
 		// while self.ui.update() {}
 
-		while let Some(e) = self.window.next() {
+		while let Some(e) = window.next() {
 	         match e {
 	            Event::Input(Input::Button(args)) => {
 	                // if args.button == Button::Keyboard(Key::W) { player.move_player(Direction::Up); }
@@ -56,14 +51,7 @@ impl Game {
 	            }
 
 	            Event::Loop(Loop::Render(args)) => {
-	                // window.draw_2d(&e, |context, graphics| {
-	                //     clear([0.0, 0.0, 0.0, 1.0], graphics);
-	                //     let red = [1.0, 0.0, 0.0, 1.0];
-	                //     let square = [player.x_pos, player.y_pos, 100.0, 100.0];
-	                //     rectangle(red, square, context.transform, graphics);
-	                // });
-
-					self.window.draw_2d(&e, |context, graphics| {
+					window.draw_2d(&e, |context, graphics| {
 				        clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
 						match self.game_state {
 							Main => {
@@ -73,49 +61,14 @@ impl Game {
 			       				rectangle(red, player_image, context.transform, graphics);
 							},
 							Title => {
-
+								
 							},
 							_ => {}
 						}
 			   	    });
 	            }
-
 	            _ => {}
 	        }
 	    }
 	}
-
-	// pub fn update(&mut self) -> bool {
-	// 	while let Some(e) = self.window.next() {
-	//         if let Some(button) = e.press_args(){
-	//             self.input_hnd.handle_input(button);
-	//
-	//             // Need to manually implement exit on escape.
-	//             if button == Button::Keyboard(Key::Escape) {
-	// 	        	return false;
-	// 	        }
-	//         }
-	//         self.display(e);
-	//         break;
-	//     }
-	//     true
-	// }
-
-	// pub fn display(&mut self, e: Event) {
-	// 	self.window.draw_2d(&e, |context, graphics| {
-	//         clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
-	// 		match game_state {
-	// 			Main => {
-	// 				// Draw Player.
-	// 				let red = [1.0, 0.0, 0.0, 1.0];
-    //    				let player_image = [PLAYER.x, PLAYER.y, 15.0, 15.0];
-    //    				rectangle(red, player_image, context.transform, graphics);
-	// 			},
-	// 			Title => {
-	//
-	// 			},
-	// 			_ => {}
-	// 		}
-   	//     });
-	// }
 }

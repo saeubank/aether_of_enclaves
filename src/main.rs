@@ -20,6 +20,10 @@ mod player;
 use game::{Game};
 
 fn main() {
+    let mut window: PistonWindow = WindowSettings::new("AOE", (500, 500))
+        .exit_on_esc(true)
+        .build()
+        .unwrap();
     let mut game = Game::new();
-    game.run();
+    game.run(&mut window);
 }
