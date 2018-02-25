@@ -8,59 +8,65 @@
 	has been manually recreated to the best of our ability.
 */
 
-use piston_window::{Button,Key};
+use piston_window::{Button, Key};
 // use game::{GameState, GAME_STATE, PLAYER};
 use game::GameState;
-use player::{Player};
+use player::Player;
 use self::GameState::*;
 
 #[derive(Debug)]
 
 // Used for Move sub-struct.
-pub enum Direction { Up, Down, Left, Right }
-
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
 
 /**
 	Ancestor object for different types of input Commands.
 */
 trait Command {
-	// Initializer for Command.
-	fn new() -> Self;
+    // Initializer for Command.
+    fn new() -> Self;
 
-	// Execute actions based on type of Command.
-	// @param Option<Key> And optional key value.
-	fn execute(&mut self, Option<Key>, player: &mut Player, game_state: &mut GameState);
+    // Execute actions based on type of Command.
+    // @param Option<Key> And optional key value.
+    fn execute(&mut self, Option<Key>, player: &mut Player, game_state: &mut GameState);
 }
-
 
 /**
 	Implementation of the OpenMenu Command.
 */
 struct OpenMenu {}
 
-impl OpenMenu { pub fn new() -> Self { OpenMenu {} } }
-
-impl Command for OpenMenu {
-	fn new() -> Self { OpenMenu {} }
-
-	// Unused param _key.
-	fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
-
-			match *game_state {
-				Main => {
-					println!("Menu opened.");
-					*game_state = InMenu;
-				},
-				InMenu => {
-					println!("Menu closed.");
-					*game_state = Main;
-				}
-				_ => {}
-			}
-
-	}
+impl OpenMenu {
+    pub fn new() -> Self {
+        OpenMenu {}
+    }
 }
 
+impl Command for OpenMenu {
+    fn new() -> Self {
+        OpenMenu {}
+    }
+
+    // Unused param _key.
+    fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
+        match *game_state {
+            Main => {
+                println!("Menu opened.");
+                *game_state = InMenu;
+            }
+            InMenu => {
+                println!("Menu closed.");
+                *game_state = Main;
+            }
+            _ => {}
+        }
+    }
+}
 
 /**
 	Implementation of the Action Command.
@@ -68,24 +74,28 @@ impl Command for OpenMenu {
 */
 struct Action {}
 
-impl Action { pub fn new() -> Self { Action {} } }
-
-impl Command for Action {
-	fn new() -> Self { Action {} }
-
-	// Unused param _key.
-	fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
-			match *game_state {
-				Title => {
-					println!("Changing state to Main.");
-					*game_state = Main;
-				},
-				_ => {}
-			}
-
-	}
+impl Action {
+    pub fn new() -> Self {
+        Action {}
+    }
 }
 
+impl Command for Action {
+    fn new() -> Self {
+        Action {}
+    }
+
+    // Unused param _key.
+    fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
+        match *game_state {
+            Title => {
+                println!("Changing state to Main.");
+                *game_state = Main;
+            }
+            _ => {}
+        }
+    }
+}
 
 /**
 	Implementation of the Move Command.
@@ -97,28 +107,31 @@ impl Command for Action {
 struct Move {}
 
 impl Move {
-	pub fn new() -> Self { Move { } }
+    pub fn new() -> Self {
+        Move {}
+    }
 }
 
 impl Command for Move {
-	fn new() -> Self { Move { } }
+    fn new() -> Self {
+        Move {}
+    }
 
-	// @param key The input key.
-	fn execute(&mut self, key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
-		use self::Direction::*;
-		let mut dir = None;
-		match key {
-			Some(Key::W) => dir = Some(Up),
-			Some(Key::A) => dir = Some(Left),
-			Some(Key::S) => dir = Some(Down),
-			Some(Key::D) => dir = Some(Right),
-			_ => {},
-		}
-		println!("Moving {:?}.", dir);
-		player.update_position(dir, 15.0);
-	}
+    // @param key The input key.
+    fn execute(&mut self, key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
+        use self::Direction::*;
+        let mut dir = None;
+        match key {
+            Some(Key::W) => dir = Some(Up),
+            Some(Key::A) => dir = Some(Left),
+            Some(Key::S) => dir = Some(Down),
+            Some(Key::D) => dir = Some(Right),
+            _ => {}
+        }
+        println!("Moving {:?}.", dir);
+        player.update_position(dir, 15.0);
+    }
 }
-
 
 /**
 	Implementation of the Input Handler.
@@ -129,34 +142,37 @@ impl Command for Move {
 	@field open_menu The OpenMenu Command handler.
 */
 pub struct InputHandler {
-	move_dir: Move,
-	action: Action,
-	open_menu: OpenMenu,
+    move_dir: Move,
+    action: Action,
+    open_menu: OpenMenu,
 }
 
 impl InputHandler {
-	// Constructor.
-	pub fn new() -> Self {
-		InputHandler {
-			move_dir: Move::new(),
-			action: Action::new(),
-			open_menu: OpenMenu::new(),
-		}
-	}
+    // Constructor.
+    pub fn new() -> Self {
+        InputHandler {
+            move_dir: Move::new(),
+            action: Action::new(),
+            open_menu: OpenMenu::new(),
+        }
+    }
 
-	// @param button The input button arguments.
-    pub fn handle_input(&mut self, button: Button, player: &mut Player, game_state: &mut GameState) {
-    	use self::Key::*;
-    	match button {
-    		Button::Keyboard(key) => {
-    			match key {
-    				Return => self.action.execute(None, player, game_state),
-	    			Tab => self.open_menu.execute(None, player, game_state),
-	    			W | A | S | D => self.move_dir.execute(Some(key), player, game_state),
-	    			_ => {}
-    			}
-	    	},
-	    	_ => {},
-    	}
+    // @param button The input button arguments.
+    pub fn handle_input(
+        &mut self,
+        button: Button,
+        player: &mut Player,
+        game_state: &mut GameState,
+    ) {
+        use self::Key::*;
+        match button {
+            Button::Keyboard(key) => match key {
+                Return => self.action.execute(None, player, game_state),
+                Tab => self.open_menu.execute(None, player, game_state),
+                W | A | S | D => self.move_dir.execute(Some(key), player, game_state),
+                _ => {}
+            },
+            _ => {}
+        }
     }
 }

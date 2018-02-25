@@ -8,16 +8,15 @@
 
     2018 Samuel Eubanks, McKenzie Weller
 */
-
 extern crate piston;
 extern crate piston_window;
 use piston_window::*;
 mod input_handler;
-mod user_interface;
+// mod user_interface;
 mod game;
 mod player;
 
-use game::{Game};
+use game::Game;
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new("AOE", (500, 500))
