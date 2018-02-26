@@ -2,13 +2,13 @@
 use piston_window::*;
 use player::Player;
 use input_handler::InputHandler;
+// use graphics::Graphics;
 
 pub enum GameState {
     Title,
     Main,
     InMenu,
 }
-use self::GameState::*;
 
 /**
 	Implementation of the Game object.
@@ -55,13 +55,13 @@ impl Game {
                     window.draw_2d(&e, |context, graphics| {
                         clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
                         match self.game_state {
-                            Main => {
+                            GameState::Main => {
                                 // Draw Player.
                                 let red = [1.0, 0.0, 0.0, 1.0];
                                 let player_image = [self.player.x, self.player.y, 15.0, 15.0];
                                 rectangle(red, player_image, context.transform, graphics);
                             }
-                            Title => {}
+                            GameState::Title => {}
                             _ => {}
                         }
                     });

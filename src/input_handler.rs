@@ -9,10 +9,8 @@
 */
 
 use piston_window::{Button, Key};
-// use game::{GameState, GAME_STATE, PLAYER};
 use game::GameState;
 use player::Player;
-use self::GameState::*;
 
 #[derive(Debug)]
 
@@ -55,13 +53,13 @@ impl Command for OpenMenu {
     // Unused param _key.
     fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
         match *game_state {
-            Main => {
+            GameState::Main => {
                 println!("Menu opened.");
-                *game_state = InMenu;
+                *game_state = GameState::InMenu;
             }
-            InMenu => {
+            GameState::InMenu => {
                 println!("Menu closed.");
-                *game_state = Main;
+                *game_state = GameState::Main;
             }
             _ => {}
         }
@@ -88,9 +86,9 @@ impl Command for Action {
     // Unused param _key.
     fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
         match *game_state {
-            Title => {
+            GameState::Title => {
                 println!("Changing state to Main.");
-                *game_state = Main;
+                *game_state = GameState::Main;
             }
             _ => {}
         }

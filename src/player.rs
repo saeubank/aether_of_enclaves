@@ -1,5 +1,4 @@
 use input_handler::Direction;
-use self::Direction::*;
 
 /**
 	Implementation of the Player object.
@@ -22,10 +21,10 @@ impl Player {
     // @param dist The distance in pixels to move.
     pub fn update_position(&mut self, dir: Option<Direction>, dist: f64) {
         match dir {
-            Some(Up) => self.y -= dist,
-            Some(Down) => self.y += dist,
-            Some(Left) => self.x -= dist,
-            Some(Right) => self.x += dist,
+            Some(Direction::Up) => self.y -= dist,
+            Some(Direction::Down) => self.y += dist,
+            Some(Direction::Left) => self.x -= dist,
+            Some(Direction::Right) => self.x += dist,
             _ => {}
         }
     }

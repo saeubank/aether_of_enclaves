@@ -10,12 +10,12 @@
 */
 extern crate piston;
 extern crate piston_window;
-use piston_window::*;
 mod input_handler;
-// mod user_interface;
 mod game;
 mod player;
+// mod graphics;
 
+use piston_window::{PistonWindow, WindowSettings};
 use game::Game;
 
 fn main() {
