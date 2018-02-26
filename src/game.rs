@@ -38,11 +38,13 @@ impl Game {
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
-                    self.input_hnd.handle_input(
-                        args.button,
-                        &mut self.player,
-                        &mut self.game_state,
-                    );
+                    if args.state == ButtonState::Press {
+                        self.input_hnd.handle_input(
+                            args.button,
+                            &mut self.player,
+                            &mut self.game_state,
+                        );
+                    }
                 }
 
                 Event::Loop(Loop::Update(args)) => {
