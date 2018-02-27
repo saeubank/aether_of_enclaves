@@ -1,4 +1,5 @@
 use piston_window::*;
+use find_folder::*;
 use player::Player;
 use input_handler::InputHandler;
 
@@ -32,7 +33,13 @@ impl Game {
     // The function that draws stuff to the screen
     // @param e The graphics event that is for drawing.
     // @param window The PistonWindow that is drawn to.
-    fn draw_stuff(&mut self, e: Event, window: &mut PistonWindow) {
+    fn display(&mut self, e: Event, window: &mut PistonWindow) {
+        let assets = Search::ParentsThenKids(3, 3)
+            .for_folder("fonts").unwrap();
+        let ref font = assets.join("Inconsolata-Regular.ttf");
+        let factory = window.factory.clone();
+        let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+
         window.draw_2d(&e, |context, graphics| {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
@@ -42,8 +49,25 @@ impl Game {
                     let player_image = [self.player.x, self.player.y, 15.0, 15.0];
                     rectangle(red, player_image, context.transform, graphics);
                 }
-                GameState::Title => {}
-                _ => {}
+                GameState::Title => {
+                    let transform = context.transform.trans(10.0, 100.0);
+                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32).draw(
+                        "Press Return to begin :)",
+                        &mut glyphs,
+                        &context.draw_state,
+                        transform, graphics
+                    ).expect("duno what to put here. Title");
+                }
+                GameState::InMenu => {
+                    let transform = context.transform.trans(10.0, 100.0);
+                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32).draw(
+                        "This is the menu :)",
+                        &mut glyphs,
+                        &context.draw_state,
+                        transform, graphics
+                    ).expect("duno what to put here. InMenu");
+                }
+                // _ => {}
             }
         });
     }
@@ -69,7 +93,7 @@ impl Game {
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
-                    self.draw_stuff(e, window);
+                    self.display(e, window);
                 }
                 _ => {}
             }
