@@ -26,10 +26,10 @@ Version 0.0.1 w/ Latest Commit - https://github.com/swamulism/aether_of_enclaves
 
 4. Screenshots below.
 
-![title](hw3_title.png)
+![title](hw3_title.PNG)
 
 
-![ingame](hw3_ingame.png)
+![ingame](hw3_ingame.PNG)
 
 
-![menu](hw3_menu.png)
+![menu](hw3_menu.PNG)
