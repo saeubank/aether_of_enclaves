@@ -51,7 +51,7 @@ impl Command for OpenMenu {
     }
 
     // Unused param _key.
-    fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
+    fn execute(&mut self, _key: Option<Key>, _player: &mut Player, game_state: &mut GameState) {
         match *game_state {
             GameState::Main => {
                 println!("Menu opened.");
@@ -84,7 +84,7 @@ impl Command for Action {
     }
 
     // Unused param _key.
-    fn execute(&mut self, _key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
+    fn execute(&mut self, _key: Option<Key>, _player: &mut Player, game_state: &mut GameState) {
         match *game_state {
             GameState::Title => {
                 println!("Changing state to Main.");
@@ -116,7 +116,7 @@ impl Command for Move {
     }
 
     // @param key The input key.
-    fn execute(&mut self, key: Option<Key>, player: &mut Player, game_state: &mut GameState) {
+    fn execute(&mut self, key: Option<Key>, player: &mut Player, _game_state: &mut GameState) {
         use self::Direction::*;
         let mut dir = None;
         match key {
