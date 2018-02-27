@@ -8,9 +8,11 @@
     - Have a list of NPCs/items we would like to include.
 
 2. What you actually accomplished for this deadline.
-    - Note any differences and explain why they occurred. Prefer honesty over excuses.
+    - differences and explanations goes here.
 
 3. What you had planned to do for the next deadline.
-    - Any changes you would like to make to this plan for the next deadline and the reasoning behind each change.
+    - changes and the reasoning goes here.
 
-4. Screenshots of where your app/program/etc is currently at. They don’t have to be exhaustive but they should adequately depict the current state of your project.
+4. Screenshots of where your app/program/etc is currently at.
+
+![screenshot](hw3screenshot.png)

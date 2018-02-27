@@ -5,11 +5,12 @@ This is a 2d exploration game built in rust.
 For more info about the game please refer to the design doc
 
 
-### Compile
-Have cargo installed
+### Compile & Run
+Have [Rust](https://www.rust-lang.org/en-US/install.html) installed (for Windows you will need visual studio c++ too)
 
 ```
-cargo build --production
+cargo build
+cargo run
 ```
 
 ## Built With
