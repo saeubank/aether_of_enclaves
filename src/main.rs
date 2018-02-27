@@ -10,6 +10,7 @@
 */
 extern crate piston;
 extern crate piston_window;
+extern crate find_folder;
 mod input_handler;
 mod game;
 mod player;
