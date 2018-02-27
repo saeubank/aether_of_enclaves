@@ -1,5 +1,5 @@
 /*
-    Not used Currently
+    Not used currently.
 */
 
 use piston_window::*;

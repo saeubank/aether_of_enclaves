@@ -13,6 +13,7 @@ extern crate piston_window;
 mod input_handler;
 mod game;
 mod player;
+mod display;
 // mod graphics;
 
 use piston_window::{PistonWindow, WindowSettings};
