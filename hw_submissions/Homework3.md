@@ -1,6 +1,8 @@
 # Homework 3
 
 [Latest Commit](https://github.com/swamulism/aether_of_enclaves/commit/612cfe3cd22e07353c87b207fad18505ecc8044a)
+
+
 [Version 0.0.1 Release](https://github.com/swamulism/aether_of_enclaves/releases/tag/0.0.1)
 
 1. What was planned for this deadline, from our design document:
