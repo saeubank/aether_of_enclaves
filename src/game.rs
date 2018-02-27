@@ -31,6 +31,22 @@ impl Game {
         }
     }
 
+    fn draw_stuff(&mut self, e: Event, window: &mut PistonWindow) {
+        window.draw_2d(&e, |context, graphics| {
+            clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
+            match self.game_state {
+                GameState::Main => {
+                    // Draw Player.
+                    let red = [1.0, 0.0, 0.0, 1.0];
+                    let player_image = [self.player.x, self.player.y, 15.0, 15.0];
+                    rectangle(red, player_image, context.transform, graphics);
+                }
+                GameState::Title => {}
+                _ => {}
+            }
+        });
+    }
+
     // The game loop.
     pub fn run(&mut self, window: &mut PistonWindow) {
         // while self.ui.update() {}
@@ -47,24 +63,12 @@ impl Game {
                     }
                 }
 
-                Event::Loop(Loop::Update(args)) => {
+                Event::Loop(Loop::Update(_args)) => {
                     //Update Events
                 }
 
-                Event::Loop(Loop::Render(args)) => {
-                    window.draw_2d(&e, |context, graphics| {
-                        clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
-                        match self.game_state {
-                            GameState::Main => {
-                                // Draw Player.
-                                let red = [1.0, 0.0, 0.0, 1.0];
-                                let player_image = [self.player.x, self.player.y, 15.0, 15.0];
-                                rectangle(red, player_image, context.transform, graphics);
-                            }
-                            GameState::Title => {}
-                            _ => {}
-                        }
-                    });
+                Event::Loop(Loop::Render(_args)) => {
+                    self.draw_stuff(e, window);
                 }
                 _ => {}
             }
