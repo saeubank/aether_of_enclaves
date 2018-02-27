@@ -1,6 +1,6 @@
 # Homework 3
 
-Version 0.0.1 
+Version 0.0.1
 
 1. What was planned for this deadline, from our design document:
     - Generate basic graphical interface with simple menu, using Piston (one class/file).
@@ -10,7 +10,7 @@ Version 0.0.1
 
 2. What was accomplished:
     - The game successfully draws a game window using Piston with a basic "player" on screen, who can be controlled using WASD. The interface updates with user input, including WASD, Tab (to "open the menu"), and Return (to "begin the game"). The screen additionally writes text to the screen. We never defined exactly what the "simple menu" we wanted to implement would be, so we are counting this a success -- especially because writing text to the screen was a pain in the butt.
-    - The basic Game loop is written to update with user input and display the screen. It will need to be flushed out to handle game events. 
+    - The basic Game loop is written to update with user input and display the screen. It will need to be flushed out to handle game events.
     - The Command programming design pattern was applied in the input_handler object. The Input Handler changes the game state according to the input (e.g. toggling between the menu and the gameplay, or moving the player.)
     - Additionally, we implemented the beginnings of a number of objects we hadn't intended to at this point, including a Player object. Most of these (graphics, map, and items) are not required / used in compilation at the current moment.
     - The list of NPCs and Items we'll aim to implement include:
@@ -26,4 +26,10 @@ Version 0.0.1
 
 4. Screenshots below.
 
-![screenshot](hw3_screenshot.png)
+![title](hw3_title.png)
+
+
+![ingame](hw3_ingame.png)
+
+
+![menu](hw3_menu.png)
