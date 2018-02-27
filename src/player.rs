@@ -9,6 +9,7 @@ use input_handler::Direction;
 pub struct Player {
     pub x: f64,
     pub y: f64,
+    // array size 3 for inventory can only use/drop top item
 }
 
 impl Player {

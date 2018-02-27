@@ -10,6 +10,9 @@ struct Item {
     item_type: ItemType;
 }
 
+// Items to add & crafting
+// Wood -> Sword
+// Plant -> Food
 
 trait Pickupable {
 
