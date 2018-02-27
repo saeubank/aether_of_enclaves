@@ -31,6 +31,9 @@ impl Game {
         }
     }
 
+    // The function that draws stuff to the screen
+    // @pram e The graphics event that is for drawing
+    // @pram window The PistonWindow that will be used to draw to
     fn draw_stuff(&mut self, e: Event, window: &mut PistonWindow) {
         window.draw_2d(&e, |context, graphics| {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
@@ -48,6 +51,7 @@ impl Game {
     }
 
     // The game loop.
+    // @param window The PistonWindow that will be used to draw to
     pub fn run(&mut self, window: &mut PistonWindow) {
         // while self.ui.update() {}
 
