@@ -1,6 +1,6 @@
 # Homework 3
 
-Version 0.0.1
+Version 0.0.1 w/ Latest Commit - https://github.com/swamulism/aether_of_enclaves/releases/tag/0.0.1
 
 1. What was planned for this deadline, from our design document:
     - Generate basic graphical interface with simple menu, using Piston (one class/file).

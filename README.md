@@ -1,17 +1,18 @@
 # Aether of Enclaves
 [![Build Status](https://travis-ci.org/swamulism/aether_of_enclaves.svg?branch=master)](https://travis-ci.org/swamulism/aether_of_enclaves)
 
-This is a 2d exploration game built in rust.
-For more info about the game please refer to the design doc
+This is a 2D exploration game built with Rust.
+For more information, please refer to the design doc.
 
 
-### Compile & Run
-Have [Rust](https://www.rust-lang.org/en-US/install.html) installed (for Windows you will need visual studio c++ too)
+## Compile & Run
+[Rust](https://www.rust-lang.org/en-US/install.html) (and Cargo) must be installed in order to build (for Windows users, Visual Studio C++ must also be installed). Dependencies are handled by Cargo. An executable is created with each build. The following commands can be used to compile & run:
 
 ```
 cargo build
 cargo run
 ```
+
 
 ## Built With
 
@@ -19,10 +20,10 @@ cargo run
 * [Piston](https://github.com/PistonDevelopers/piston) - Game Engine
 
 
-## Authors
+## Creators
 
 * **Samuel Eubanks**
-* **Kenzie Weller**
+* **McKenzie Weller**
 
 See also the list of [contributors](https://github.com/swamulism/aether_of_enclaves/contributors) who participated in this project.
 
