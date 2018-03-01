@@ -2,20 +2,23 @@
     Not used currently.
 */
 
+// use piston_window::{PistonWindow, Texture};
 use piston_window::*;
+use find_folder::Search;
+// use gfx_core::Resources;
 
 pub struct Graphics {
-    grass: piston_window::Texture,
+    // grass: Texture<Resources>,
+    grass: Texture<>
 }
 
 impl Graphics {
-    pub fn new(&mut window: piston_window::PistonWindow) -> Self {
-        // let assets = "./assets/images";
+    pub fn new(&mut window: &mut PistonWindow) -> Self {
+        let assets = Search::ParentsThenKids(3,3).for_folder("images").unwrap();
         Graphics {
             grass: Texture::from_path(
                 &mut window.factory,
-                // assets + "/grass.png",
-                "./assets/images/grass.png",
+                assets.join("grass.png"),
                 Flip::None,
                 &TextureSettings::new()
             ).unwrap()
