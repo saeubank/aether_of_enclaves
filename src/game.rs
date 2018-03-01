@@ -1,5 +1,5 @@
 use piston_window::*;
-use find_folder::*;
+use find_folder::Search;
 use player::Player;
 use input_handler::InputHandler;
 
@@ -48,7 +48,7 @@ impl Game {
                     let red = [1.0, 0.0, 0.0, 1.0];
                     let player_image = [self.player.x, self.player.y, 15.0, 15.0];
                     rectangle(red, player_image, context.transform, graphics);
-                }
+                },
                 GameState::Title => {
                     let transform = context.transform.trans(10.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32).draw(
@@ -56,8 +56,8 @@ impl Game {
                         &mut glyphs,
                         &context.draw_state,
                         transform, graphics
-                    ).expect("duno what to put here. Title");
-                }
+                    ).unwrap();
+                },
                 GameState::InMenu => {
                     let transform = context.transform.trans(10.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32).draw(
@@ -65,8 +65,8 @@ impl Game {
                         &mut glyphs,
                         &context.draw_state,
                         transform, graphics
-                    ).expect("duno what to put here. InMenu");
-                }
+                    ).unwrap();
+                },
                 // _ => {}
             }
         });
@@ -86,15 +86,15 @@ impl Game {
                             &mut self.game_state,
                         );
                     }
-                }
+                },
 
                 Event::Loop(Loop::Update(_args)) => {
                     //Update Events
-                }
+                },
 
                 Event::Loop(Loop::Render(_args)) => {
                     self.display(e, window);
-                }
+                },
                 _ => {}
             }
         }

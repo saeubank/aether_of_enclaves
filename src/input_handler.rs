@@ -56,11 +56,11 @@ impl Command for OpenMenu {
             GameState::Main => {
                 println!("Menu opened.");
                 *game_state = GameState::InMenu;
-            }
+            },
             GameState::InMenu => {
                 println!("Menu closed.");
                 *game_state = GameState::Main;
-            }
+            },
             _ => {}
         }
     }
@@ -89,7 +89,7 @@ impl Command for Action {
             GameState::Title => {
                 println!("Changing state to Main.");
                 *game_state = GameState::Main;
-            }
+            },
             _ => {}
         }
     }
