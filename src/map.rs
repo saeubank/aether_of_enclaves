@@ -1,7 +1,3 @@
-/*
-    Not used Currently
-*/
-
 use noise::*;
 use rand::{distributions, thread_rng};
 use rand::distributions::Sample;
@@ -48,8 +44,8 @@ fn generate_perlin(size: usize, step: f32) -> Vec<Vec<f32>> {
         for j in 0..perlin_arr[i].len() {
             perlin_arr[i][j] = perlin.get([xpos, ypos]);
             xpos += step;
-            ypos += step;
         }
+        ypos += step;
     }
     perlin_arr
 }
@@ -64,6 +60,16 @@ fn generate_island_size() -> usize {
     island_size
 }
 
-// pub struct Map {
-//     map = Worley
-// }
+pub struct Map {
+    pub tiles: Vec<Vec<TileType>>,
+}
+
+impl Map {
+    pub fn new() -> Self {
+        let worley: Worley<f32> = Worley::new();
+        let map_tiles = vec![vec![TileType::Air; 1]; 1];
+        Map {
+            tiles: map_tiles
+        }
+    }
+}
