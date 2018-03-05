@@ -1,5 +1,3 @@
-extern crate find_folder;
-extern crate noise;
 /**
     Aether of Enclaves will be a 32-bit exploration game, in which the user
     controls a main character and an airship and travels through the sky -
@@ -10,6 +8,8 @@ extern crate noise;
 
     2018 Samuel Eubanks, McKenzie Weller
 */
+extern crate find_folder;
+extern crate noise;
 extern crate piston;
 extern crate piston_window;
 extern crate rand;
