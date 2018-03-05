@@ -10,7 +10,7 @@
 
 use piston_window::{Button, Key};
 use game::GameState;
-use player::Player;
+use creature::Creature;
 
 #[derive(Debug)]
 
@@ -31,7 +31,7 @@ trait Command {
 
     // Execute actions based on type of Command.
     // @param Option<Key> And optional key value.
-    fn execute(&mut self, Option<Key>, player: &mut Player, game_state: &mut GameState);
+    fn execute(&mut self, Option<Key>, player: &mut Creature, game_state: &mut GameState);
 }
 
 /**
@@ -51,16 +51,16 @@ impl Command for OpenMenu {
     }
 
     // Unused param _key.
-    fn execute(&mut self, _key: Option<Key>, _player: &mut Player, game_state: &mut GameState) {
+    fn execute(&mut self, _key: Option<Key>, _player: &mut Creature, game_state: &mut GameState) {
         match *game_state {
             GameState::Main => {
                 println!("Menu opened.");
                 *game_state = GameState::InMenu;
-            },
+            }
             GameState::InMenu => {
                 println!("Menu closed.");
                 *game_state = GameState::Main;
-            },
+            }
             _ => {}
         }
     }
@@ -84,12 +84,12 @@ impl Command for Action {
     }
 
     // Unused param _key.
-    fn execute(&mut self, _key: Option<Key>, _player: &mut Player, game_state: &mut GameState) {
+    fn execute(&mut self, _key: Option<Key>, _player: &mut Creature, game_state: &mut GameState) {
         match *game_state {
             GameState::Title => {
                 println!("Changing state to Main.");
                 *game_state = GameState::Main;
-            },
+            }
             _ => {}
         }
     }
@@ -116,7 +116,7 @@ impl Command for Move {
     }
 
     // @param key The input key.
-    fn execute(&mut self, key: Option<Key>, player: &mut Player, _game_state: &mut GameState) {
+    fn execute(&mut self, key: Option<Key>, player: &mut Creature, _game_state: &mut GameState) {
         use self::Direction::*;
         let mut dir = None;
         match key {
@@ -159,7 +159,7 @@ impl InputHandler {
     pub fn handle_input(
         &mut self,
         button: Button,
-        player: &mut Player,
+        player: &mut Creature,
         game_state: &mut GameState,
     ) {
         use self::Key::*;

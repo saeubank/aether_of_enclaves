@@ -1,6 +1,6 @@
 use piston_window::*;
 use find_folder::Search;
-use player::Player;
+use creature::Creature;
 use input_handler::InputHandler;
 
 pub enum GameState {
@@ -16,7 +16,7 @@ pub enum GameState {
 */
 pub struct Game {
     input_hnd: InputHandler,
-    player: Player,
+    player: Creature,
     game_state: GameState,
 }
 
@@ -25,7 +25,7 @@ impl Game {
     pub fn new() -> Self {
         Game {
             input_hnd: InputHandler::new(),
-            player: Player::new(),
+            player: Creature::new(),
             game_state: GameState::Title,
         }
     }
@@ -34,8 +34,7 @@ impl Game {
     // @param e The graphics event that is for drawing.
     // @param window The PistonWindow that is drawn to.
     fn display(&mut self, e: Event, window: &mut PistonWindow) {
-        let assets = Search::ParentsThenKids(3, 3)
-            .for_folder("fonts").unwrap();
+        let assets = Search::ParentsThenKids(3, 3).for_folder("fonts").unwrap();
         let ref font = assets.join("Inconsolata-Regular.ttf");
         let factory = window.factory.clone();
         let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
@@ -48,25 +47,31 @@ impl Game {
                     let red = [1.0, 0.0, 0.0, 1.0];
                     let player_image = [self.player.x, self.player.y, 15.0, 15.0];
                     rectangle(red, player_image, context.transform, graphics);
-                },
+                }
                 GameState::Title => {
                     let transform = context.transform.trans(10.0, 100.0);
-                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32).draw(
-                        "Press Return to begin :)",
-                        &mut glyphs,
-                        &context.draw_state,
-                        transform, graphics
-                    ).unwrap();
-                },
+                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32)
+                        .draw(
+                            "Press Return to begin :)",
+                            &mut glyphs,
+                            &context.draw_state,
+                            transform,
+                            graphics,
+                        )
+                        .unwrap();
+                }
                 GameState::InMenu => {
                     let transform = context.transform.trans(10.0, 100.0);
-                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32).draw(
-                        "This is the menu :)",
-                        &mut glyphs,
-                        &context.draw_state,
-                        transform, graphics
-                    ).unwrap();
-                },
+                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 32)
+                        .draw(
+                            "This is the menu :)",
+                            &mut glyphs,
+                            &context.draw_state,
+                            transform,
+                            graphics,
+                        )
+                        .unwrap();
+                }
                 // _ => {}
             }
         });
@@ -75,7 +80,6 @@ impl Game {
     // The game loop.
     // @param window The PistonWindow that is drawn to.
     pub fn run(&mut self, window: &mut PistonWindow) {
-
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
@@ -86,15 +90,15 @@ impl Game {
                             &mut self.game_state,
                         );
                     }
-                },
+                }
 
                 Event::Loop(Loop::Update(_args)) => {
                     //Update Events
-                },
+                }
 
                 Event::Loop(Loop::Render(_args)) => {
                     self.display(e, window);
-                },
+                }
                 _ => {}
             }
         }

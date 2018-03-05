@@ -1,3 +1,5 @@
+extern crate find_folder;
+extern crate noise;
 /**
     Aether of Enclaves will be a 32-bit exploration game, in which the user
     controls a main character and an airship and travels through the sky -
@@ -10,12 +12,10 @@
 */
 extern crate piston;
 extern crate piston_window;
-extern crate find_folder;
-extern crate noise;
 extern crate rand;
 mod input_handler;
 mod game;
-mod player;
+mod creature;
 // mod graphics;
 
 use piston_window::{PistonWindow, WindowSettings};
