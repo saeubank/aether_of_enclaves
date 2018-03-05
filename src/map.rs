@@ -6,7 +6,7 @@ use rand::distributions::Sample;
 pub enum TileType {
     Air,
     Grass,
-    Water
+    Water,
 }
 
 pub struct Island {
@@ -23,15 +23,12 @@ impl Island {
                 let num = perlin_arr[i][j];
                 if num < 0.0 {
                     temp_tiles[i][j] = TileType::Grass;
-                }
-                else {
+                } else {
                     temp_tiles[i][j] = TileType::Water;
                 }
             }
         }
-        Island {
-            tiles: temp_tiles
-        }
+        Island { tiles: temp_tiles }
     }
 }
 
@@ -68,8 +65,6 @@ impl Map {
     pub fn new() -> Self {
         let worley: Worley<f32> = Worley::new();
         let map_tiles = vec![vec![TileType::Air; 1]; 1];
-        Map {
-            tiles: map_tiles
-        }
+        Map { tiles: map_tiles }
     }
 }
