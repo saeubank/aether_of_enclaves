@@ -1,6 +1,6 @@
 use piston_window::*;
 use find_folder::Search;
-use creature::Creature;
+use creature::{Creature, CreatureType};
 use input_handler::InputHandler;
 
 pub enum GameState {
@@ -25,7 +25,7 @@ impl Game {
     pub fn new() -> Self {
         Game {
             input_hnd: InputHandler::new(),
-            player: Creature::new(),
+            player: Creature::new(CreatureType::Player),
             game_state: GameState::Title,
         }
     }
@@ -82,6 +82,11 @@ impl Game {
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
+                    // make it so that when key is pressed velocity is changed once
+                    // then make it so that when key is released velocity is changed back
+                    // make sure to watch out for bug if speed is chnaged while button was pressed
+                    // but also make sure to keep velocity of what person is on
+                    // maybe can be solved by no allowing for speed to be changed while moving (keydown)
                     if args.state == ButtonState::Press {
                         self.input_hnd.handle_input(
                             args.button,
@@ -89,8 +94,10 @@ impl Game {
                             &mut self.game_state,
                         );
                     }
+                    // if arges.state == ButtonState::Release
                 }
 
+                // add lag handler here
                 Event::Loop(Loop::Update(_args)) => {
                     //Update Events
                 }
@@ -102,4 +109,18 @@ impl Game {
             }
         }
     }
+
+
+    // TODO add grapics for things here?
+    // fn get_graphics() {
+    //     let assets = Search::ParentsThenKids(3,3).for_folder("images").unwrap();
+    //     Graphics {
+    //         grass: Texture::from_path(
+    //             &mut window.factory,
+    //             assets.join("grass.png"),
+    //             Flip::None,
+    //             &TextureSettings::new()
+    //         ).unwrap()
+    //     }
+    // }
 }

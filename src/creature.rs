@@ -1,11 +1,11 @@
 use input_handler::Direction;
 
-enum CreatureType {
+pub enum CreatureType {
     Player,
-    Fighter,
-    Cook,
-    Carpenter,
-    Monster,
+    // Fighter,
+    // Cook,
+    // Carpenter,
+    // Monster,
 }
 
 /**
@@ -15,14 +15,18 @@ enum CreatureType {
 	@field y Player's vertical position on screen.
 */
 pub struct Creature {
+    creature_type: CreatureType,
     pub x: f64,
     pub y: f64,
+    vel_x: f64,
+    vel_y: f64,
+    health: i32
     // array size 3 for inventory can only use/drop top item
 }
 
 impl Creature {
-    pub fn new() -> Creature {
-        Creature { x: 0.0, y: 0.0 }
+    pub fn new(c_type: CreatureType) -> Creature {
+        Creature { creature_type: c_type, x: 0.0, y: 0.0, vel_x: 0.0, vel_y: 0.0, health: 1 }
     }
 
     // Updates the player's position.
@@ -36,6 +40,17 @@ impl Creature {
             Some(Direction::Right) => self.x += dist,
             _ => {}
         }
+    }
+
+    // pub fn update_position(&mut self) {
+    //     self.x += self.vel_x;
+    //     self.y += self.vel_y;
+    // }
+
+    // velocity should be based on both what the creature is on and the actual movement of the creature
+    pub fn change_velocity(&mut self, dx: f64, dy: f64) {
+        self.vel_x += dx;
+        self.vel_y += dy;
     }
     // fn interact()
 }

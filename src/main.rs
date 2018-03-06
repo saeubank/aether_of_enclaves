@@ -17,25 +17,25 @@ mod input_handler;
 mod game;
 mod creature;
 // mod graphics;
+// mod map;
 
 use piston_window::{PistonWindow, WindowSettings};
 use game::Game;
 
-mod map;
+
 
 fn main() {
-    let temp = map::Island::new();
-    // println!("{:?}", temp.getTiles());
-    for i in temp.tiles {
-        for j in i {
-            match j {
-                map::TileType::Air => print!("+"),
-                map::TileType::Grass => print!("."),
-                map::TileType::Water => print!("~"),
-            }
-        }
-        println!("");
-    }
+    // let temp = map::Island::new();
+    // for i in temp.tiles {
+    //     for j in i {
+    //         match j {
+    //             map::TileType::Air => print!("+"),
+    //             map::TileType::Grass => print!("."),
+    //             map::TileType::Water => print!("~"),
+    //         }
+    //     }
+    //     println!("");
+    // }
     let mut window: PistonWindow = WindowSettings::new("AOE", (500, 500))
         .exit_on_esc(true)
         .build()
