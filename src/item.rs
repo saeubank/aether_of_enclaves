@@ -23,7 +23,7 @@ impl Item {
     }
 
     fn interact(&mut self, creature: Creature) {
-        
+
     }
 
     fn pick_up() {
