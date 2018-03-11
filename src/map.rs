@@ -1,12 +1,16 @@
+/*
+    Not in use
+*/
+
 use noise::*;
 use rand::{distributions, thread_rng};
 use rand::distributions::Sample;
 
-const ISLAND_MEAN: f32 = 10.0;
-const ISLAND_STANDERD_DEV: f32 = 2.0;
-const ISLAND_LOWERBOUND: f32 = 2.0;
-const ISLAND_UPPERBOUND: f32 = 50.0;
-const ISLAND_STEP: f32 = 0.2;
+const ISLAND_MEAN: f64 = 10.0;
+const ISLAND_STANDERD_DEV: f64 = 2.0;
+const ISLAND_LOWERBOUND: f64 = 2.0;
+const ISLAND_UPPERBOUND: f64 = 50.0;
+const ISLAND_STEP: f64 = 0.2;
 
 #[derive(Copy, Clone)]
 pub enum TileType {
@@ -38,7 +42,7 @@ impl Island {
     }
 }
 
-fn generate_perlin(size: usize, step: f32) -> Vec<Vec<f32>> {
+fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
     let perlin = Perlin::new();
     let mut xpos = 0.0;
     let mut ypos = 0.0;
@@ -51,6 +55,24 @@ fn generate_perlin(size: usize, step: f32) -> Vec<Vec<f32>> {
         ypos += step;
     }
     perlin_arr
+}
+
+// need to fix so edge is weighted 0 and middle is weighted 1
+fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
+    let mut circle_arr = vec![vec![0.0; size]; size];
+    let middle: f64 = (size as f64) / 2.0;
+    for i in 0..size {
+        for j in 0..size {
+            println!("{:?}, {:?}, {:?}", middle, i, j);
+            let x: f64 = middle - i as f64;
+            let x = x * x;
+            let y: f64 = middle - j as f64;
+            let y = y * y;
+            circle_arr[i][j] = ((size as f64) - (x + y).sqrt()) / (size as f64);
+            println!("{:?}", circle_arr[i][j]);
+        }
+    }
+    circle_arr
 }
 
 fn generate_island_size() -> usize {
@@ -69,7 +91,7 @@ fn generate_island_size() -> usize {
 //
 // impl Map {
 //     pub fn new() -> Self {
-//         let worley: Worley<f32> = Worley::new();
+//         let worley: Worley<f64> = Worley::new();
 //         let map_tiles = vec![vec![TileType::Air; 1]; 1];
 //         Map { tiles: map_tiles }
 //     }

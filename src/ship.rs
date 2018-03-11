@@ -1,3 +1,9 @@
 struct Ship {
-    // Vec
+    // Vec of tiles
+    // velocity
+    // health?
+}
+
+impl Ship {
+
 }
