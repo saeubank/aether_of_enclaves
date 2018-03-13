@@ -60,7 +60,8 @@ fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
 // need to fix so edge is weighted 0 and middle is weighted 1
 fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
     let mut circle_arr = vec![vec![0.0; size]; size];
-    let middle: f64 = (size as f64) / 2.0;
+    let sizef = size as f64;
+    let middle: f64 = sizef / 2.0;
     for i in 0..size {
         for j in 0..size {
             println!("{:?}, {:?}, {:?}", middle, i, j);
@@ -68,7 +69,7 @@ fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
             let x = x * x;
             let y: f64 = middle - j as f64;
             let y = y * y;
-            circle_arr[i][j] = ((size as f64) - (x + y).sqrt()) / (size as f64);
+            circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
             println!("{:?}", circle_arr[i][j]);
         }
     }
