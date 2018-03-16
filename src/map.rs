@@ -12,13 +12,6 @@ const ISLAND_LOWERBOUND: f64 = 2.0;
 const ISLAND_UPPERBOUND: f64 = 50.0;
 const ISLAND_STEP: f64 = 0.2;
 
-#[derive(Copy, Clone)]
-pub enum TileType {
-    Air,
-    Grass,
-    Water,
-}
-
 pub struct Island {
     pub tiles: Vec<Vec<TileType>>,
 }

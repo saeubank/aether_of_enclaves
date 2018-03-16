@@ -16,6 +16,7 @@ extern crate rand;
 mod input_handler;
 mod game;
 mod creature;
+mod tile;
 // mod graphics;
 // mod map;
 
