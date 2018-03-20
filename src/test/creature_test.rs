@@ -23,5 +23,7 @@ mod tests {
         test_player.update_position(None, 5.0);
         assert_eq!(test_player.x, 10.5);
         assert_eq!(test_player.y, 5.0);
+
+        drop(test_player);
     }
 }

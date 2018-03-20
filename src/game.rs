@@ -3,6 +3,8 @@ use find_folder::Search;
 use creature::{Creature, CreatureType};
 use input_handler::InputHandler;
 
+#[derive(Debug,PartialEq)]
+
 pub enum GameState {
     Title,
     Main,
