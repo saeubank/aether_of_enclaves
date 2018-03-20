@@ -16,8 +16,9 @@ extern crate rand;
 mod input_handler;
 mod game;
 mod creature;
-// mod tile;
+mod tile;
 mod test;
+mod ship;
 
 // mod graphics;
 // mod map;

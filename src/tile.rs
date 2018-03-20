@@ -1,10 +1,12 @@
-enum TileType {
+#[derive(Clone)]
+pub enum TileType {
     Floor,
     Wall,
     Special,
 }
 
-enum TileMaterial {
+#[derive(Clone)]
+pub enum TileMaterial {
     Wood,
     Stone,
     Grass,
@@ -12,11 +14,19 @@ enum TileMaterial {
     Water,
 }
 
+#[derive(Clone)]
 pub struct Tile {
     tile_type: TileType,
     material: TileMaterial,
-    destructable: bool,
-    health: i32,
+}
+
+impl Tile {
+    pub fn new(tile: TileType, mat: TileMaterial) -> Self {
+        Tile {
+            tile_type: tile,
+            material: mat,
+        }
+    }
 }
 
 /*
@@ -25,6 +35,8 @@ Move diagonally when on stairs to simulate moving up?
 Should game have jumping?
 to make this effect: https://youtu.be/fbWjx2HpWPU?t=54m49s
 https://lparchive.org/Dragon-Quest-Heroes-Rocket-Slime/Update%2008/12-Shockwave.gif
+Should there be z levels or height?
+If so add stairs
 
 
 Main game mechanic: do something (slap tail) to make character move faster.
@@ -37,17 +49,3 @@ be able to customize ship with different rooms and also customize engine room to
 jumping makes charactor invincible?
 
 */
-
-impl Tile {
-    fn new(tile: TileType, mat: TileMaterial, destruct: bool, hp: i32) -> Self {
-        Tile {
-            tile_type: tile,
-            material: mat,
-            destructable: destruct,
-            health: hp,
-        }
-    }
-}
-
-// Should there be z levels or height?
-// If so add stairs
