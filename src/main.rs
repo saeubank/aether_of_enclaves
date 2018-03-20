@@ -8,7 +8,6 @@
 
     2018 Samuel Eubanks, McKenzie Weller
 */
-
 extern crate find_folder;
 extern crate noise;
 extern crate piston;
@@ -25,8 +24,6 @@ mod test;
 
 use piston_window::{PistonWindow, WindowSettings};
 use game::Game;
-
-
 
 fn main() {
     // let temp = map::Island::new();

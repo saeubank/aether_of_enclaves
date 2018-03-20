@@ -6,7 +6,7 @@ mod tests {
         use creature::*;
         use input_handler::Direction;
         let mut test_player = Creature::new(CreatureType::Player);
-        
+
         // Player's pos initialized to 0.0.
         assert_eq!(test_player.x, 0.0);
         assert_eq!(test_player.y, 0.0);

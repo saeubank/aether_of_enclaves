@@ -5,6 +5,7 @@
 use noise::*;
 use rand::{distributions, thread_rng};
 use rand::distributions::Sample;
+use tile::Tile;
 
 const ISLAND_MEAN: f64 = 10.0;
 const ISLAND_STANDERD_DEV: f64 = 2.0;
@@ -13,7 +14,7 @@ const ISLAND_UPPERBOUND: f64 = 50.0;
 const ISLAND_STEP: f64 = 0.2;
 
 pub struct Island {
-    pub tiles: Vec<Vec<TileType>>,
+    pub tiles: Vec<Vec<Tile>>,
 }
 
 impl Island {

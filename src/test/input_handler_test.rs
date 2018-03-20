@@ -3,7 +3,6 @@ mod tests {
 
     #[test]
     fn toggles_menu() {
-
         use input_handler::*;
         use creature::*;
         use piston_window::{Button, Key};
@@ -26,10 +25,8 @@ mod tests {
         drop(test_gs);
     }
 
-
     #[test]
     fn moves_player() {
-
         use input_handler::*;
         use creature::*;
         use piston_window::{Button, Key};
