@@ -12,16 +12,18 @@ pub enum CreatureType {
 
 	@field x Creature's horizontal position on screen.
 	@field y Creature's vertical position on screen.
-    @field vel_x Creature's horizontal velocity.
-    @field vel_y Creature's vertical velocity.
+    @field self_vel_x Creature's horizontal velocity.
+    @field self_vel_y Creature's vertical velocity.
     @field health Creature's health.
 */
 pub struct Creature {
-    creature_type: CreatureType,
+    pub creature_type: CreatureType,
     pub x: f64,
     pub y: f64,
-    pub vel_x: f64,
-    pub vel_y: f64,
+    pub self_vel_x: f64,
+    pub self_vel_y: f64,
+    pub other_vel_x: f64,
+    pub other_vel_y: f64,
     pub speed: f64,
     pub health: i32, // array size 3 for inventory can only use/drop top item
 }
@@ -32,8 +34,10 @@ impl Creature {
             creature_type: c_type,
             x: 0.0,
             y: 0.0,
-            vel_x: 0.0,
-            vel_y: 0.0,
+            self_vel_x: 0.0,
+            self_vel_y: 0.0,
+            other_vel_x: 0.0,
+            other_vel_y: 0.0,
             speed: 5.0,
             health: 1,
         }
@@ -53,26 +57,26 @@ impl Creature {
     // }
 
     pub fn update_position(&mut self) {
-        self.x += self.vel_x;
-        self.y += self.vel_y;
+        self.x += self.self_vel_x;
+        self.y += self.self_vel_y;
     }
 
     // velocity should be based on both what the creature is on and the actual movement of the creature
     pub fn change_velocity(&mut self, dx: f64, dy: f64) {
-        self.vel_x += dx;
-        self.vel_y += dy;
+        self.self_vel_x += dx;
+        self.self_vel_y += dy;
 
-        if self.vel_x > self.speed {
-            self.vel_x = self.speed;
+        if self.self_vel_x > self.speed {
+            self.self_vel_x = self.speed;
         }
-        if self.vel_y > self.speed {
-            self.vel_y = self.speed;
+        if self.self_vel_y > self.speed {
+            self.self_vel_y = self.speed;
         }
-        if self.vel_x < -self.speed {
-            self.vel_x = -self.speed;
+        if self.self_vel_x < -self.speed {
+            self.self_vel_x = -self.speed;
         }
-        if self.vel_y < -self.speed {
-            self.vel_y = -self.speed;
+        if self.self_vel_y < -self.speed {
+            self.self_vel_y = -self.speed;
         }
     }
     // fn interact()
