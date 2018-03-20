@@ -38,7 +38,7 @@ impl Creature {
             self_vel_y: 0.0,
             other_vel_x: 0.0,
             other_vel_y: 0.0,
-            speed: 5.0,
+            speed: 3.0,
             health: 1,
         }
     }

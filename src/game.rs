@@ -2,6 +2,7 @@ use piston_window::*;
 use find_folder::Search;
 use creature::{Creature, CreatureType};
 use input_handler::InputHandler;
+use std::collections::HashMap;
 
 #[derive(Debug, PartialEq)]
 
@@ -35,7 +36,7 @@ impl Game {
     // The function that draws stuff to the screen
     // @param e The graphics event that is for drawing.
     // @param window The PistonWindow that is drawn to.
-    fn display(&mut self, e: Event, window: &mut PistonWindow) {
+    fn display(&mut self, e: Event, window: &mut PistonWindow, textures: &HashMap<&str, G2dTexture>) {
         let assets = Search::ParentsThenKids(3, 3).for_folder("fonts").unwrap();
         let ref font = assets.join("Inconsolata-Regular.ttf");
         let factory = window.factory.clone();
@@ -45,10 +46,7 @@ impl Game {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
                 GameState::InGame => {
-                    // Draw Player.
-                    let red = [1.0, 0.0, 0.0, 1.0];
-                    let player_image = [self.player.x, self.player.y, 15.0, 15.0];
-                    rectangle(red, player_image, context.transform, graphics);
+                    image(textures.get("mc").unwrap(), context.transform.scale(1.25,1.25).trans(self.player.x, self.player.y), graphics);
                 }
                 GameState::Title => {
                     let transform = context.transform.trans(10.0, 100.0);
@@ -80,15 +78,10 @@ impl Game {
 
     // The game loop.
     // @param window The PistonWindow that is drawn to.
-    pub fn run(&mut self, window: &mut PistonWindow) {
+    pub fn run(&mut self, window: &mut PistonWindow, textures: HashMap<&str, G2dTexture>) {
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
-                    // make it so that when key is pressed velocity is changed once
-                    // then make it so that when key is released velocity is changed back
-                    // make sure to watch out for bug if speed is chnaged while button was pressed
-                    // but also make sure to keep velocity of what person is on
-                    // maybe can be solved by no allowing for speed to be changed while moving (keydown)
                     self.input_hnd.handle_input(
                         args.state,
                         args.button,
@@ -97,29 +90,46 @@ impl Game {
                     );
                 }
 
-                // add lag handler here
+                // TODO Add lag handler here
                 Event::Loop(Loop::Update(_args)) => {
                     self.player.update_position();
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
-                    self.display(e, window);
+                    self.display(e, window, &textures);
                 }
                 _ => {}
             }
         }
     }
-
-    // TODO add grapics for things here?
-    // fn get_graphics() {
-    //     let assets = Search::ParentsThenKids(3,3).for_folder("images").unwrap();
-    //     Graphics {
-    //         grass: Texture::from_path(
-    //             &mut window.factory,
-    //             assets.join("grass.png"),
-    //             Flip::None,
-    //             &TextureSettings::new()
-    //         ).unwrap()
-    //     }
-    // }
 }
+
+// fn get_graphics(window: &mut PistonWindow) -> HashMap<&str, G2dTexture> {
+//     let assets = Search::ParentsThenKids(3, 3).for_folder("images").unwrap();
+//     let sky = Texture::from_path(
+//             &mut window.factory,
+//             assets.join("sky.png"),
+//             Flip::None,
+//             &TextureSettings::new()
+//             ).unwrap();
+//     let boards = Texture::from_path(
+//             &mut window.factory,
+//             assets.join("boards.png"),
+//             Flip::None,
+//             &TextureSettings::new()
+//             ).unwrap();
+//     let mc = Texture::from_path(
+//             &mut window.factory,
+//             assets.join("player.png"),
+//             Flip::None,
+//             &TextureSettings::new()
+//             ).unwrap();
+//     let mut textures = HashMap::new();
+//     textures.insert("sky", sky);
+//     textures.insert("boards", boards);
+//     textures.insert("mc", mc);
+//     textures
+// }
+
+
+
