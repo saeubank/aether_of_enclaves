@@ -9,10 +9,13 @@ pub enum CreatureType {
 }
 
 /**
-	Implementation of the Player object.
+	Implementation of the Creature object.
 
-	@field x Player's horizontal position on screen.
-	@field y Player's vertical position on screen.
+	@field x Creature's horizontal position on screen.
+	@field y Creature's vertical position on screen.
+    @field vel_x Creature's horizontal velocity.
+    @field vel_y Creature's vertical velocity.
+    @field health Creature's health.
 */
 pub struct Creature {
     creature_type: CreatureType,

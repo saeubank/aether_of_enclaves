@@ -8,6 +8,7 @@
 
     2018 Samuel Eubanks, McKenzie Weller
 */
+
 extern crate find_folder;
 extern crate noise;
 extern crate piston;
@@ -17,6 +18,8 @@ mod input_handler;
 mod game;
 mod creature;
 mod tile;
+mod test;
+
 // mod graphics;
 // mod map;
 
