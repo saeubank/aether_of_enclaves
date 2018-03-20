@@ -3,7 +3,7 @@ use find_folder::Search;
 use creature::{Creature, CreatureType};
 use input_handler::InputHandler;
 
-#[derive(Debug,PartialEq)]
+#[derive(Debug, PartialEq)]
 
 pub enum GameState {
     Title,
@@ -89,19 +89,19 @@ impl Game {
                     // make sure to watch out for bug if speed is chnaged while button was pressed
                     // but also make sure to keep velocity of what person is on
                     // maybe can be solved by no allowing for speed to be changed while moving (keydown)
-                    if args.state == ButtonState::Press {
-                        self.input_hnd.handle_input(
-                            args.button,
-                            &mut self.player,
-                            &mut self.game_state,
-                        );
-                    }
+                    self.input_hnd.handle_input(
+                        args.state,
+                        args.button,
+                        &mut self.player,
+                        &mut self.game_state,
+                    );
+
                     // if arges.state == ButtonState::Release
                 }
 
                 // add lag handler here
                 Event::Loop(Loop::Update(_args)) => {
-                    //Update Events
+                    self.player.update_position();
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
@@ -111,7 +111,6 @@ impl Game {
             }
         }
     }
-
 
     // TODO add grapics for things here?
     // fn get_graphics() {

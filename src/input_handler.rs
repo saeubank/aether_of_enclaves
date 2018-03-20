@@ -8,7 +8,7 @@
 	has been manually recreated to the best of our ability.
 */
 
-use piston_window::{Button, Key};
+use piston_window::{Button, ButtonState, Key};
 use game::GameState;
 use creature::Creature;
 
@@ -31,7 +31,13 @@ trait Command {
 
     // Execute actions based on type of Command.
     // @param Option<Key> And optional key value.
-    fn execute(&mut self, Option<Key>, player: &mut Creature, game_state: &mut GameState);
+    fn execute(
+        &mut self,
+        ButtonState,
+        Option<Key>,
+        player: &mut Creature,
+        game_state: &mut GameState,
+    );
 }
 
 /**
@@ -39,11 +45,11 @@ trait Command {
 */
 struct OpenMenu {}
 
-impl OpenMenu {
-    pub fn new() -> Self {
-        OpenMenu {}
-    }
-}
+// impl OpenMenu {
+//     pub fn new() -> Self {
+//         OpenMenu {}
+//     }
+// }
 
 impl Command for OpenMenu {
     fn new() -> Self {
@@ -51,17 +57,25 @@ impl Command for OpenMenu {
     }
 
     // Unused param _key.
-    fn execute(&mut self, _key: Option<Key>, _player: &mut Creature, game_state: &mut GameState) {
-        match *game_state {
-            GameState::Main => {
-                println!("Menu opened.");
-                *game_state = GameState::InMenu;
+    fn execute(
+        &mut self,
+        state: ButtonState,
+        _key: Option<Key>,
+        _player: &mut Creature,
+        game_state: &mut GameState,
+    ) {
+        if state == ButtonState::Press {
+            match *game_state {
+                GameState::Main => {
+                    println!("Menu opened.");
+                    *game_state = GameState::InMenu;
+                }
+                GameState::InMenu => {
+                    println!("Menu closed.");
+                    *game_state = GameState::Main;
+                }
+                _ => {}
             }
-            GameState::InMenu => {
-                println!("Menu closed.");
-                *game_state = GameState::Main;
-            }
-            _ => {}
         }
     }
 }
@@ -72,11 +86,11 @@ impl Command for OpenMenu {
 */
 struct Action {}
 
-impl Action {
-    pub fn new() -> Self {
-        Action {}
-    }
-}
+// impl Action {
+//     pub fn new() -> Self {
+//         Action {}
+//     }
+// }
 
 impl Command for Action {
     fn new() -> Self {
@@ -84,13 +98,21 @@ impl Command for Action {
     }
 
     // Unused param _key.
-    fn execute(&mut self, _key: Option<Key>, _player: &mut Creature, game_state: &mut GameState) {
-        match *game_state {
-            GameState::Title => {
-                println!("Changing state to Main.");
-                *game_state = GameState::Main;
+    fn execute(
+        &mut self,
+        state: ButtonState,
+        _key: Option<Key>,
+        _player: &mut Creature,
+        game_state: &mut GameState,
+    ) {
+        if state == ButtonState::Press {
+            match *game_state {
+                GameState::Title => {
+                    println!("Changing state to Main.");
+                    *game_state = GameState::Main;
+                }
+                _ => {}
             }
-            _ => {}
         }
     }
 }
@@ -104,11 +126,11 @@ impl Command for Action {
 */
 struct Move {}
 
-impl Move {
-    pub fn new() -> Self {
-        Move {}
-    }
-}
+// impl Move {
+//     pub fn new() -> Self {
+//         Move {}
+//     }
+// }
 
 impl Command for Move {
     fn new() -> Self {
@@ -116,18 +138,45 @@ impl Command for Move {
     }
 
     // @param key The input key.
-    fn execute(&mut self, key: Option<Key>, player: &mut Creature, _game_state: &mut GameState) {
-        use self::Direction::*;
-        let mut dir = None;
-        match key {
-            Some(Key::W) => dir = Some(Up),
-            Some(Key::A) => dir = Some(Left),
-            Some(Key::S) => dir = Some(Down),
-            Some(Key::D) => dir = Some(Right),
-            _ => {}
+    fn execute(
+        &mut self,
+        state: ButtonState,
+        key: Option<Key>,
+        player: &mut Creature,
+        _game_state: &mut GameState,
+    ) {
+        // use self::Direction::*;
+        // let mut dir = None;
+        // match key {
+        //     Some(Key::W) => dir = Some(Up),
+        //     Some(Key::A) => dir = Some(Left),
+        //     Some(Key::S) => dir = Some(Down),
+        //     Some(Key::D) => dir = Some(Right),
+        //     _ => {}
+        // }
+        // println!("Moving {:?}.", dir);
+        // player.update_position(dir, 15.0);
+        let mut dx: f64 = 0.0;
+        let mut dy: f64 = 0.0;
+
+        if key == Some(Key::W) {
+            dy -= player.speed;
         }
-        println!("Moving {:?}.", dir);
-        player.update_position(dir, 15.0);
+        if key == Some(Key::A) {
+            dx -= player.speed;
+        }
+        if key == Some(Key::S) {
+            dy += player.speed;
+        }
+        if key == Some(Key::D) {
+            dx += player.speed;
+        }
+        if state == ButtonState::Release {
+            dx *= -1.0;
+            dy *= -1.0;
+        }
+
+        player.change_velocity(dx, dy);
     }
 }
 
@@ -158,6 +207,7 @@ impl InputHandler {
     // @param button The input button arguments.
     pub fn handle_input(
         &mut self,
+        state: ButtonState,
         button: Button,
         player: &mut Creature,
         game_state: &mut GameState,
@@ -165,9 +215,9 @@ impl InputHandler {
         use self::Key::*;
         match button {
             Button::Keyboard(key) => match key {
-                Return => self.action.execute(None, player, game_state),
-                Tab => self.open_menu.execute(None, player, game_state),
-                W | A | S | D => self.move_dir.execute(Some(key), player, game_state),
+                Return => self.action.execute(state, None, player, game_state),
+                Tab => self.open_menu.execute(state, None, player, game_state),
+                W | A | S | D => self.move_dir.execute(state, Some(key), player, game_state),
                 _ => {}
             },
             _ => {}
