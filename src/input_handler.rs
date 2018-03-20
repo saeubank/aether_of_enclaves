@@ -50,13 +50,13 @@ impl Command for OpenMenu {
     ) {
         if state == ButtonState::Press {
             match *game_state {
-                GameState::Main => {
+                GameState::InGame => {
                     println!("Menu opened.");
                     *game_state = GameState::InMenu;
                 }
                 GameState::InMenu => {
                     println!("Menu closed.");
-                    *game_state = GameState::Main;
+                    *game_state = GameState::InGame;
                 }
                 _ => {}
             }
@@ -86,8 +86,8 @@ impl Command for Action {
         if state == ButtonState::Press {
             match *game_state {
                 GameState::Title => {
-                    println!("Changing state to Main.");
-                    *game_state = GameState::Main;
+                    println!("Changing state to InGame.");
+                    *game_state = GameState::InGame;
                 }
                 _ => {}
             }

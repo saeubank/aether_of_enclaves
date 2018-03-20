@@ -7,7 +7,7 @@ use input_handler::InputHandler;
 
 pub enum GameState {
     Title,
-    Main,
+    InGame,
     InMenu,
 }
 
@@ -44,7 +44,7 @@ impl Game {
         window.draw_2d(&e, |context, graphics| {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
-                GameState::Main => {
+                GameState::InGame => {
                     // Draw Player.
                     let red = [1.0, 0.0, 0.0, 1.0];
                     let player_image = [self.player.x, self.player.y, 15.0, 15.0];

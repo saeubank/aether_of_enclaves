@@ -43,19 +43,6 @@ impl Creature {
         }
     }
 
-    // Updates the player's position.
-    // @param dir The direction player will move.
-    // @param dist The distance in pixels to move.
-    // pub fn update_position(&mut self, dir: Option<Direction>, dist: f64) {
-    //     match dir {
-    //         Some(Direction::Up) => self.y -= dist,
-    //         Some(Direction::Down) => self.y += dist,
-    //         Some(Direction::Left) => self.x -= dist,
-    //         Some(Direction::Right) => self.x += dist,
-    //         _ => {}
-    //     }
-    // }
-
     pub fn update_position(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
@@ -83,7 +70,7 @@ impl Creature {
     pub fn reset_self_velocity_x(&mut self) {
         self.self_vel_x = 0.0;
     }
-    
+
     pub fn reset_self_velocity_y(&mut self) {
         self.self_vel_y = 0.0;
     }    
