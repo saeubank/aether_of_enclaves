@@ -83,6 +83,7 @@ impl Creature {
     pub fn reset_self_velocity_x(&mut self) {
         self.self_vel_x = 0.0;
     }
+    
     pub fn reset_self_velocity_y(&mut self) {
         self.self_vel_y = 0.0;
     }    

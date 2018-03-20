@@ -5,7 +5,7 @@ mod tests {
     fn toggles_menu() {
         use input_handler::*;
         use creature::*;
-        use piston_window::{Button, Key};
+        use piston_window::{Button, ButtonState, Key};
         use game::GameState;
 
         let mut test_handler = InputHandler::new();
@@ -13,11 +13,11 @@ mod tests {
         let mut test_gs = GameState::Main;
 
         // Should open menu.
-        test_handler.handle_input(Button::Keyboard(Key::Tab), &mut test_player, &mut test_gs);
+        test_handler.handle_input(ButtonState::Press, Button::Keyboard(Key::Tab), &mut test_player, &mut test_gs);
         assert_eq!(test_gs, GameState::InMenu);
 
         // Should close menu.
-        test_handler.handle_input(Button::Keyboard(Key::Tab), &mut test_player, &mut test_gs);
+        test_handler.handle_input(ButtonState::Press, Button::Keyboard(Key::Tab), &mut test_player, &mut test_gs);
         assert_eq!(test_gs, GameState::Main);
 
         drop(test_handler);
@@ -29,7 +29,7 @@ mod tests {
     fn moves_player() {
         use input_handler::*;
         use creature::*;
-        use piston_window::{Button, Key};
+        use piston_window::{Button, ButtonState, Key};
         use game::GameState;
 
         let mut test_handler = InputHandler::new();
@@ -37,10 +37,17 @@ mod tests {
         let mut test_gs = GameState::Main;
 
         // Should move Player to the right.
-        test_handler.handle_input(Button::Keyboard(Key::D), &mut test_player, &mut test_gs);
+        test_handler.handle_input(ButtonState::Press, Button::Keyboard(Key::D), &mut test_player, &mut test_gs);
+        assert_eq!(test_player.self_vel_x, 5.0);
+        
+        test_handler.handle_input(ButtonState::Press, Button::Keyboard(Key::S), &mut test_player, &mut test_gs);
+        assert_eq!(test_player.self_vel_y, 5.0);
 
-        assert_eq!(test_player.x, 15.0);
-        assert_eq!(test_gs, GameState::Main);
+        test_handler.handle_input(ButtonState::Release, Button::Keyboard(Key::D), &mut test_player, &mut test_gs);
+        assert_eq!(test_player.self_vel_x, 0.0);
+
+        test_handler.handle_input(ButtonState::Release, Button::Keyboard(Key::S), &mut test_player, &mut test_gs);
+        assert_eq!(test_player.self_vel_y, 0.0);
 
         drop(test_handler);
         drop(test_player);
