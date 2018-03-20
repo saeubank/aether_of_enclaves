@@ -117,27 +117,33 @@ impl Command for Move {
         player: &mut Creature,
         _game_state: &mut GameState,
     ) {
-        let mut dx: f64 = 0.0;
-        let mut dy: f64 = 0.0;
+        if state == ButtonState::Press {
+            let mut dx: f64 = 0.0;
+            let mut dy: f64 = 0.0;
 
-        if key == Some(Key::W) {
-            dy -= player.speed;
+            if key == Some(Key::W) {
+                dy -= player.speed;
+            }
+            if key == Some(Key::A) {
+                dx -= player.speed;
+            }
+            if key == Some(Key::S) {
+                dy += player.speed;
+            }
+            if key == Some(Key::D) {
+                dx += player.speed;
+            }
+            player.change_self_velocity(dx, dy);
         }
-        if key == Some(Key::A) {
-            dx -= player.speed;
-        }
-        if key == Some(Key::S) {
-            dy += player.speed;
-        }
-        if key == Some(Key::D) {
-            dx += player.speed;
-        }
-        if state == ButtonState::Release {
-            dx *= -1.0;
-            dy *= -1.0;
+        else if state == ButtonState::Release {
+            if key == Some(Key::W) || key == Some(Key::S){
+                player.reset_self_velocity_y();
+            }
+            if key == Some(Key::A) || key == Some(Key::D) {
+                player.reset_self_velocity_x();
+            }
         }
 
-        player.change_velocity(dx, dy);
     }
 }
 

@@ -62,7 +62,7 @@ impl Creature {
     }
 
     // velocity should be based on both what the creature is on and the actual movement of the creature
-    pub fn change_velocity(&mut self, dx: f64, dy: f64) {
+    pub fn change_self_velocity(&mut self, dx: f64, dy: f64) {
         self.self_vel_x += dx;
         self.self_vel_y += dy;
 
@@ -79,6 +79,13 @@ impl Creature {
             self.self_vel_y = -self.speed;
         }
     }
+
+    pub fn reset_self_velocity_x(&mut self) {
+        self.self_vel_x = 0.0;
+    }
+    pub fn reset_self_velocity_y(&mut self) {
+        self.self_vel_y = 0.0;
+    }    
     // fn interact()
 }
 
