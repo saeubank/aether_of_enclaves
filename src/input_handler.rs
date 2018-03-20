@@ -12,16 +12,6 @@ use piston_window::{Button, ButtonState, Key};
 use game::GameState;
 use creature::Creature;
 
-#[derive(Debug)]
-
-// Used for Move sub-struct.
-pub enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
-}
-
 /**
 	Ancestor object for different types of input Commands.
 */
@@ -44,12 +34,6 @@ trait Command {
 	Implementation of the OpenMenu Command.
 */
 struct OpenMenu {}
-
-// impl OpenMenu {
-//     pub fn new() -> Self {
-//         OpenMenu {}
-//     }
-// }
 
 impl Command for OpenMenu {
     fn new() -> Self {
@@ -86,12 +70,6 @@ impl Command for OpenMenu {
 */
 struct Action {}
 
-// impl Action {
-//     pub fn new() -> Self {
-//         Action {}
-//     }
-// }
-
 impl Command for Action {
     fn new() -> Self {
         Action {}
@@ -126,12 +104,6 @@ impl Command for Action {
 */
 struct Move {}
 
-// impl Move {
-//     pub fn new() -> Self {
-//         Move {}
-//     }
-// }
-
 impl Command for Move {
     fn new() -> Self {
         Move {}
@@ -145,17 +117,6 @@ impl Command for Move {
         player: &mut Creature,
         _game_state: &mut GameState,
     ) {
-        // use self::Direction::*;
-        // let mut dir = None;
-        // match key {
-        //     Some(Key::W) => dir = Some(Up),
-        //     Some(Key::A) => dir = Some(Left),
-        //     Some(Key::S) => dir = Some(Down),
-        //     Some(Key::D) => dir = Some(Right),
-        //     _ => {}
-        // }
-        // println!("Moving {:?}.", dir);
-        // player.update_position(dir, 15.0);
         let mut dx: f64 = 0.0;
         let mut dy: f64 = 0.0;
 

@@ -95,8 +95,6 @@ impl Game {
                         &mut self.player,
                         &mut self.game_state,
                     );
-
-                    // if arges.state == ButtonState::Release
                 }
 
                 // add lag handler here

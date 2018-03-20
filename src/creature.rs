@@ -1,4 +1,3 @@
-use input_handler::Direction;
 
 pub enum CreatureType {
     Player,

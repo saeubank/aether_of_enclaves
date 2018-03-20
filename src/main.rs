@@ -16,7 +16,7 @@ extern crate rand;
 mod input_handler;
 mod game;
 mod creature;
-mod tile;
+// mod tile;
 mod test;
 
 // mod graphics;
@@ -26,17 +26,6 @@ use piston_window::{PistonWindow, WindowSettings};
 use game::Game;
 
 fn main() {
-    // let temp = map::Island::new();
-    // for i in temp.tiles {
-    //     for j in i {
-    //         match j {
-    //             map::TileType::Air => print!("+"),
-    //             map::TileType::Grass => print!("."),
-    //             map::TileType::Water => print!("~"),
-    //         }
-    //     }
-    //     println!("");
-    // }
     let mut window: PistonWindow = WindowSettings::new("AOE", (500, 500))
         .exit_on_esc(true)
         .build()
