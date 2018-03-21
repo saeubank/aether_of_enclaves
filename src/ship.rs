@@ -14,7 +14,7 @@ const SHIP_TILES: [[i32; 11]; 10] =
 [0,0,0,0,1,1,1,0,0,0,0],
 ];
 
-struct Ship {
+pub struct Ship {
     pub tiles: Vec<Vec<Tile>>,
     pub x: f64,
     pub y: f64,
@@ -27,7 +27,7 @@ struct Ship {
 }
 
 impl Ship {
-    fn new() -> Self {
+    pub fn new() -> Self {
         let air = Tile::new(TileType::Special, TileMaterial::Air);
         let floor_wood = Tile::new(TileType::Floor, TileMaterial::Wood);
         let mut temp_tiles = vec![vec![air.clone(); SHIP_TILES[0].len()]; SHIP_TILES.len()];
@@ -81,4 +81,11 @@ impl Ship {
 
     fn update_tile() {}
     // figure out how to do chest storage and inventory stuff
+
+    pub fn update() {
+        // update_health()
+        // check if dead
+        // fire qued weapons
+        update_position()
+    }
 }
