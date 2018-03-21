@@ -1,4 +1,10 @@
+/**
+    Testing of the Input Handler object.
+*/
+
+
 #[cfg(test)]
+
 mod tests {
 
     #[test]
@@ -58,14 +64,17 @@ mod tests {
 
         // Should move Player to the right.
         test_handler.handle_input(ButtonState::Press, Button::Keyboard(Key::D), &mut test_player, &mut test_gs);
-        assert_eq!(test_player.self_vel_x, 5.0);
+        assert_eq!(test_player.self_vel_x, test_player.speed);
         
+        // Should move Player down.
         test_handler.handle_input(ButtonState::Press, Button::Keyboard(Key::S), &mut test_player, &mut test_gs);
-        assert_eq!(test_player.self_vel_y, 5.0);
+        assert_eq!(test_player.self_vel_y, test_player.speed);
 
+        // Player should stop moving horizontally.
         test_handler.handle_input(ButtonState::Release, Button::Keyboard(Key::D), &mut test_player, &mut test_gs);
         assert_eq!(test_player.self_vel_x, 0.0);
 
+        // Player should stop moving vertically.
         test_handler.handle_input(ButtonState::Release, Button::Keyboard(Key::S), &mut test_player, &mut test_gs);
         assert_eq!(test_player.self_vel_y, 0.0);
 

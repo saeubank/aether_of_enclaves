@@ -4,6 +4,9 @@ use creature::{Creature, CreatureType};
 use input_handler::InputHandler;
 use std::collections::HashMap;
 
+const WIDTH: f64 = 500.0;
+const HEIGHT: f64 = 500.0;
+
 #[derive(Debug, PartialEq)]
 
 pub enum GameState {
@@ -46,7 +49,8 @@ impl Game {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
                 GameState::InGame => {
-                    image(textures.get("mc").unwrap(), context.transform.scale(1.25,1.25).trans(self.player.x, self.player.y), graphics);
+                    image(textures.get("sky").unwrap(), context.transform.scale(WIDTH,HEIGHT), graphics);
+                    image(textures.get("mc").unwrap(), context.transform.scale(0.75,0.75).trans(self.player.x, self.player.y), graphics);
                 }
                 GameState::Title => {
                     let transform = context.transform.trans(10.0, 100.0);
@@ -103,33 +107,6 @@ impl Game {
         }
     }
 }
-
-// fn get_graphics(window: &mut PistonWindow) -> HashMap<&str, G2dTexture> {
-//     let assets = Search::ParentsThenKids(3, 3).for_folder("images").unwrap();
-//     let sky = Texture::from_path(
-//             &mut window.factory,
-//             assets.join("sky.png"),
-//             Flip::None,
-//             &TextureSettings::new()
-//             ).unwrap();
-//     let boards = Texture::from_path(
-//             &mut window.factory,
-//             assets.join("boards.png"),
-//             Flip::None,
-//             &TextureSettings::new()
-//             ).unwrap();
-//     let mc = Texture::from_path(
-//             &mut window.factory,
-//             assets.join("player.png"),
-//             Flip::None,
-//             &TextureSettings::new()
-//             ).unwrap();
-//     let mut textures = HashMap::new();
-//     textures.insert("sky", sky);
-//     textures.insert("boards", boards);
-//     textures.insert("mc", mc);
-//     textures
-// }
 
 
 
