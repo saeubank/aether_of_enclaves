@@ -1,3 +1,7 @@
+/**
+    The Creature object is the template for any NPC in AOE. Primarily this is used for
+    the Player, but default functionality is also implemented for Monsters and Crew.
+*/
 
 pub enum CreatureType {
     Player,
@@ -14,6 +18,9 @@ pub enum CreatureType {
 	@field y Creature's vertical position on screen.
     @field self_vel_x Creature's horizontal velocity.
     @field self_vel_y Creature's vertical velocity.
+    @field other_vel_x Horizontal velocity of other object(s) affecting Creature.
+    @field other_vel_y Horizontal velocity of other object(s) affecting Creature.
+    @field speed Creature's maximum speed when moving.
     @field health Creature's health.
 */
 pub struct Creature {
@@ -25,10 +32,11 @@ pub struct Creature {
     pub other_vel_x: f64,
     pub other_vel_y: f64,
     pub speed: f64,
-    pub health: i32, // array size 3 for inventory can only use/drop top item
+    pub health: i32,
 }
 
 impl Creature {
+    // Constructor for default Creature.
     pub fn new(c_type: CreatureType) -> Creature {
         Creature {
             creature_type: c_type,
@@ -43,16 +51,21 @@ impl Creature {
         }
     }
 
+    // Updates position based on velocity.
     pub fn update_position(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
     }
 
-    // velocity should be based on both what the creature is on and the actual movement of the creature
+    // Changes the Creature's personal velocity (unrelated to other velocities acting on
+    // the creature).
+    // @param dx The difference in x velocity.
+    // @param dy The difference in y velocity.
     pub fn change_self_velocity(&mut self, dx: f64, dy: f64) {
         self.self_vel_x += dx;
         self.self_vel_y += dy;
 
+        // Account for exceeding Creature's max speed.
         if self.self_vel_x > self.speed {
             self.self_vel_x = self.speed;
         }
@@ -67,15 +80,16 @@ impl Creature {
         }
     }
 
+    // Sets horizontal velocity to zero.
     pub fn reset_self_velocity_x(&mut self) {
         self.self_vel_x = 0.0;
     }
 
+    // Sets vertical velocity to zero.
     pub fn reset_self_velocity_y(&mut self) {
         self.self_vel_y = 0.0;
     }    
-    // fn interact()
-}
 
-// Maybe make so some types of creatures hate some other type
-// Fighting within same species of creatures?
+    // TODO Write collision function.
+
+}

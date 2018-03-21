@@ -16,19 +16,23 @@ use creature::Creature;
 	Ancestor object for different types of input Commands.
 */
 trait Command {
-    // Initializer for Command.
+    // Constructor for Command.
     fn new() -> Self;
 
     // Execute actions based on type of Command.
+    // @param ButtonState Either "pressed" or "released".
     // @param Option<Key> And optional key value.
+    // @param &mut Creature The Player.
+    // @param GameState The current Game State.
     fn execute(
         &mut self,
         ButtonState,
         Option<Key>,
-        player: &mut Creature,
-        game_state: &mut GameState,
+        &mut Creature,
+        &mut GameState,
     );
 }
+
 
 /**
 	Implementation of the OpenMenu Command.
@@ -40,7 +44,10 @@ impl Command for OpenMenu {
         OpenMenu {}
     }
 
-    // Unused param _key.
+    // @param state The ButtonState (pressed or released).
+    // @param _key Unused.
+    // @param _player Unused.
+    // @param game_state The current Game State.
     fn execute(
         &mut self,
         state: ButtonState,
@@ -66,7 +73,7 @@ impl Command for OpenMenu {
 
 /**
 	Implementation of the Action Command.
-	Used when the player presses the action button (Return).
+	Used when the player presses the action button (Enter).
 */
 struct Action {}
 
@@ -75,7 +82,10 @@ impl Command for Action {
         Action {}
     }
 
-    // Unused param _key.
+    // @param state The ButtonState (pressed or released).
+    // @param _key Unused.
+    // @param _player Unused.
+    // @param game_state The current Game State.
     fn execute(
         &mut self,
         state: ButtonState,
@@ -97,10 +107,8 @@ impl Command for Action {
 
 /**
 	Implementation of the Move Command.
-	This will either move the player or move selections
+	This will either move the player/ship or move selections
 	in a menu.
-
-	@field dir The direction of the Command.
 */
 struct Move {}
 
@@ -109,7 +117,10 @@ impl Command for Move {
         Move {}
     }
 
+    // @param state The ButtonState (pressed or released).
     // @param key The input key.
+    // @param player The player.
+    // @param game_state The current Game State.
     fn execute(
         &mut self,
         state: ButtonState,
@@ -135,6 +146,7 @@ impl Command for Move {
             }
             player.change_self_velocity(dx, dy);
         }
+        // Set Player's velocity to zero when key is released.
         else if state == ButtonState::Release {
             if key == Some(Key::W) || key == Some(Key::S){
                 player.reset_self_velocity_y();
@@ -171,7 +183,10 @@ impl InputHandler {
         }
     }
 
+    // @param state The ButtonState.
     // @param button The input button arguments.
+    // @param player The player.
+    // @param game_state The current Game State.
     pub fn handle_input(
         &mut self,
         state: ButtonState,
@@ -182,8 +197,11 @@ impl InputHandler {
         use self::Key::*;
         match button {
             Button::Keyboard(key) => match key {
+                // Action button.
                 Return => self.action.execute(state, None, player, game_state),
+                // Menu toggle.
                 Tab => self.open_menu.execute(state, None, player, game_state),
+                // Move.
                 W | A | S | D => self.move_dir.execute(state, Some(key), player, game_state),
                 _ => {}
             },

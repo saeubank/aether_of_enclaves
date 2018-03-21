@@ -35,6 +35,7 @@ fn main() {
 
     window.set_max_fps(60);
 
+    // Collect the graphics ("textures").
     let assets = Search::ParentsThenKids(3, 3).for_folder("images").unwrap();
     let sky = Texture::from_path(
             &mut window.factory,
