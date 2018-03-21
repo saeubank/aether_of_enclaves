@@ -23,7 +23,6 @@ pub struct Ship {
     pub speed: f64,
     pub acc: f64,
     pub health: i32,
-    // have cannons and sub rooms here?
 }
 
 impl Ship {
