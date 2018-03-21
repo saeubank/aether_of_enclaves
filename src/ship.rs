@@ -1,17 +1,15 @@
 use tile::*;
 
-const SHIP_TILES: [[i32; 11]; 10] =
+const SHIP_TILES: [[i32; 7]; 8] =
 [
-[0,0,0,0,1,1,1,0,0,0,0],
-[0,0,0,1,1,1,1,1,0,0,0],
-[0,0,0,1,1,1,1,1,0,0,0],
-[0,0,1,1,1,1,1,1,1,0,0],
-[0,1,1,1,1,1,1,1,1,1,0],
-[1,1,1,1,1,1,1,1,1,1,1],
-[1,1,1,1,1,1,1,1,1,1,1],
-[1,0,1,1,1,1,1,1,1,0,1],
-[0,0,1,1,1,1,1,1,1,0,0],
-[0,0,0,0,1,1,1,0,0,0,0],
+[0,0,1,1,1,0,0],
+[0,1,1,1,1,1,0],
+[0,1,1,2,1,1,0],
+[1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1],
+[1,1,1,1,1,1,1],
 ];
 
 pub struct Ship {
@@ -29,13 +27,15 @@ impl Ship {
     pub fn new() -> Self {
         let air = Tile::new(TileType::Special, TileMaterial::Air);
         let floor_wood = Tile::new(TileType::Floor, TileMaterial::Wood);
-        let mut temp_tiles = vec![vec![air.clone(); SHIP_TILES[0].len()]; SHIP_TILES.len()];
+        let control = Tile::new(TileType::Special, TileMaterial::Grass);
+        let mut temp_tiles = vec![vec![air.clone(); SHIP_TILES.len()]; SHIP_TILES[0].len()];
 
         for i in 0..SHIP_TILES.len() {
             for j in 0..SHIP_TILES[i].len() {
-                match j {
-                    0 => temp_tiles[i][j] = air.clone(),
-                    1 => temp_tiles[i][j] = floor_wood.clone(),
+                match SHIP_TILES[i][j] {
+                    0 => temp_tiles[j][i] = air.clone(),
+                    1 => temp_tiles[j][i] = floor_wood.clone(),
+                    2 => temp_tiles[j][i] = control.clone(),
                     _ => {}
                 }
             }
@@ -79,12 +79,4 @@ impl Ship {
     }
 
     fn update_tile() {}
-    // figure out how to do chest storage and inventory stuff
-
-    pub fn update() {
-        // update_health()
-        // check if dead
-        // fire qued weapons
-        update_position()
-    }
 }

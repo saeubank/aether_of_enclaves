@@ -3,9 +3,12 @@ use find_folder::Search;
 use creature::{Creature, CreatureType};
 use input_handler::InputHandler;
 use std::collections::HashMap;
+use ship::Ship;
+use tile::*;
 
 const WIDTH: f64 = 500.0;
 const HEIGHT: f64 = 500.0;
+const IMAGE_SIZE: f64 = 32.0;
 
 #[derive(Debug, PartialEq)]
 
@@ -16,15 +19,16 @@ pub enum GameState {
 }
 
 /**
-	Implementation of the Game object.
+    Implementation of the Game object.
 
-	@field input_hnd The Input Handler.
+    @field input_hnd The Input Handler.
     @field player The main player.
     @field game_state The Game State (see above). 
 */
 pub struct Game {
     input_hnd: InputHandler,
     player: Creature,
+    ship: Ship,
     game_state: GameState,
 }
 
@@ -34,6 +38,7 @@ impl Game {
         Game {
             input_hnd: InputHandler::new(),
             player: Creature::new(CreatureType::Player),
+            ship: Ship::new(),
             game_state: GameState::Title,
         }
     }
@@ -53,10 +58,21 @@ impl Game {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
                 GameState::InGame => {
-                    // TODO Draw the sky properly.
                     image(textures.get("sky").unwrap(), context.transform.scale(WIDTH,HEIGHT), graphics);
+                    let floor_wood = Tile::new(TileType::Floor, TileMaterial::Wood);
+                    for i in 0..self.ship.tiles.len() {
+                        for j in 0..self.ship.tiles[i].len() {
+                            match self.ship.tiles[i][j].material {
+                                TileMaterial::Wood => {
+                                    image(textures.get("boards").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
+                                },
+                                TileMaterial::Grass => image(textures.get("grass").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics),
+                                _ => {}
+                            }
+                        }
+                    }
                     // Draw the player texture at player's x and y position.
-                    image(textures.get("mc").unwrap(), context.transform.scale(0.75,0.75).trans(self.player.x, self.player.y), graphics);
+                    image(textures.get("mc").unwrap(), context.transform.scale(0.5,0.5).trans(self.player.x, self.player.y), graphics);
                 }
                 GameState::Title => {
                     let transform = context.transform.trans(WIDTH/2.0, HEIGHT/2.0);
