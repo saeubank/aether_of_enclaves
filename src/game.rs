@@ -66,7 +66,7 @@ impl Game {
                                 TileMaterial::Wood => {
                                     image(textures.get("boards").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
                                 },
-                                TileMaterial::Grass => image(textures.get("grass").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics),
+                                TileMaterial::Grass => image(textures.get("wheel").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics),
                                 _ => {}
                             }
                         }

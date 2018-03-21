@@ -55,10 +55,17 @@ fn main() {
             Flip::None,
             &TextureSettings::new()
             ).unwrap();
+    let wheel = Texture::from_path(
+            &mut window.factory,
+            assets.join("wheel.png"),
+            Flip::None,
+            &TextureSettings::new()
+            ).unwrap();
     let mut textures = HashMap::new();
     textures.insert("sky", sky);
     textures.insert("boards", boards);
     textures.insert("mc", mc);
+    textures.insert("wheel", wheel);
 
 
     let mut game = Game::new();
