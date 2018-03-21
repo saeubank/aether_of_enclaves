@@ -10,6 +10,7 @@ const WIDTH: f64 = 500.0;
 const HEIGHT: f64 = 500.0;
 const IMAGE_SIZE: f64 = 32.0;
 
+
 #[derive(Debug, PartialEq)]
 
 pub enum GameState {
@@ -35,10 +36,23 @@ pub struct Game {
 impl Game {
     // Constructor of the Game.
     pub fn new() -> Self {
+
+        let ship_tiles: Vec<Vec<i32>> = 
+        vec![
+        vec![0,0,1,1,1,0,0],
+        vec![0,1,1,1,1,1,0],
+        vec![0,1,1,2,1,1,0],
+        vec![1,1,1,1,1,1,1],
+        vec![1,1,1,1,1,1,1],
+        vec![1,1,1,1,1,1,1],
+        vec![1,1,1,1,1,1,1],
+        vec![1,1,1,1,1,1,1],
+        ];
+
         Game {
             input_hnd: InputHandler::new(),
             player: Creature::new(CreatureType::Player),
-            ship: Ship::new(),
+            ship: Ship::new(ship_tiles),
             game_state: GameState::Title,
         }
     }
@@ -72,7 +86,7 @@ impl Game {
                         }
                     }
                     // Draw the player texture at player's x and y position.
-                    image(textures.get("mc").unwrap(), context.transform.scale(0.5,0.5).trans(self.player.x, self.player.y), graphics);
+                    image(textures.get("mc").unwrap(), context.transform.trans(self.player.x - IMAGE_SIZE/2.0, self.player.y - IMAGE_SIZE/2.0), graphics);
                 }
                 GameState::Title => {
                     let transform = context.transform.trans(WIDTH/2.0, HEIGHT/2.0);
@@ -106,6 +120,8 @@ impl Game {
     // @param window The PistonWindow that is drawn to.
     // @param textures HashMap of graphics textures.
     pub fn run(&mut self, window: &mut PistonWindow, textures: HashMap<&str, G2dTexture>) {
+        self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
+        self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE);
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {

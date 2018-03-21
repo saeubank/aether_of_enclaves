@@ -51,7 +51,7 @@ fn main() {
             ).unwrap();
     let mc = Texture::from_path(
             &mut window.factory,
-            assets.join("player_64.png"),
+            assets.join("player.png"),
             Flip::None,
             &TextureSettings::new()
             ).unwrap();

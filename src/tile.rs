@@ -1,11 +1,11 @@
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TileType {
     Floor,
     Wall,
     Special,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TileMaterial {
     Wood,
     Stone,
