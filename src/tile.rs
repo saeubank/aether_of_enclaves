@@ -16,8 +16,8 @@ pub enum TileMaterial {
 
 #[derive(Clone)]
 pub struct Tile {
-    tile_type: TileType,
-    material: TileMaterial,
+    pub tile_type: TileType,
+    pub material: TileMaterial,
 }
 
 impl Tile {
