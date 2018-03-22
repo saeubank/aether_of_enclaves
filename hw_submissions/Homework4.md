@@ -44,7 +44,7 @@ The player's graphic continues to move with input. Obviously, it should stay on 
 
 The results of our testing.
 
-![testing](hw4_tests.PNG)
+![testing](hw4_tests.png)
 
 We're working really hard 😃
 
