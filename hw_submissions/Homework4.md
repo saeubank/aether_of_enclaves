@@ -1,7 +1,7 @@
 # Homework 4
 
-[Latest Commit]()
-[Version 0.0.2 Release]()
+[Latest Commit](https://github.com/swamulism/aether_of_enclaves/commit/5791cb2287095e4e2cef75fe80f4c9c6821ae710)
+[Version 0.0.2 Release](https://github.com/swamulism/aether_of_enclaves/releases/tag/0.0.2s)
 
 1. What was planned for this deadline, from our design document:
     - Implementation of Airship and Player class integrated with the Game. 
