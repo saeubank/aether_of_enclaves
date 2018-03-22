@@ -30,17 +30,22 @@
 
 4. Screenshots below.
 
-The menu text font size had been changed and the text has been moved
+The menu text font size had been changed and the text has been moved. We're experimenting with working with graphics still.
+
 ![menu](hw4_menu.PNG)
 
-There are graphics!!!
+Here are the beginnings of our graphics. The ship "floor" has an original wood-tiling graphic, and the character is now a sprite instead of a red square. 
+
 ![ingame](hw4_ingame.PNG)
 
-The player's graphic moves
+The player's graphic continues to move with input. Obviously, it should stay on its ship, but we have yet to implement collision detection. The player can move multiple directions at the same time, and is not longer confined to a "grid".
+
 ![ingame](hw4_ingame2.PNG)
 
-We have testing
+The results of our testing.
+
 ![testing](hw4_tests.PNG)
 
-It is us 😃
-![US](hw4_us.PNG)
+We're working really hard 😃
+
+![US](hw4_us.jpg)
