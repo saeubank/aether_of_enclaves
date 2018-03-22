@@ -47,6 +47,6 @@ The results of our testing.
 
 ![testing](hw4_tests.png)
 
-We're working really hard 😃
+We're working really hard 😃 (so is the guy behind us)
 
 ![US](hw4_us.jpg)
