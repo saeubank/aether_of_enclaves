@@ -73,14 +73,16 @@ impl Game {
             match self.game_state {
                 GameState::InGame => {
                     image(textures.get("sky").unwrap(), context.transform.scale(WIDTH,HEIGHT), graphics);
-                    let floor_wood = Tile::new(TileType::Floor, TileMaterial::Wood);
                     for i in 0..self.ship.tiles.len() {
                         for j in 0..self.ship.tiles[i].len() {
                             match self.ship.tiles[i][j].material {
                                 TileMaterial::Wood => {
                                     image(textures.get("boards").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
                                 },
-                                TileMaterial::Grass => image(textures.get("wheel").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics),
+                                TileMaterial::Wheel => {
+                                    image(textures.get("boards").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
+                                    image(textures.get("wheel").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
+                                }
                                 _ => {}
                             }
                         }

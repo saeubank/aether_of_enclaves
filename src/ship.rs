@@ -34,7 +34,7 @@ impl Ship {
         // Populate ship's tileset with proper TileMaterial.
         let air = Tile::new(TileType::Special, TileMaterial::Air);
         let floor_wood = Tile::new(TileType::Floor, TileMaterial::Wood);
-        let control = Tile::new(TileType::Special, TileMaterial::Grass);
+        let control = Tile::new(TileType::Special, TileMaterial::Wheel);
         let w = ship_tiles[0].len();
         let h = ship_tiles.len();
         let mut temp_tiles = vec![vec![air.clone(); h]; w];
@@ -95,5 +95,7 @@ impl Ship {
     }
 
     // TODO
-    fn update_tile() {}
+    // fn change_tile() {}
+
+    // fn update() {}
 }
