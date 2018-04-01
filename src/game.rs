@@ -5,11 +5,11 @@ use input_handler::InputHandler;
 use std::collections::HashMap;
 use ship::Ship;
 use tile::*;
+use misc::*;
 
 const WIDTH: f64 = 500.0;
 const HEIGHT: f64 = 500.0;
 const IMAGE_SIZE: f64 = 32.0;
-
 
 #[derive(Debug, PartialEq)]
 
@@ -36,17 +36,15 @@ pub struct Game {
 impl Game {
     // Constructor of the Game.
     pub fn new() -> Self {
-
-        let ship_tiles: Vec<Vec<i32>> = 
-        vec![
-        vec![0,0,1,1,1,0,0],
-        vec![0,1,1,1,1,1,0],
-        vec![0,1,1,2,1,1,0],
-        vec![1,1,1,1,1,1,1],
-        vec![1,1,1,1,1,1,1],
-        vec![1,1,1,1,1,1,1],
-        vec![1,1,1,1,1,1,1],
-        vec![1,1,1,1,1,1,1],
+        let ship_tiles: Vec<Vec<i32>> = vec![
+            vec![0, 0, 1, 1, 1, 0, 0],
+            vec![0, 1, 1, 1, 1, 1, 0],
+            vec![0, 1, 1, 2, 1, 1, 0],
+            vec![1, 1, 1, 1, 1, 1, 1],
+            vec![1, 1, 1, 1, 1, 1, 1],
+            vec![1, 1, 1, 1, 1, 1, 1],
+            vec![1, 1, 1, 1, 1, 1, 1],
+            vec![1, 1, 1, 1, 1, 1, 1],
         ];
 
         Game {
@@ -61,7 +59,12 @@ impl Game {
     // @param e The graphics event for drawing.
     // @param window The PistonWindow that is drawn to.
     // @param textures A HashMap of texture graphics.
-    fn display(&mut self, e: Event, window: &mut PistonWindow, textures: &HashMap<&str, G2dTexture>) {
+    fn display(
+        &mut self,
+        e: Event,
+        window: &mut PistonWindow,
+        textures: &HashMap<&str, G2dTexture>,
+    ) {
         // Font locating.
         let assets = Search::ParentsThenKids(3, 3).for_folder("fonts").unwrap();
         let ref font = assets.join("Inconsolata-Regular.ttf");
@@ -72,26 +75,58 @@ impl Game {
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
                 GameState::InGame => {
-                    image(textures.get("sky").unwrap(), context.transform.scale(WIDTH,HEIGHT), graphics);
+                    image(
+                        textures.get("sky").unwrap(),
+                        context.transform.scale(WIDTH, HEIGHT),
+                        graphics,
+                    );
                     for i in 0..self.ship.tiles.len() {
                         for j in 0..self.ship.tiles[i].len() {
                             match self.ship.tiles[i][j].material {
                                 TileMaterial::Wood => {
-                                    image(textures.get("boards").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
-                                },
+                                    image(
+                                        textures.get("boards").unwrap(),
+                                        context.transform.trans(
+                                            self.ship.x + i as f64 * IMAGE_SIZE,
+                                            self.ship.y + j as f64 * IMAGE_SIZE,
+                                        ),
+                                        graphics,
+                                    );
+                                }
                                 TileMaterial::Wheel => {
-                                    image(textures.get("boards").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
-                                    image(textures.get("wheel").unwrap(), context.transform.trans(self.ship.x + i as f64 * IMAGE_SIZE, self.ship.y + j as f64 * IMAGE_SIZE), graphics);
+                                    image(
+                                        textures.get("boards").unwrap(),
+                                        context.transform.trans(
+                                            self.ship.x + i as f64 * IMAGE_SIZE,
+                                            self.ship.y + j as f64 * IMAGE_SIZE,
+                                        ),
+                                        graphics,
+                                    );
+                                    image(
+                                        textures.get("wheel").unwrap(),
+                                        context.transform.trans(
+                                            self.ship.x + i as f64 * IMAGE_SIZE,
+                                            self.ship.y + j as f64 * IMAGE_SIZE,
+                                        ),
+                                        graphics,
+                                    );
                                 }
                                 _ => {}
                             }
                         }
                     }
                     // Draw the player texture at player's x and y position.
-                    image(textures.get("mc").unwrap(), context.transform.trans(self.player.x - IMAGE_SIZE/2.0, self.player.y - IMAGE_SIZE/2.0), graphics);
+                    image(
+                        textures.get("mc").unwrap(),
+                        context.transform.trans(
+                            self.player.x - IMAGE_SIZE / 2.0,
+                            self.player.y - IMAGE_SIZE / 2.0,
+                        ),
+                        graphics,
+                    );
                 }
                 GameState::Title => {
-                    let transform = context.transform.trans(WIDTH/2.0, HEIGHT/2.0);
+                    let transform = context.transform.trans(WIDTH / 2.0, HEIGHT / 2.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
                             "Press Enter to begin.",
@@ -103,7 +138,7 @@ impl Game {
                         .unwrap();
                 }
                 GameState::InMenu => {
-                    let transform = context.transform.trans(WIDTH/2.0, HEIGHT/2.0);
+                    let transform = context.transform.trans(WIDTH / 2.0, HEIGHT / 2.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
                             "This is the menu.",
@@ -148,6 +183,3 @@ impl Game {
         }
     }
 }
-
-
-

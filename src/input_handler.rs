@@ -11,6 +11,7 @@
 use piston_window::{Button, ButtonState, Key};
 use game::GameState;
 use creature::Creature;
+use misc::*;
 
 /**
 	Ancestor object for different types of input Commands.
@@ -24,15 +25,8 @@ trait Command {
     // @param Option<Key> And optional key value.
     // @param &mut Creature The Player.
     // @param GameState The current Game State.
-    fn execute(
-        &mut self,
-        ButtonState,
-        Option<Key>,
-        &mut Creature,
-        &mut GameState,
-    );
+    fn execute(&mut self, ButtonState, Option<Key>, &mut Creature, &mut GameState);
 }
-
 
 /**
 	Implementation of the OpenMenu Command.
@@ -148,14 +142,13 @@ impl Command for Move {
         }
         // Set Player's velocity to zero when key is released.
         else if state == ButtonState::Release {
-            if key == Some(Key::W) || key == Some(Key::S){
+            if key == Some(Key::W) || key == Some(Key::S) {
                 player.reset_self_velocity_y();
             }
             if key == Some(Key::A) || key == Some(Key::D) {
                 player.reset_self_velocity_x();
             }
         }
-
     }
 }
 
@@ -209,3 +202,9 @@ impl InputHandler {
         }
     }
 }
+
+/*
+fn execute<T: Moveable>(thing: T) {
+    println!("yeet");
+}
+*/

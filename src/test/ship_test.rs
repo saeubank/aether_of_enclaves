@@ -11,12 +11,11 @@ mod tests {
         use ship::*;
         use tile::*;
 
-        let test_tiles =
-        vec![
-        vec![0,0,1,0,0],
-        vec![0,1,1,1,0],
-        vec![0,1,2,1,0],
-        vec![1,1,1,1,1],
+        let test_tiles = vec![
+            vec![0, 0, 1, 0, 0],
+            vec![0, 1, 1, 1, 0],
+            vec![0, 1, 2, 1, 0],
+            vec![1, 1, 1, 1, 1],
         ];
 
         let test_ship = Ship::new(test_tiles);

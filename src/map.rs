@@ -7,6 +7,8 @@ use rand::{distributions, thread_rng};
 use rand::distributions::Sample;
 use tile::Tile;
 
+
+/*
 const ISLAND_MEAN: f64 = 10.0;
 const ISLAND_STANDERD_DEV: f64 = 2.0;
 const ISLAND_LOWERBOUND: f64 = 2.0;
@@ -80,14 +82,51 @@ fn generate_island_size() -> usize {
     island_size
 }
 
-// pub struct Map {
-//     pub tiles: Vec<Vec<TileType>>,
-// }
-//
-// impl Map {
-//     pub fn new() -> Self {
-//         let worley: Worley<f64> = Worley::new();
-//         let map_tiles = vec![vec![TileType::Air; 1]; 1];
-//         Map { tiles: map_tiles }
-//     }
-// }
+*/
+
+const MAP_WIDTH: usize = 20;
+const MAP_HEIGHT: usize = 20;
+
+pub struct Map {
+    pub tiles: Vec<Vec<Tile>>,
+}
+
+impl Map {
+    pub fn new() -> Self {
+
+        let air = Tile::new(TileType::Special, TileMaterial::Air);
+        let floor_grass = Tile::new(TileType::Floor, TileMaterial::Grass);
+
+        let mut map_tiles = vec![vec![air.clone(); MAP_HEIGHT]; MAP_WIDTH];
+        let worley_arr = generate_worley(MAP_WIDTH, 0.2); 
+
+        for i in 0..map_tiles.len() {
+            for j in 0..map_tiles[i].len() {
+                let num = worley_arr[i][j];
+                if num < 0.0 {
+                    map_tiles[i][j] = floor_grass.clone();
+                } else {
+                    map_tiles[i][j] = air.clone();
+                }
+            }
+        }
+        Map { tiles: map_tiles }
+    }
+}
+
+fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
+    let worley: Worley<f64> = Worley::new();
+    let mut xpos = 0.0;
+    let mut ypos = 0.0;
+    let mut worley_arr = vec![vec![0.0; size]; size];
+    for i in 0..worley_arr.len() {
+        for j in 0..worley_arr[i].len() {
+            worley_arr[i][j] = worley.get([xpos, ypos]);
+            print!("{}, ", worley_arr[i][j]);
+            xpos += step;
+        }
+        println!();
+        ypos += step;
+    }
+    worley_arr
+}

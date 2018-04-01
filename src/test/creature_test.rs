@@ -56,7 +56,7 @@ mod tests {
         test_player.reset_self_velocity_x();
         assert_eq!(test_player.self_vel_x, 0.0);
 
-         // Set Player's vertical velocity back to 0.
+        // Set Player's vertical velocity back to 0.
         test_player.reset_self_velocity_y();
         assert_eq!(test_player.self_vel_y, 0.0);
 

@@ -19,6 +19,7 @@ mod creature;
 mod tile;
 mod test;
 mod ship;
+mod misc;
 
 // mod map;
 
@@ -33,40 +34,40 @@ fn main() {
         .build()
         .unwrap();
 
-    window.set_max_fps(60);
+    // window.set_max_fps(60);
+    // window.ups(60);
 
     // Collect the graphics ("textures").
     let assets = Search::ParentsThenKids(3, 3).for_folder("images").unwrap();
     let sky = Texture::from_path(
-            &mut window.factory,
-            assets.join("sky.png"),
-            Flip::None,
-            &TextureSettings::new()
-            ).unwrap();
+        &mut window.factory,
+        assets.join("sky.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
     let boards = Texture::from_path(
-            &mut window.factory,
-            assets.join("boards.png"),
-            Flip::None,
-            &TextureSettings::new()
-            ).unwrap();
+        &mut window.factory,
+        assets.join("boards.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
     let mc = Texture::from_path(
-            &mut window.factory,
-            assets.join("player.png"),
-            Flip::None,
-            &TextureSettings::new()
-            ).unwrap();
+        &mut window.factory,
+        assets.join("player.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
     let wheel = Texture::from_path(
-            &mut window.factory,
-            assets.join("wheel.png"),
-            Flip::None,
-            &TextureSettings::new()
-            ).unwrap();
+        &mut window.factory,
+        assets.join("wheel.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
     let mut textures = HashMap::new();
     textures.insert("sky", sky);
     textures.insert("boards", boards);
     textures.insert("mc", mc);
     textures.insert("wheel", wheel);
-
 
     let mut game = Game::new();
     game.run(&mut window, textures);

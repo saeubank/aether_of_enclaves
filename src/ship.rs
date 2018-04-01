@@ -65,8 +65,10 @@ impl Ship {
     }
 
     // @param change The change in health.
-    fn change_health(&mut self, change: i32) { self.health += change; }
-    
+    fn change_health(&mut self, change: i32) {
+        self.health += change;
+    }
+
     // Update ship's position with ship's velocity.
     pub fn update_position(&mut self) {
         self.x += self.self_vel_x;
@@ -97,5 +99,7 @@ impl Ship {
     // TODO
     // fn change_tile() {}
 
-    // fn update() {}
+    pub fn update(&mut self) {
+        self.update_position();
+    }
 }

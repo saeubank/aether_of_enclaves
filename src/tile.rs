@@ -10,9 +10,13 @@ pub enum TileMaterial {
     Wood,
     // Stone,
     // Grass,
+    // Sand,
+    // long grass,
+    // Dirt,
+    // figure out how to add trees
     Air,
     // Water,
-    Wheel
+    Wheel,
 }
 
 #[derive(Clone)]
