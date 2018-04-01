@@ -1,15 +1,13 @@
-use piston_window::{Button, ButtonState, Key};
+use piston_window::{ButtonState, Key};
 
 pub trait moveable {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>);
     // fn collision(&mut self, game: &Game) -> bool;
     fn update_position(&mut self);
-    fn change_self_velocity(&mut self, dx: f64, dy: f64);
-    fn reset_self_velocity_x(&mut self);
-    fn reset_self_velocity_y(&mut self);
+    fn update_self_velocity(&mut self);
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum Direction {
     Up,
     Down,

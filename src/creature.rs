@@ -1,7 +1,6 @@
-// use std::collections::HashMap;
 use misc::*;
 // use game::Game;
-use piston_window::{Button, ButtonState, Key};
+use piston_window::{ButtonState, Key};
 
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
@@ -34,8 +33,7 @@ pub struct Creature {
     pub y: f64,
     pub self_vel_x: f64,
     pub self_vel_y: f64,
-    // pub directions: HashMap<>,
-    pub directions: [Option<Direction>; 4],
+    pub directions: Vec<Direction>,
     pub other_vel_x: f64,
     pub other_vel_y: f64,
     pub speed: f64,
@@ -52,8 +50,7 @@ impl Creature {
             y: 0.0,
             self_vel_x: 0.0,
             self_vel_y: 0.0,
-            // directions: HashMap::new(),
-            directions: [None; 4],
+            directions: vec![],
             other_vel_x: 0.0,
             other_vel_y: 0.0,
             speed: 3.0,
@@ -70,32 +67,56 @@ impl Creature {
 
 impl moveable for Creature {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
-        if state == ButtonState::Press {
-            let mut dx: f64 = 0.0;
-            let mut dy: f64 = 0.0;
-
-            if key == Some(Key::W) {
-                dy -= self.speed;
-            }
-            if key == Some(Key::A) {
-                dx -= self.speed;
-            }
-            if key == Some(Key::S) {
-                dy += self.speed;
-            }
-            if key == Some(Key::D) {
-                dx += self.speed;
-            }
-            self.change_self_velocity(dx, dy);
-        }
-        // Set Player's velocity to zero when key is released.
-        else if state == ButtonState::Release {
-            if key == Some(Key::W) || key == Some(Key::S) {
-                self.reset_self_velocity_y();
-            }
-            if key == Some(Key::A) || key == Some(Key::D) {
-                self.reset_self_velocity_x();
-            }
+        match key {
+            Some(Key::W) => {
+                let dir = Direction::Up;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            Some(Key::A) => {
+                let dir = Direction::Left;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            Some(Key::S) => {
+                let dir = Direction::Down;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            Some(Key::D) => {
+                let dir = Direction::Right;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            _ => {}
         }
     }
     // fn collision(&mut self, game: &Game) -> bool {
@@ -112,32 +133,21 @@ impl moveable for Creature {
     // the creature).
     // @param dx The difference in x velocity.
     // @param dy The difference in y velocity.
-    fn change_self_velocity(&mut self, dx: f64, dy: f64) {
-        self.self_vel_x += dx;
-        self.self_vel_y += dy;
+    fn update_self_velocity(&mut self) {
 
-        // Account for exceeding Creature's max speed.
-        if self.self_vel_x > self.speed {
-            self.self_vel_x = self.speed;
-        }
-        if self.self_vel_y > self.speed {
-            self.self_vel_y = self.speed;
-        }
-        if self.self_vel_x < -self.speed {
-            self.self_vel_x = -self.speed;
-        }
-        if self.self_vel_y < -self.speed {
-            self.self_vel_y = -self.speed;
-        }
-    }
+        let mut dx = 0.0;
+        let mut dy = 0.0;
 
-    // Sets horizontal velocity to zero.
-    fn reset_self_velocity_x(&mut self) {
-        self.self_vel_x = 0.0;
-    }
+        for dir in &self.directions {
+            match *dir {
+                Direction::Up => dy -= self.speed,
+                Direction::Down => dy += self.speed,
+                Direction::Left => dx -= self.speed,
+                Direction::Right => dx += self.speed,
+            }
+        }
 
-    // Sets vertical velocity to zero.
-    fn reset_self_velocity_y(&mut self) {
-        self.self_vel_y = 0.0;
+        self.self_vel_x = dx;
+        self.self_vel_y = dy;
     }
 }
