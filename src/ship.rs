@@ -1,4 +1,7 @@
 use tile::*;
+use misc::*;
+use piston_window::{ButtonState, Key};
+
 
 /**
     Implementation of the Ship object.
@@ -20,6 +23,7 @@ pub struct Ship {
     pub y: f64,
     pub self_vel_x: f64,
     pub self_vel_y: f64,
+    pub directions: Vec<Direction>,
     pub speed: f64,
     pub acc: f64,
     pub health: i32,
@@ -56,6 +60,7 @@ impl Ship {
             y: 0.0,
             self_vel_x: 0.0,
             self_vel_y: 0.0,
+            directions: vec![],
             speed: 20.0,
             acc: 2.0,
             health: 1,
@@ -69,37 +74,104 @@ impl Ship {
         self.health += change;
     }
 
-    // Update ship's position with ship's velocity.
-    pub fn update_position(&mut self) {
-        self.x += self.self_vel_x;
-        self.y += self.self_vel_y;
-    }
-
-    // Changes ship's velocity.
-    // @param dx The difference in x velocity.
-    // @param dy The difference in y velocity.
-    pub fn change_self_velocity(&mut self, dx: f64, dy: f64) {
-        self.self_vel_x += dx;
-        self.self_vel_y += dy;
-
-        if self.self_vel_x > self.speed {
-            self.self_vel_x = self.speed;
-        }
-        if self.self_vel_y > self.speed {
-            self.self_vel_y = self.speed;
-        }
-        if self.self_vel_x < -self.speed {
-            self.self_vel_x = -self.speed;
-        }
-        if self.self_vel_y < -self.speed {
-            self.self_vel_y = -self.speed;
-        }
-    }
-
     // TODO
     // fn change_tile() {}
 
     pub fn update(&mut self) {
         self.update_position();
+    }
+}
+
+impl Moveable for Ship {
+    fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
+        match key {
+            Some(Key::W) => {
+                let dir = Direction::Up;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            Some(Key::A) => {
+                let dir = Direction::Left;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            Some(Key::S) => {
+                let dir = Direction::Down;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            Some(Key::D) => {
+                let dir = Direction::Right;
+                if let Some(index) = self.directions.iter().position(|&x| x == dir) {
+                    if state == ButtonState::Release {
+                        self.directions.remove(index);
+                    }
+                } else {
+                    if state == ButtonState::Press {
+                        self.directions.push(dir);
+                    }
+                }
+            },
+            _ => {}
+        }
+    }
+    // fn collision(&mut self, game: &Game) -> bool {
+    //     true
+    // }
+
+    fn update_position(&mut self) {
+        self.x += self.self_vel_x;
+        self.y += self.self_vel_y;
+    }
+
+    fn update_self_velocity(&mut self) {
+
+        let mut dx = 0.0;
+        let mut dy = 0.0;
+
+        for dir in &self.directions {
+            match *dir {
+                Direction::Up => dy -= self.acc,
+                Direction::Down => dy += self.acc,
+                Direction::Left => dx -= self.acc,
+                Direction::Right => dx += self.acc,
+            }
+        }
+
+        self.self_vel_x += dx;
+        self.self_vel_y += dy;
+        if self.self_vel_x > self.speed {
+            self.self_vel_x = self.speed;
+        }
+        if self.self_vel_x < -self.speed {
+            self.self_vel_x = -self.speed;
+        }
+        if self.self_vel_y > self.speed {
+            self.self_vel_y = self.speed;
+        }
+        if self.self_vel_y < -self.speed {
+            self.self_vel_y = -self.speed;
+        }
     }
 }

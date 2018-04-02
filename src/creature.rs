@@ -1,6 +1,7 @@
 use misc::*;
 // use game::Game;
 use piston_window::{ButtonState, Key};
+use item::Item;
 
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
@@ -38,7 +39,7 @@ pub struct Creature {
     pub other_vel_y: f64,
     pub speed: f64,
     pub health: i32,
-    // pub inventory: [Item; 3],
+    pub inventory: [Option<Item>; 3],
 }
 
 impl Creature {
@@ -55,6 +56,7 @@ impl Creature {
             other_vel_y: 0.0,
             speed: 3.0,
             health: 1,
+            inventory: [None, None, None],
         }
     }
 
@@ -62,10 +64,14 @@ impl Creature {
         self.update_position();
     }
 
+    pub fn pickup_item(&mut self, item: Item) {
+        self.inventory[0] = Some(item);
+    }
+
     // TODO Write collision function.
 }
 
-impl moveable for Creature {
+impl Moveable for Creature {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
         match key {
             Some(Key::W) => {

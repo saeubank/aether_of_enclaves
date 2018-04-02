@@ -1,6 +1,6 @@
 use piston_window::{ButtonState, Key};
 
-pub trait moveable {
+pub trait Moveable {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>);
     // fn collision(&mut self, game: &Game) -> bool;
     fn update_position(&mut self);

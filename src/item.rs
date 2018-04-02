@@ -11,24 +11,29 @@ enum ItemType {
 }
 
 
-struct Item {
+pub struct Item {
     item_type: ItemType,
-    damage: usize, // Damage done when thrown
-    pickupable: bool
+    pub damage: i32, // Damage done when thrown
+    pub pickupable: bool
 }
 
 impl Item {
-    fn new(ItemType) -> Self {
-
+    fn new(item_t: ItemType) -> Self {
+        Item {
+            item_type: item_t,
+            damage: 0,
+            pickupable: true,
+        }
     }
 
-    fn interact(&mut self, creature: Creature) {
+    // fn interact(&mut self, creature: Creature) {
 
-    }
+    // }
 
-    fn pick_up() {
-
-    }
+    // fn pick_up() {
+    // }
+    // fn throw() {
+    // }
 }
 
 // Items to add & crafting

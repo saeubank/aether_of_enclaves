@@ -20,8 +20,7 @@ mod tile;
 mod test;
 mod ship;
 mod misc;
-
-// mod map;
+mod item;
 
 use piston_window::*;
 use game::Game;
