@@ -12,11 +12,12 @@ use piston_window::{Button, ButtonState, Key};
 use game::GameState;
 use creature::Creature;
 use misc::*;
+use game::Game;
 
 /**
 	Ancestor object for different types of input Commands.
 */
-trait Command {
+pub trait Command {
     // Constructor for Command.
     fn new() -> Self;
 
@@ -25,13 +26,13 @@ trait Command {
     // @param Option<Key> And optional key value.
     // @param &mut Creature The Player.
     // @param GameState The current Game State.
-    fn execute(&mut self, ButtonState, Option<Key>, &mut Creature, &mut GameState);
+    fn execute(&mut self, ButtonState, Option<Key>, &mut Game);
 }
 
 /**
 	Implementation of the OpenMenu Command.
 */
-struct OpenMenu {}
+pub struct OpenMenu {}
 
 impl Command for OpenMenu {
     fn new() -> Self {
@@ -46,18 +47,17 @@ impl Command for OpenMenu {
         &mut self,
         state: ButtonState,
         _key: Option<Key>,
-        _player: &mut Creature,
-        game_state: &mut GameState,
+        game: &mut Game
     ) {
         if state == ButtonState::Press {
-            match *game_state {
+            match game.game_state {
                 GameState::InGame => {
                     println!("Menu opened.");
-                    *game_state = GameState::InMenu;
+                    game.game_state = GameState::InMenu;
                 }
                 GameState::InMenu => {
                     println!("Menu closed.");
-                    *game_state = GameState::InGame;
+                    game.game_state = GameState::InGame;
                 }
                 _ => {}
             }
@@ -69,7 +69,7 @@ impl Command for OpenMenu {
 	Implementation of the Action Command.
 	Used when the player presses the action button (Enter).
 */
-struct Action {}
+pub struct Action {}
 
 impl Command for Action {
     fn new() -> Self {
@@ -84,14 +84,13 @@ impl Command for Action {
         &mut self,
         state: ButtonState,
         _key: Option<Key>,
-        _player: &mut Creature,
-        game_state: &mut GameState,
+        game: &mut Game
     ) {
         if state == ButtonState::Press {
-            match *game_state {
+            match game.game_state {
                 GameState::Title => {
                     println!("Changing state to InGame.");
-                    *game_state = GameState::InGame;
+                    game.game_state = GameState::InGame;
                 }
                 _ => {}
             }
@@ -104,7 +103,7 @@ impl Command for Action {
 	This will either move the player/ship or move selections
 	in a menu.
 */
-struct Move {}
+pub struct Move {}
 
 impl Command for Move {
     fn new() -> Self {
@@ -119,67 +118,15 @@ impl Command for Move {
         &mut self,
         state: ButtonState,
         key: Option<Key>,
-        player: &mut Creature,
-        _game_state: &mut GameState,
+        game: &mut Game
     ) {
-        player.handle_input(state, key);
-        player.update_self_velocity();
-    }
-}
-
-/**
-	Implementation of the Input Handler.
-	Executes respective Commands given Button input.
-
-	@field move_dir The Move Command handler.
-	@field action The Action Command handler.
-	@field open_menu The OpenMenu Command handler.
-*/
-pub struct InputHandler {
-    move_dir: Move,
-    action: Action,
-    open_menu: OpenMenu,
-}
-
-impl InputHandler {
-    // Constructor.
-    pub fn new() -> Self {
-        InputHandler {
-            move_dir: Move::new(),
-            action: Action::new(),
-            open_menu: OpenMenu::new(),
-        }
-    }
-
-    // @param state The ButtonState.
-    // @param button The input button arguments.
-    // @param player The player.
-    // @param game_state The current Game State.
-    pub fn handle_input(
-        &mut self,
-        state: ButtonState,
-        button: Button,
-        player: &mut Creature,
-        game_state: &mut GameState,
-    ) {
-        use self::Key::*;
-        match button {
-            Button::Keyboard(key) => match key {
-                // Action button.
-                Return => self.action.execute(state, None, player, game_state),
-                // Menu toggle.
-                Tab => self.open_menu.execute(state, None, player, game_state),
-                // Move.
-                W | A | S | D => self.move_dir.execute(state, Some(key), player, game_state),
-                _ => {}
-            },
-            _ => {}
-        }
+        game.player.handle_input(state, key);
+        game.player.update_self_velocity();
     }
 }
 
 /*
 fn execute<T: Moveable>(thing: T) {
-    println!("yeet");
+    println!("yes");
 }
 */

@@ -13,7 +13,6 @@ extern crate noise;
 extern crate piston;
 extern crate piston_window;
 extern crate rand;
-mod input_handler;
 mod game;
 mod creature;
 mod tile;

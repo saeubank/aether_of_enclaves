@@ -1,7 +1,6 @@
 use piston_window::*;
 use find_folder::Search;
-use creature::{Creature, CreatureType};
-use input_handler::InputHandler;
+use creature::{Creature, CreatureState, CreatureType};
 use std::collections::HashMap;
 use ship::Ship;
 use tile::*;
@@ -27,10 +26,9 @@ pub enum GameState {
     @field game_state The Game State (see above). 
 */
 pub struct Game {
-    input_hnd: InputHandler,
-    player: Creature,
-    ship: Ship,
-    game_state: GameState,
+    pub player: Creature,
+    pub ship: Ship,
+    pub game_state: GameState,
 }
 
 impl Game {
@@ -48,7 +46,6 @@ impl Game {
         ];
 
         Game {
-            input_hnd: InputHandler::new(),
             player: Creature::new(CreatureType::Player),
             ship: Ship::new(ship_tiles),
             game_state: GameState::Title,
@@ -162,23 +159,101 @@ impl Game {
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
-                    self.input_hnd.handle_input(
+                    self.handle_input(
                         args.state,
                         args.button,
-                        &mut self.player,
-                        &mut self.game_state,
+                        // &mut self.player,
+                        // &mut self.game_state,
                     );
                 }
 
                 // TODO Add lag handler here
                 Event::Loop(Loop::Update(_args)) => {
+                    self.player.other_vel_x = self.ship.self_vel_x;
+                    self.player.other_vel_y = self.ship.self_vel_y;
                     self.player.update_position();
+                    self.ship.update_position();
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
                     self.display(e, window, &textures);
                 }
                 _ => {}
+            }
+        }
+    }
+
+    // @param state The ButtonState.
+    // @param button The input button arguments.
+    // @param player The player.
+    // @param game_state The current Game State.
+    fn handle_input(&mut self, state: ButtonState, button: Button) {
+        use self::Key::*;
+        match button {
+            Button::Keyboard(key) => match key {
+                // Action button.
+                Return => self.execute_action(state, None),
+                // Menu toggle.
+                Tab => self.execute_open_menu(state, None),
+                // Move.
+                W | A | S | D => self.execute_move(state, Some(key)),
+                V => self.execute_change_state(state, None),
+                _ => {}
+            },
+            _ => {}
+        }
+    }
+
+    fn execute_open_menu(&mut self, state: ButtonState, _key: Option<Key>) {
+        if state == ButtonState::Press {
+            match self.game_state {
+                GameState::InGame => {
+                    println!("Menu opened.");
+                    self.game_state = GameState::InMenu;
+                }
+                GameState::InMenu => {
+                    println!("Menu closed.");
+                    self.game_state = GameState::InGame;
+                }
+                _ => {}
+            }
+        }
+    }
+
+    fn execute_action(&mut self, state: ButtonState, _key: Option<Key>) {
+        if state == ButtonState::Press {
+            match self.game_state {
+                GameState::Title => {
+                    println!("Changing state to InGame.");
+                    self.game_state = GameState::InGame;
+                }
+                _ => {}
+            }
+        }
+    }
+
+    fn execute_move(&mut self, state: ButtonState, key: Option<Key>) {
+        match self.player.creature_state {
+            CreatureState::Normal => {
+                self.player.handle_input(state, key);
+                self.player.update_self_velocity();
+            }
+            CreatureState::ControllingShip => {
+                self.ship.handle_input(state, key);
+                self.ship.update_self_velocity();
+            }
+        }
+    }
+
+    fn execute_change_state(&mut self, state: ButtonState, key: Option<Key>) {
+        if state == ButtonState::Press {
+            match self.player.creature_state {
+                CreatureState::Normal => {
+                    self.player.creature_state = CreatureState::ControllingShip;
+                }
+                _ => {
+                    self.player.creature_state = CreatureState::Normal;
+                }
             }
         }
     }

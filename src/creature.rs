@@ -16,6 +16,11 @@ pub enum CreatureType {
     // Monster,
 }
 
+pub enum CreatureState {
+    Normal,
+    ControllingShip,
+}
+
 /**
 	Implementation of the Creature object.
 
@@ -30,6 +35,7 @@ pub enum CreatureType {
 */
 pub struct Creature {
     pub creature_type: CreatureType,
+    pub creature_state: CreatureState,
     pub x: f64,
     pub y: f64,
     pub self_vel_x: f64,
@@ -47,6 +53,7 @@ impl Creature {
     pub fn new(c_type: CreatureType) -> Creature {
         Creature {
             creature_type: c_type,
+            creature_state: CreatureState::Normal,
             x: 0.0,
             y: 0.0,
             self_vel_x: 0.0,
@@ -85,7 +92,7 @@ impl Moveable for Creature {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             Some(Key::A) => {
                 let dir = Direction::Left;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -97,7 +104,7 @@ impl Moveable for Creature {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             Some(Key::S) => {
                 let dir = Direction::Down;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -109,7 +116,7 @@ impl Moveable for Creature {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             Some(Key::D) => {
                 let dir = Direction::Right;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -121,7 +128,7 @@ impl Moveable for Creature {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             _ => {}
         }
     }
@@ -131,6 +138,8 @@ impl Moveable for Creature {
 
     // Updates position based on velocity.
     fn update_position(&mut self) {
+        self.x += self.other_vel_x;
+        self.y += self.other_vel_y;
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
     }
@@ -140,7 +149,6 @@ impl Moveable for Creature {
     // @param dx The difference in x velocity.
     // @param dy The difference in y velocity.
     fn update_self_velocity(&mut self) {
-
         let mut dx = 0.0;
         let mut dy = 0.0;
 

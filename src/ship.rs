@@ -2,7 +2,6 @@ use tile::*;
 use misc::*;
 use piston_window::{ButtonState, Key};
 
-
 /**
     Implementation of the Ship object.
 
@@ -61,8 +60,8 @@ impl Ship {
             self_vel_x: 0.0,
             self_vel_y: 0.0,
             directions: vec![],
-            speed: 20.0,
-            acc: 2.0,
+            speed: 4.0,
+            acc: 1.0,
             health: 1,
             width: w as f64,
             height: h as f64,
@@ -96,7 +95,7 @@ impl Moveable for Ship {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             Some(Key::A) => {
                 let dir = Direction::Left;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -108,7 +107,7 @@ impl Moveable for Ship {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             Some(Key::S) => {
                 let dir = Direction::Down;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -120,7 +119,7 @@ impl Moveable for Ship {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             Some(Key::D) => {
                 let dir = Direction::Right;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -132,7 +131,7 @@ impl Moveable for Ship {
                         self.directions.push(dir);
                     }
                 }
-            },
+            }
             _ => {}
         }
     }
@@ -146,7 +145,6 @@ impl Moveable for Ship {
     }
 
     fn update_self_velocity(&mut self) {
-
         let mut dx = 0.0;
         let mut dy = 0.0;
 
