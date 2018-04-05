@@ -67,12 +67,27 @@ impl Creature {
         }
     }
 
-    pub fn update(&mut self) {
-        self.update_position();
-    }
+    // pub fn update(&mut self) {
+    //     self.update_position();
+    // }
 
     pub fn pickup_item(&mut self, item: Item) {
         self.inventory[0] = Some(item);
+    }
+
+    pub fn update_position_other(&mut self) {
+        self.x += self.other_vel_x;
+        self.y += self.other_vel_y;
+    }
+    pub fn update_position_self(&mut self) {
+        self.x += self.self_vel_x;
+        self.y += self.self_vel_y;
+    }
+    pub fn x_to_be_location(&mut self) -> f64 {
+        self.x + self.self_vel_x
+    }
+    pub fn y_to_be_location(&mut self) -> f64 {
+        self.y + self.self_vel_y
     }
 
     // TODO Write collision function.

@@ -23,6 +23,7 @@ pub enum TileMaterial {
 pub struct Tile {
     pub tile_type: TileType,
     pub material: TileMaterial,
+    pub passable: bool
 }
 
 /**
@@ -31,9 +32,18 @@ pub struct Tile {
 */
 impl Tile {
     pub fn new(tile: TileType, mat: TileMaterial) -> Self {
+        let can_pass = match tile.clone() {
+            TileType::Floor => true,
+            TileType::Special => { match mat.clone() {
+                    TileMaterial::Air => false,
+                    _ => true,
+                }
+            }
+        };
         Tile {
             tile_type: tile,
             material: mat,
+            passable: can_pass,
         }
     }
 }

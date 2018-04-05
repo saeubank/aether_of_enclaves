@@ -116,8 +116,8 @@ impl Game {
                     image(
                         textures.get("mc").unwrap(),
                         context.transform.trans(
-                            self.player.x - IMAGE_SIZE / 2.0,
-                            self.player.y - IMAGE_SIZE / 2.0,
+                            self.player.x,
+                            self.player.y,
                         ),
                         graphics,
                     );
@@ -161,9 +161,7 @@ impl Game {
                 Event::Input(Input::Button(args)) => {
                     self.handle_input(
                         args.state,
-                        args.button,
-                        // &mut self.player,
-                        // &mut self.game_state,
+                        args.button
                     );
                 }
 
@@ -171,7 +169,12 @@ impl Game {
                 Event::Loop(Loop::Update(_args)) => {
                     self.player.other_vel_x = self.ship.self_vel_x;
                     self.player.other_vel_y = self.ship.self_vel_y;
-                    self.player.update_position();
+                    self.player.update_position_other();
+                    let x = self.player.x_to_be_location();
+                    let y = self.player.y_to_be_location();
+                    if self.is_on_ship(x, y) {
+                        self.player.update_position_self();
+                    }
                     self.ship.update_position();
                 }
 
@@ -256,5 +259,23 @@ impl Game {
                 }
             }
         }
+    }
+
+    fn is_on_ship(&mut self, x: f64, y: f64) -> bool {
+        let is_in_x = x >= self.ship.x && x + IMAGE_SIZE <= self.ship.x + self.ship.width * IMAGE_SIZE;
+        let is_in_y = y >= self.ship.y && y + IMAGE_SIZE <= self.ship.y + self.ship.height * IMAGE_SIZE;
+        if is_in_x && is_in_y {
+            let ship_tile_x = (x - self.ship.x) / IMAGE_SIZE;
+            let ship_tile_y = (y - self.ship.y) / IMAGE_SIZE;
+            if !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable ||
+            !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize].passable ||
+            !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.floor() as usize].passable ||
+            !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.ceil() as usize].passable
+            {
+                return false
+            }
+            return true
+        }
+        false
     }
 }
