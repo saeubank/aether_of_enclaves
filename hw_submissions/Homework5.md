@@ -1,8 +1,8 @@
 # Homework 5
 
-[Latest Commit]()
+[Latest Commit](https://github.com/swamulism/aether_of_enclaves/commit/750330dd2e08d355310ac22b616dda6ff12cffbf)
 
-[Version 0.0.3 Release]()
+[Version 0.0.3 Release](https://github.com/swamulism/aether_of_enclaves/releases/tag/0.0.3)
 
 1. What was planned for this deadline, from our check-in before break:
     - Collision detection between player and ship.
