@@ -82,6 +82,7 @@ impl Ship {
 }
 
 impl Moveable for Ship {
+    // Moving controls implemented for the ship
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
         match key {
             Some(Key::W) => {
@@ -135,19 +136,19 @@ impl Moveable for Ship {
             _ => {}
         }
     }
-    // fn collision(&mut self, game: &Game) -> bool {
-    //     true
-    // }
 
+    // Updates ship position.
     fn update_position(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
     }
 
+    // Updates ship velocity.
     fn update_self_velocity(&mut self) {
         let mut dx = 0.0;
         let mut dy = 0.0;
 
+        // Control which direction ship accelerates in.
         for dir in &self.directions {
             match *dir {
                 Direction::Up => dy -= self.acc,
@@ -159,6 +160,8 @@ impl Moveable for Ship {
 
         self.self_vel_x += dx;
         self.self_vel_y += dy;
+
+        // Speed limiting.
         if self.self_vel_x > self.speed {
             self.self_vel_x = self.speed;
         }

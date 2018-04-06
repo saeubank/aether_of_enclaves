@@ -167,6 +167,8 @@ impl Game {
 
                 // TODO Add lag handler here
                 Event::Loop(Loop::Update(_args)) => {
+                    // Collision detection. 
+                    // TODO Create separate function.
                     self.player.other_vel_x = self.ship.self_vel_x;
                     self.player.other_vel_y = self.ship.self_vel_y;
                     self.player.update_position_other();
@@ -186,6 +188,33 @@ impl Game {
         }
     }
 
+
+    // Checks whether a specific x,y position is on the ship.
+    // @param x Some x coordinate.
+    // @param y Some y coordinate.
+    fn is_on_ship(&mut self, x: f64, y: f64) -> bool {
+        // Check edges.
+        let is_in_x = x >= self.ship.x && x + IMAGE_SIZE <= self.ship.x + self.ship.width * IMAGE_SIZE;
+        let is_in_y = y >= self.ship.y && y + IMAGE_SIZE <= self.ship.y + self.ship.height * IMAGE_SIZE;
+        if is_in_x && is_in_y {
+            // Check specific tiles.
+            let ship_tile_x = (x - self.ship.x) / IMAGE_SIZE;
+            let ship_tile_y = (y - self.ship.y) / IMAGE_SIZE;
+            if !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable ||
+            !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize].passable ||
+            !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.floor() as usize].passable ||
+            !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.ceil() as usize].passable
+            {
+                return false
+            }
+            return true
+        }
+        false
+    }
+
+
+    // Input Handling below.
+
     // @param state The ButtonState.
     // @param button The input button arguments.
     // @param player The player.
@@ -200,13 +229,14 @@ impl Game {
                 Tab => self.execute_open_menu(state, None),
                 // Move.
                 W | A | S | D => self.execute_move(state, Some(key)),
-                V => self.execute_change_state(state, None),
+                V => self.execute_change_control_state(state, None),
                 _ => {}
             },
             _ => {}
         }
     }
 
+    // Opens menu.
     fn execute_open_menu(&mut self, state: ButtonState, _key: Option<Key>) {
         if state == ButtonState::Press {
             match self.game_state {
@@ -223,6 +253,7 @@ impl Game {
         }
     }
 
+    // Action button is pressed.
     fn execute_action(&mut self, state: ButtonState, _key: Option<Key>) {
         if state == ButtonState::Press {
             match self.game_state {
@@ -235,6 +266,7 @@ impl Game {
         }
     }
 
+    // Moves creature / ship.
     fn execute_move(&mut self, state: ButtonState, key: Option<Key>) {
         match self.player.creature_state {
             CreatureState::Normal => {
@@ -248,7 +280,8 @@ impl Game {
         }
     }
 
-    fn execute_change_state(&mut self, state: ButtonState, key: Option<Key>) {
+    // Change of player's control state.
+    fn execute_change_control_state(&mut self, state: ButtonState, key: Option<Key>) {
         if state == ButtonState::Press {
             match self.player.creature_state {
                 CreatureState::Normal => {
@@ -259,23 +292,5 @@ impl Game {
                 }
             }
         }
-    }
-
-    fn is_on_ship(&mut self, x: f64, y: f64) -> bool {
-        let is_in_x = x >= self.ship.x && x + IMAGE_SIZE <= self.ship.x + self.ship.width * IMAGE_SIZE;
-        let is_in_y = y >= self.ship.y && y + IMAGE_SIZE <= self.ship.y + self.ship.height * IMAGE_SIZE;
-        if is_in_x && is_in_y {
-            let ship_tile_x = (x - self.ship.x) / IMAGE_SIZE;
-            let ship_tile_y = (y - self.ship.y) / IMAGE_SIZE;
-            if !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable ||
-            !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize].passable ||
-            !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.floor() as usize].passable ||
-            !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.ceil() as usize].passable
-            {
-                return false
-            }
-            return true
-        }
-        false
     }
 }

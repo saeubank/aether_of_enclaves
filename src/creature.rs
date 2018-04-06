@@ -67,22 +67,24 @@ impl Creature {
         }
     }
 
-    // pub fn update(&mut self) {
-    //     self.update_position();
-    // }
-
+    // Places item in creature's inventory.
     pub fn pickup_item(&mut self, item: Item) {
         self.inventory[0] = Some(item);
     }
 
+    // Updates the position of creature based on other objects acting on it.
     pub fn update_position_other(&mut self) {
         self.x += self.other_vel_x;
         self.y += self.other_vel_y;
     }
+
+    // Updates creature's position based on its own velocity.
     pub fn update_position_self(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
     }
+
+    // Determines where the creature is about to move.
     pub fn x_to_be_location(&mut self) -> f64 {
         self.x + self.self_vel_x
     }
@@ -93,6 +95,7 @@ impl Creature {
     // TODO Write collision function.
 }
 
+// Moving of creature.
 impl Moveable for Creature {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
         match key {
@@ -147,11 +150,9 @@ impl Moveable for Creature {
             _ => {}
         }
     }
-    // fn collision(&mut self, game: &Game) -> bool {
-    //     true
-    // }
 
     // Updates position based on velocity.
+    // Overwritten for creature.
     fn update_position(&mut self) {
         self.x += self.other_vel_x;
         self.y += self.other_vel_y;
