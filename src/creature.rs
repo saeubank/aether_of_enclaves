@@ -68,9 +68,9 @@ impl Creature {
     }
 
     // Places item in creature's inventory.
-    pub fn pickup_item(&mut self, item: Item) {
-        self.inventory[0] = Some(item);
-    }
+    // pub fn pickup_item(&mut self, item: Item) {
+    //     self.inventory[0] = Some(item);
+    // }
 
     // Updates the position of creature based on other objects acting on it.
     pub fn update_position_other(&mut self) {
@@ -90,6 +90,24 @@ impl Creature {
     }
     pub fn y_to_be_location(&mut self) -> f64 {
         self.y + self.self_vel_y
+    }
+
+    // pub fn throw_item(&mut self) {
+    //     if let Some(item) = self.inventory[0] {
+    //         item.throw(self.self_vel_x, self.self_vel_y);
+    //     }
+    // }
+
+    pub fn pickup_item(&mut self, item: Item) {
+        if let None = self.inventory[0] {
+            
+        } 
+        else if let None = self.inventory[1] {
+
+        }
+        else if let None = self.inventory[2] {
+
+        }
     }
 
     // TODO Write collision function.
