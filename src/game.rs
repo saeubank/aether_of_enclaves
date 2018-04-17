@@ -7,8 +7,6 @@ use tile::*;
 use misc::*;
 use item::*;
 
-const WIDTH: f64 = 500.0;
-const HEIGHT: f64 = 500.0;
 const IMAGE_SIZE: f64 = 32.0;
 
 #[derive(Debug, PartialEq)]
@@ -86,13 +84,19 @@ impl Game {
         let factory = window.factory.clone();
         let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
+        let window_size = window.draw_size();
+
         window.draw_2d(&e, |context, graphics| {
+            let w_width = window_size.width as f64;
+            let w_height = window_size.height as f64;
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
             match self.game_state {
                 GameState::InGame => {
+                    let trans_x = w_width / 2.0 - self.player.x;
+                    let trans_y = w_height / 2.0  - self.player.y;
                     image(
                         textures.get("sky").unwrap(),
-                        context.transform.scale(WIDTH, HEIGHT),
+                        context.transform.scale(w_width, w_height),
                         graphics,
                     );
 
@@ -105,7 +109,7 @@ impl Game {
                                         context.transform.trans(
                                             self.ship.x + i as f64 * IMAGE_SIZE,
                                             self.ship.y + j as f64 * IMAGE_SIZE,
-                                        ),
+                                        ).trans(trans_x, trans_y),
                                         graphics,
                                     );
                                 }
@@ -115,7 +119,7 @@ impl Game {
                                         context.transform.trans(
                                             self.ship.x + i as f64 * IMAGE_SIZE,
                                             self.ship.y + j as f64 * IMAGE_SIZE,
-                                        ),
+                                        ).trans(trans_x, trans_y),
                                         graphics,
                                     );
                                     image(
@@ -123,7 +127,7 @@ impl Game {
                                         context.transform.trans(
                                             self.ship.x + i as f64 * IMAGE_SIZE,
                                             self.ship.y + j as f64 * IMAGE_SIZE,
-                                        ),
+                                        ).trans(trans_x, trans_y),
                                         graphics,
                                     );
                                 }
@@ -133,6 +137,12 @@ impl Game {
                     }
 
                     for i in 0..self.items_in_game.len() {
+                        // let item_x = self.items_in_game[i].x;
+                        // let item_y = self.items_in_game[i].y;
+                        // if self.is_on_ship(item_x, item_y) {
+                        //     self.items_in_game[i].x += self.ship.self_vel_x;
+                        //     self.items_in_game[i].y += self.ship.self_vel_y;
+                        // }
                         match self.items_in_game[i].item_type {
                             ItemType::Food(FoodType::Bisket) => {
                                 image(
@@ -140,7 +150,7 @@ impl Game {
                                         context.transform.trans(
                                             self.items_in_game[i].x,
                                             self.items_in_game[i].y,
-                                        ),
+                                        ).trans(trans_x, trans_y),
                                         graphics,
                                     );
                             },
@@ -148,18 +158,20 @@ impl Game {
                         }
                     }
 
+
                     // Draw the player texture at player's x and y position.
                     image(
                         textures.get("mc").unwrap(),
                         context.transform.trans(
-                            self.player.x,
-                            self.player.y,
+                            w_width / 2.0,
+                            w_height / 2.0,
                         ),
                         graphics,
                     );
+
                 }
                 GameState::Title => {
-                    let transform = context.transform.trans(WIDTH / 2.0, HEIGHT / 2.0);
+                    let transform = context.transform.trans(w_width / 2.0, w_height / 2.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
                             "Press Enter to begin.",
