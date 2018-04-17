@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use ship::Ship;
 use tile::*;
 use misc::*;
+use item::*;
 
 const WIDTH: f64 = 500.0;
 const HEIGHT: f64 = 500.0;
@@ -18,6 +19,12 @@ pub enum GameState {
     InMenu,
 }
 
+/* pub enum MenuOption {
+     Top,
+     Inventory, 
+     //Options,
+}*/
+
 /**
     Implementation of the Game object.
 
@@ -29,6 +36,8 @@ pub struct Game {
     pub player: Creature,
     pub ship: Ship,
     pub game_state: GameState,
+    pub item_prototypes: HashMap<String, Item>,
+    pub items_in_game: Vec<Item>,
 }
 
 impl Game {
@@ -45,10 +54,19 @@ impl Game {
             vec![1, 1, 1, 1, 1, 1, 1],
         ];
 
+
+        let mut prototypes: HashMap<String, Item> = HashMap::new();
+        prototypes.insert("bisket".to_string(),Item::new(ItemType::Food(FoodType::Bisket), 1, true, 1.0));
+        prototypes.insert("sword".to_string(),Item::new(ItemType::Interactable(InteractableType::Sword), 10, true, 5.0));
+        prototypes.insert("grune".to_string(),Item::new(ItemType::Resource(ResourceType::Grune), 1, true, 0.5));
+        prototypes.insert("logs".to_string(),Item::new(ItemType::Resource(ResourceType::Logs), 5, true, 8.0));
+
         Game {
             player: Creature::new(CreatureType::Player),
             ship: Ship::new(ship_tiles),
             game_state: GameState::Title,
+            item_prototypes: prototypes,
+            items_in_game: vec![],
         }
     }
 
@@ -77,6 +95,7 @@ impl Game {
                         context.transform.scale(WIDTH, HEIGHT),
                         graphics,
                     );
+
                     for i in 0..self.ship.tiles.len() {
                         for j in 0..self.ship.tiles[i].len() {
                             match self.ship.tiles[i][j].material {
@@ -112,6 +131,23 @@ impl Game {
                             }
                         }
                     }
+
+                    for i in 0..self.items_in_game.len() {
+                        match self.items_in_game[i].item_type {
+                            ItemType::Food(FoodType::Bisket) => {
+                                image(
+                                        textures.get("bisket").unwrap(),
+                                        context.transform.trans(
+                                            self.items_in_game[i].x,
+                                            self.items_in_game[i].y,
+                                        ),
+                                        graphics,
+                                    );
+                            },
+                            _ => {},
+                        }
+                    }
+
                     // Draw the player texture at player's x and y position.
                     image(
                         textures.get("mc").unwrap(),
@@ -135,10 +171,12 @@ impl Game {
                         .unwrap();
                 }
                 GameState::InMenu => {
-                    let transform = context.transform.trans(WIDTH / 2.0, HEIGHT / 2.0);
+                    //let MenuOption m = MenuOption::Main;
+                    //while(m != MenuOption::Exit) {
+                    let transform = context.transform.trans(100.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
-                            "This is the menu.",
+                            "Inventory",
                             &mut glyphs,
                             &context.draw_state,
                             transform,
@@ -156,6 +194,12 @@ impl Game {
     pub fn run(&mut self, window: &mut PistonWindow, textures: HashMap<&str, G2dTexture>) {
         self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
         self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE);
+
+        // Temporary
+        self.items_in_game.push(self.item_prototypes.get("bisket").unwrap().generate_clone(self.ship.x + 128.0, self.ship.y + 128.0));
+        self.items_in_game[0].x_vel = self.ship.self_vel_x;
+        self.items_in_game[0].y_vel = self.ship.self_vel_y;
+
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
