@@ -2,7 +2,6 @@ use piston_window::{ButtonState, Key};
 
 pub trait Moveable {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>);
-    // fn collision(&mut self, game: &Game) -> bool;
     fn update_position(&mut self);
     fn update_self_velocity(&mut self);
 }
@@ -19,6 +18,8 @@ pub enum Direction {
     SW,
 }
 
+// Generates the corresponding string of a direction.
+// @param d The direction.
 pub fn direction_to_string(d: Direction) -> String {
     let s;
     match d {
@@ -33,6 +34,9 @@ pub fn direction_to_string(d: Direction) -> String {
     }
     s.to_string()
 }
+
+
+// More notes.
 
 /*
 player inventory 
