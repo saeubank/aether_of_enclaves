@@ -5,7 +5,10 @@
 use noise::*;
 use rand::{distributions, thread_rng};
 use rand::distributions::Sample;
+use rand::Rng;
 use tile::{Tile, TileMaterial, TileType};
+
+const STEP_SIZE: f64 = 0.2;
 
 // const ISLAND_MEAN: f64 = 10.0;
 // const ISLAND_STANDERD_DEV: f64 = 2.0;
@@ -38,6 +41,8 @@ use tile::{Tile, TileMaterial, TileType};
 
 fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
     let perlin = Perlin::new();
+    let mut rng = thread_rng();
+    let perlin = perlin.set_seed(rng.gen::<usize>());
     let mut xpos = 0.0;
     let mut ypos = 0.0;
     let mut perlin_arr = vec![vec![0.0; size]; size];
@@ -96,8 +101,8 @@ impl Map {
         let floor_stone = Tile::new(TileType::Floor, TileMaterial::Stone);
 
         let mut map_tiles = vec![vec![air.clone(); MAP_HEIGHT]; MAP_WIDTH];
-        let worley_arr = generate_worley(MAP_WIDTH, 0.2);
-        let perlin_arr = generate_perlin(MAP_WIDTH, 0.2);
+        let worley_arr = generate_worley(MAP_WIDTH, STEP_SIZE);
+        let perlin_arr = generate_perlin(MAP_WIDTH, STEP_SIZE);
 
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
@@ -119,6 +124,8 @@ impl Map {
 
 fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
     let worley: Worley<f64> = Worley::new();
+    let mut rng = thread_rng();
+    let worley = worley.set_seed(rng.gen::<usize>());
     let mut xpos = 0.0;
     let mut ypos = 0.0;
     let mut worley_arr = vec![vec![0.0; size]; size];
