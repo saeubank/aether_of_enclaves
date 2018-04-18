@@ -187,9 +187,12 @@ impl Game {
                                 }
                             }
                         }
-                        else {
+                        else if self.player.directions.len() == 1 {
                             dir = direction_to_string(self.player.directions[0]);
                             self.player.dir = self.player.directions[0];
+                        }
+                        else {
+                            dir = direction_to_string(self.player.dir);
                         }
                     }
                     else {
