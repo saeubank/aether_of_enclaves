@@ -28,7 +28,7 @@ use find_folder::Search;
 use std::collections::HashMap;
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new("AOE", (500, 500))
+    let mut window: PistonWindow = WindowSettings::new("AOE", (650, 650))
         .exit_on_esc(true)
         .build()
         .unwrap();
@@ -92,6 +92,12 @@ fn main() {
         Flip::None,
         &TextureSettings::new(),
     ).unwrap();
+    let title_screen = Texture::from_path(
+        &mut window.factory,
+        assets.join("Title.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
     textures.insert("sky".to_string(), sky);
@@ -103,6 +109,7 @@ fn main() {
     textures.insert("floor_dirt".to_string(), floor_dirt);
     textures.insert("floor_grass".to_string(), floor_grass);
     textures.insert("water".to_string(), water);
+    textures.insert("title".to_string(), title_screen);
     let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
 
     // Import all player sprites

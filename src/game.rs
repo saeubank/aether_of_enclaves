@@ -321,16 +321,13 @@ impl Game {
                 }
 
                 GameState::Title => {
-                    let transform = context.transform.trans(w_width / 2.0, w_height / 2.0);
-                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
-                        .draw(
-                            "Press Enter to begin.",
-                            &mut glyphs,
-                            &context.draw_state,
-                            transform,
-                            graphics,
-                        )
-                        .unwrap();
+                    let title = textures.get("title").unwrap();
+                    image(
+                        title,
+                        context.transform.scale(w_width / title.get_width() as f64, w_height / title.get_height() as f64),
+                        graphics,
+                    );
+
                 }
                 GameState::InMenu => {
                     //let MenuOption m = MenuOption::Main;
