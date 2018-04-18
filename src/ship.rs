@@ -64,7 +64,7 @@ impl Ship {
             self_vel_x: 0.0,
             self_vel_y: 0.0,
             directions: vec![],
-            speed: 4.0,
+            speed: 6.0,
             acc: 1.0,
             health: 1,
             width: w as f64,

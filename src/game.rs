@@ -335,6 +335,8 @@ impl Game {
     // @param window The PistonWindow that is drawn to.
     // @param textures HashMap of graphics textures.
     pub fn run(&mut self, window: &mut PistonWindow, textures: &HashMap<String, G2dTexture>) {
+        self.ship.x = 1500.0;
+        self.ship.y = 1500.0;
         self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
         self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE);
 

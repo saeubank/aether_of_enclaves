@@ -7,8 +7,8 @@ use rand::{thread_rng, Rng};
 use tile::{Tile, TileMaterial, TileType};
 
 const STEP_SIZE: f64 = 0.2;
-const MAP_WIDTH: usize = 50;
-const MAP_HEIGHT: usize = 50;
+const MAP_WIDTH: usize = 500;
+const MAP_HEIGHT: usize = 500;
 
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
