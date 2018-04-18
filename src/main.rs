@@ -33,8 +33,8 @@ fn main() {
         .build()
         .unwrap();
 
-    // window.set_max_fps(60);
-    // window.ups(60);
+    window.set_max_fps(60);
+    let mut window = window.ups(60);
 
     // Collect the graphics ("textures").
     let assets = Search::ParentsThenKids(3, 3).for_folder("images").unwrap();
