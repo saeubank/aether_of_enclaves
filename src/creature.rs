@@ -106,12 +106,10 @@ impl Creature {
 
     pub fn pickup_item(&mut self, item: Item) {
         if let None = self.inventory[0] {
-            
-        } 
-        else if let None = self.inventory[1] {
 
-        }
-        else if let None = self.inventory[2] {
+        } else if let None = self.inventory[1] {
+
+        } else if let None = self.inventory[2] {
 
         }
     }

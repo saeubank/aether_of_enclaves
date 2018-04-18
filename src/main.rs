@@ -75,7 +75,7 @@ fn main() {
     textures.insert("wheel".to_string(), wheel);
     textures.insert("bisket".to_string(), bisket);
 
-    let dirs = ["N","W","S","E","NE","NW","SE","SW"];
+    let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
 
     // Import all player sprites
     for j in 0..dirs.len() {

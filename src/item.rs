@@ -2,9 +2,9 @@
 
 pub enum ItemType {
     Interactable(InteractableType), // Can be thrown or interacted with (intent: used for fighting / interacting with world)
-    Food(FoodType),         // Can be thrown or consumed (intent: used for healing / buffs)
-    Resource(ResourceType),     // Can be thrown (intent: used for crafting)
-    Other,        // Can be thrown but provideds passive effect (intent: used for passive effect)
+    Food(FoodType),                 // Can be thrown or consumed (intent: used for healing / buffs)
+    Resource(ResourceType),         // Can be thrown (intent: used for crafting)
+    Other, // Can be thrown but provideds passive effect (intent: used for passive effect)
 }
 
 #[derive(Clone)]
@@ -38,7 +38,6 @@ pub struct Item {
     pub y_vel: f64,
     pub weight: f64,
 }
-
 
 impl Item {
     pub fn new(item_t: ItemType, dam: i32, pickup: bool, w: f64) -> Self {

@@ -9,9 +9,15 @@ pub trait Moveable {
 
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Direction {
-    N, E, S, W, NE, NW, SE, SW
+    N,
+    E,
+    S,
+    W,
+    NE,
+    NW,
+    SE,
+    SW,
 }
-
 
 pub fn direction_to_string(d: Direction) -> String {
     let mut s;
