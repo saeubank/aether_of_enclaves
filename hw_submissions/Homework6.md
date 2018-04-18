@@ -1,8 +1,8 @@
 # Homework 6
 
-[Latest Commit]()
+[Latest Commit](https://github.com/swamulism/aether_of_enclaves/commit/8502defacc3cc30799781ed3247f09592f48a292)
 
-[Version 0.0.3 Release]()
+[Version 0.0.4 Release](https://github.com/swamulism/aether_of_enclaves/releases/tag/0.0.4)
 
 1. What was planned for this deadline, from our check-in before break:
     - Basic generation of some world using the Map class and expanding upon tile sets.
