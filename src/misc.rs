@@ -20,7 +20,7 @@ pub enum Direction {
 }
 
 pub fn direction_to_string(d: Direction) -> String {
-    let mut s;
+    let s;
     match d {
         Direction::N => s = "N",
         Direction::S => s = "S",

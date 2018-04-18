@@ -69,9 +69,9 @@ impl Ship {
     }
 
     // @param change The change in health.
-    fn change_health(&mut self, change: i32) {
-        self.health += change;
-    }
+    // fn change_health(&mut self, change: i32) {
+    //     self.health += change;
+    // }
 
     // TODO
     // fn change_tile() {}

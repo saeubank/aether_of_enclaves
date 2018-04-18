@@ -3,9 +3,8 @@
 */
 
 use noise::*;
-use rand::{distributions, thread_rng};
-use rand::distributions::Sample;
-use rand::Rng;
+use rand::{Rng, thread_rng};
+
 use tile::{Tile, TileMaterial, TileType};
 
 const STEP_SIZE: f64 = 0.2;
@@ -42,21 +41,21 @@ const STEP_SIZE: f64 = 0.2;
 
 
 // need to fix so edge is weighted 0 and middle is weighted 1
-fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
-    let mut circle_arr = vec![vec![0.0; size]; size];
-    let sizef = size as f64;
-    let middle: f64 = sizef / 2.0;
-    for i in 0..size {
-        for j in 0..size {
-            let x: f64 = middle - i as f64;
-            let x = x * x;
-            let y: f64 = middle - j as f64;
-            let y = y * y;
-            circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
-        }
-    }
-    circle_arr
-}
+// fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
+//     let mut circle_arr = vec![vec![0.0; size]; size];
+//     let sizef = size as f64;
+//     let middle: f64 = sizef / 2.0;
+//     for i in 0..size {
+//         for j in 0..size {
+//             let x: f64 = middle - i as f64;
+//             let x = x * x;
+//             let y: f64 = middle - j as f64;
+//             let y = y * y;
+//             circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
+//         }
+//     }
+//     circle_arr
+// }
 
 // fn generate_island_size() -> usize {
 //     let mut normal = distributions::normal::Normal::new(ISLAND_MEAN, ISLAND_STANDERD_DEV);

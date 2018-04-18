@@ -508,7 +508,7 @@ impl Game {
     }
 
     // Change of player's control state.
-    fn execute_change_control_state(&mut self, state: ButtonState, key: Option<Key>) {
+    fn execute_change_control_state(&mut self, state: ButtonState, _key: Option<Key>) {
         if state == ButtonState::Press {
             match self.player.creature_state {
                 CreatureState::Normal => {

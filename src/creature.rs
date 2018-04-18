@@ -2,7 +2,6 @@ use misc::*;
 // use game::Game;
 use piston_window::*;
 use item::Item;
-use std::collections::HashMap;
 
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
@@ -104,15 +103,15 @@ impl Creature {
     //     }
     // }
 
-    pub fn pickup_item(&mut self, item: Item) {
-        if let None = self.inventory[0] {
+    // pub fn pickup_item(&mut self, item: Item) {
+    //     if let None = self.inventory[0] {
 
-        } else if let None = self.inventory[1] {
+    //     } else if let None = self.inventory[1] {
 
-        } else if let None = self.inventory[2] {
+    //     } else if let None = self.inventory[2] {
 
-        }
-    }
+    //     }
+    // }
 
     // TODO Write collision function.
 }
