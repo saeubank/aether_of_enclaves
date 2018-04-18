@@ -198,7 +198,6 @@ impl Moveable for Creature {
                 _ => {}
             }
         }
-
         self.self_vel_x = dx;
         self.self_vel_y = dy;
     }

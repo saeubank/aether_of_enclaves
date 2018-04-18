@@ -3,7 +3,7 @@
 */
 
 use noise::*;
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 
 use tile::{Tile, TileMaterial, TileType};
 
@@ -37,8 +37,6 @@ const STEP_SIZE: f64 = 0.2;
 //         Island { tiles: temp_tiles }
 //     }
 // }
-
-
 
 // need to fix so edge is weighted 0 and middle is weighted 1
 // fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
@@ -95,7 +93,7 @@ impl Map {
                 } else if num <= 0.0 {
                     map_tiles[i][j] = floor_dirt.clone();
                 } else if num <= 1.0 {
-                    map_tiles[i][j]= floor_grass.clone();
+                    map_tiles[i][j] = floor_grass.clone();
                 } else {
                     map_tiles[i][j] = floor_stone.clone();
                 }

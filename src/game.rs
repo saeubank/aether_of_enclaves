@@ -326,27 +326,32 @@ impl Game {
                     // For scaling / positioning text.
                     let title_txt = textures.get("title_text").unwrap();
                     let mut scale;
-                    if w_height < w_width { 
-                        scale = w_height / title_txt.get_width() as f64; 
-                    }
-                    else { 
-                        scale = w_width / title_txt.get_width() as f64; 
+                    if w_height < w_width {
+                        scale = w_height / title_txt.get_width() as f64;
+                    } else {
+                        scale = w_width / title_txt.get_width() as f64;
                     }
                     let new_size = scale * title_txt.get_width() as f64;
 
                     image(
                         title_img,
-                        context.transform.scale(w_width / title_img.get_width() as f64, w_height / title_img.get_height() as f64),
+                        context.transform.scale(
+                            w_width / title_img.get_width() as f64,
+                            w_height / title_img.get_height() as f64,
+                        ),
                         graphics,
                     );
                     image(
                         title_txt,
-                        context.transform.
-                            trans(w_width / 2.0 - new_size / 2.0, w_height / 2.0 - new_size / 2.0).
-                            scale(scale, scale),
+                        context
+                            .transform
+                            .trans(
+                                w_width / 2.0 - new_size / 2.0,
+                                w_height / 2.0 - new_size / 2.0,
+                            )
+                            .scale(scale, scale),
                         graphics,
                     );
-
                 }
                 GameState::InMenu => {
                     //let MenuOption m = MenuOption::Main;
@@ -393,15 +398,17 @@ impl Game {
                 Event::Loop(Loop::Update(_args)) => {
                     // Collision detection.
                     // TODO Create separate function.
-                    self.player.other_vel_x = self.ship.self_vel_x;
-                    self.player.other_vel_y = self.ship.self_vel_y;
-                    self.player.update_position_other();
-                    let x = self.player.x_to_be_location();
-                    let y = self.player.y_to_be_location();
-                    if self.is_on_ship(x, y) {
-                        self.player.update_position_self();
+                    if self.game_state == GameState::InGame {
+                        self.player.other_vel_x = self.ship.self_vel_x;
+                        self.player.other_vel_y = self.ship.self_vel_y;
+                        self.player.update_position_other();
+                        let x = self.player.x_to_be_location();
+                        let y = self.player.y_to_be_location();
+                        if self.is_on_ship(x, y) {
+                            self.player.update_position_self();
+                        }
+                        self.ship.update_position();
                     }
-                    self.ship.update_position();
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
@@ -495,27 +502,31 @@ impl Game {
 
     // Moves creature / ship.
     fn execute_move(&mut self, state: ButtonState, key: Option<Key>) {
-        match self.player.creature_state {
-            CreatureState::Normal => {
-                self.player.handle_input(state, key);
-                self.player.update_self_velocity();
-            }
-            CreatureState::ControllingShip => {
-                self.ship.handle_input(state, key);
-                self.ship.update_self_velocity();
+        if self.game_state == GameState::InGame {
+            match self.player.creature_state {
+                CreatureState::Normal => {
+                    self.player.handle_input(state, key);
+                    self.player.update_self_velocity();
+                }
+                CreatureState::ControllingShip => {
+                    self.ship.handle_input(state, key);
+                    self.ship.update_self_velocity();
+                }
             }
         }
     }
 
     // Change of player's control state.
     fn execute_change_control_state(&mut self, state: ButtonState, _key: Option<Key>) {
-        if state == ButtonState::Press {
-            match self.player.creature_state {
-                CreatureState::Normal => {
-                    self.player.creature_state = CreatureState::ControllingShip;
-                }
-                _ => {
-                    self.player.creature_state = CreatureState::Normal;
+        if self.game_state == GameState::InGame {
+            if state == ButtonState::Press {
+                match self.player.creature_state {
+                    CreatureState::Normal => {
+                        self.player.creature_state = CreatureState::ControllingShip;
+                    }
+                    _ => {
+                        self.player.creature_state = CreatureState::Normal;
+                    }
                 }
             }
         }
