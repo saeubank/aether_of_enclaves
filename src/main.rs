@@ -92,9 +92,15 @@ fn main() {
         Flip::None,
         &TextureSettings::new(),
     ).unwrap();
-    let title_screen = Texture::from_path(
+    let title_img = Texture::from_path(
         &mut window.factory,
-        assets.join("Title.png"),
+        assets.join("title_no_text.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
+    let title_txt = Texture::from_path(
+        &mut window.factory,
+        assets.join("title_text.png"),
         Flip::None,
         &TextureSettings::new(),
     ).unwrap();
@@ -109,7 +115,8 @@ fn main() {
     textures.insert("floor_dirt".to_string(), floor_dirt);
     textures.insert("floor_grass".to_string(), floor_grass);
     textures.insert("water".to_string(), water);
-    textures.insert("title".to_string(), title_screen);
+    textures.insert("title_img".to_string(), title_img);
+    textures.insert("title_text".to_string(), title_txt);
     let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
 
     // Import all player sprites

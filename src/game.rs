@@ -321,10 +321,29 @@ impl Game {
                 }
 
                 GameState::Title => {
-                    let title = textures.get("title").unwrap();
+                    let title_img = textures.get("title_img").unwrap();
+
+                    // For scaling / positioning text.
+                    let title_txt = textures.get("title_text").unwrap();
+                    let mut scale;
+                    if w_height < w_width { 
+                        scale = w_height / title_txt.get_width() as f64; 
+                    }
+                    else { 
+                        scale = w_width / title_txt.get_width() as f64; 
+                    }
+                    let new_size = scale * title_txt.get_width() as f64;
+
                     image(
-                        title,
-                        context.transform.scale(w_width / title.get_width() as f64, w_height / title.get_height() as f64),
+                        title_img,
+                        context.transform.scale(w_width / title_img.get_width() as f64, w_height / title_img.get_height() as f64),
+                        graphics,
+                    );
+                    image(
+                        title_txt,
+                        context.transform.
+                            trans(w_width / 2.0 - new_size / 2.0, w_height / 2.0 - new_size / 2.0).
+                            scale(scale, scale),
                         graphics,
                     );
 
