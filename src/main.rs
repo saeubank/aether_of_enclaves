@@ -19,6 +19,7 @@ mod tile;
 mod test;
 mod ship;
 mod misc;
+mod map;
 mod item;
 
 use piston_window::*;
@@ -67,6 +68,30 @@ fn main() {
         Flip::None,
         &TextureSettings::new(),
     ).unwrap();
+    let floor_stone = Texture::from_path(
+        &mut window.factory,
+        assets.join("stone.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
+    let floor_grass = Texture::from_path(
+        &mut window.factory,
+        assets.join("grass.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
+    let floor_dirt = Texture::from_path(
+        &mut window.factory,
+        assets.join("dirt.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
+    let water = Texture::from_path(
+        &mut window.factory,
+        assets.join("water.png"),
+        Flip::None,
+        &TextureSettings::new(),
+    ).unwrap();
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
     textures.insert("sky".to_string(), sky);
@@ -74,7 +99,10 @@ fn main() {
     textures.insert("mc".to_string(), mc);
     textures.insert("wheel".to_string(), wheel);
     textures.insert("bisket".to_string(), bisket);
-
+    textures.insert("floor_stone".to_string(), floor_stone);
+    textures.insert("floor_dirt".to_string(), floor_dirt);
+    textures.insert("floor_grass".to_string(), floor_grass);
+    textures.insert("water".to_string(), water);
     let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
 
     // Import all player sprites

@@ -8,14 +8,14 @@ pub enum TileType {
 #[derive(Clone, Debug, PartialEq)]
 pub enum TileMaterial {
     Wood,
-    // Stone,
-    // Grass,
+    Stone,
+    Grass,
     // Sand,
     // long grass,
-    // Dirt,
+    Dirt,
     // figure out how to add trees
     Air,
-    // Water,
+    Water,
     Wheel,
 }
 

@@ -6,6 +6,7 @@ use ship::Ship;
 use tile::*;
 use misc::*;
 use item::*;
+use map::Map;
 
 const IMAGE_SIZE: f64 = 32.0;
 const ANIMATION_RATE: u32 = 4;
@@ -37,6 +38,7 @@ pub struct Game {
     pub game_state: GameState,
     pub item_prototypes: HashMap<String, Item>,
     pub items_in_game: Vec<Item>,
+    pub map: Map,
     pub frames_since_last_draw: u32,
 }
 
@@ -83,6 +85,7 @@ impl Game {
             game_state: GameState::Title,
             item_prototypes: prototypes,
             items_in_game: vec![],
+            map: Map::new(),
             frames_since_last_draw: 0,
         }
     }
@@ -119,6 +122,54 @@ impl Game {
                         context.transform.scale(w_width, w_height),
                         graphics,
                     );
+
+                    for i in 0..self.map.tiles.len() {
+                        for j in 0..self.map.tiles[i].len() {
+                            match self.map.tiles[i][j].material {
+                                TileMaterial::Water => {
+                                    image(
+                                        textures.get("water").unwrap(),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                TileMaterial::Stone => {
+                                    image(
+                                        textures.get("floor_stone").unwrap(),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                TileMaterial::Grass => {
+                                    image(
+                                        textures.get("floor_grass").unwrap(),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                TileMaterial::Dirt => {
+                                    image(
+                                        textures.get("floor_dirt").unwrap(),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                _ => {}
+                            }
+                        }
+                    }
 
                     for i in 0..self.ship.tiles.len() {
                         for j in 0..self.ship.tiles[i].len() {
