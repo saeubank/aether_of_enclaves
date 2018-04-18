@@ -261,46 +261,13 @@ impl Game {
 
                     // Player animation
 
-                    let mut dir: String = "".to_string();
-
-                    // TODO fuckin fix this mess
-                    if self.player.self_vel_y != 0.0 || self.player.self_vel_x != 0.0 {
-                        if self.player.directions.len() > 1 {
-                            let dir_1 = direction_to_string(self.player.directions[0]);
-                            let dir_2 = direction_to_string(self.player.directions[1]);
-
-                            if dir_1 == "N".to_string() || dir_2 == "N".to_string() {
-                                if dir_1 == "E".to_string() || dir_2 == "E".to_string() {
-                                    dir = "NE".to_string();
-                                } else {
-                                    dir = "NW".to_string();
-                                }
-                            } else if dir_1 == "S".to_string() || dir_2 == "S".to_string() {
-                                if dir_1 == "E".to_string() || dir_2 == "E".to_string() {
-                                    dir = "SE".to_string();
-                                } else {
-                                    dir = "SW".to_string();
-                                }
-                            }
-                        } else if self.player.directions.len() == 1 {
-                            dir = direction_to_string(self.player.directions[0]);
-                            self.player.dir = self.player.directions[0];
-                        } else {
-                            dir = direction_to_string(self.player.dir);
-                        }
-                    } else {
-                        // Not moving
-                        dir = direction_to_string(self.player.dir);
-                        self.player.sprite_index = 2;
-                    }
-
                     // Draw the player texture at player's x and y position.
                     image(
                         textures
                             .get(&format!(
                                 "{}{}{}{}",
                                 "mc_",
-                                dir,
+                                direction_to_string(self.player.dir),
                                 "_",
                                 self.player.sprite_index.to_string()
                             ))
@@ -308,8 +275,6 @@ impl Game {
                         context.transform.trans(w_width / 2.0, w_height / 2.0),
                         graphics,
                     );
-
-                    // TODO framerate stuff
 
                     if self.frames_since_last_draw > ANIMATION_RATE {
                         self.frames_since_last_draw = 0;
@@ -406,6 +371,7 @@ impl Game {
                         let y = self.player.y_to_be_location();
                         if self.is_on_ship(x, y) {
                             self.player.update_position_self();
+                            self.player.update_direction();
                         }
                         self.ship.update_position();
                     }
