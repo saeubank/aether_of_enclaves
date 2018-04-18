@@ -1,5 +1,4 @@
 use misc::*;
-// use game::Game;
 use piston_window::*;
 use item::Item;
 
@@ -32,6 +31,10 @@ pub enum CreatureState {
     @field other_vel_y Horizontal velocity of other object(s) affecting Creature.
     @field speed Creature's maximum speed when moving.
     @field health Creature's health.
+    @field inventory Creature's item inventory.
+    @field dir Creature's direction.
+    @field sprite_index Used for animating the Creature's sprite.
+
 */
 pub struct Creature {
     pub creature_type: CreatureType,
@@ -48,7 +51,6 @@ pub struct Creature {
     pub inventory: [Option<Item>; 3],
     pub dir: Direction,
     pub sprite_index: i32,
-    //pub graphics_map: HashMap<Direction, [G2dTexture; 3]>,
 }
 
 impl Creature {
@@ -72,11 +74,6 @@ impl Creature {
         }
     }
 
-    // Places item in creature's inventory.
-    // pub fn pickup_item(&mut self, item: Item) {
-    //     self.inventory[0] = Some(item);
-    // }
-
     // Updates the position of creature based on other objects acting on it.
     pub fn update_position_other(&mut self) {
         self.x += self.other_vel_x;
@@ -89,6 +86,7 @@ impl Creature {
         self.y += self.self_vel_y;
     }
 
+    // Updates the direction that the creature is facing.
     pub fn update_direction(&mut self) {
         let mut dir_y = None;
         let mut dir_x = None;
@@ -135,6 +133,7 @@ impl Creature {
             }
         }
         else {
+            // Override sprite when creature isn't moving.
             self.sprite_index = 2;
         }
     }

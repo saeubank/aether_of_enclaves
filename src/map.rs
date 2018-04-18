@@ -1,70 +1,12 @@
-/*
-    Not in use
+/**
+    Map generates and manages the tileset for the map using Perlin and Worley generations.
 */
 
 use noise::*;
 use rand::{thread_rng, Rng};
-
 use tile::{Tile, TileMaterial, TileType};
 
 const STEP_SIZE: f64 = 0.2;
-
-// const ISLAND_MEAN: f64 = 10.0;
-// const ISLAND_STANDERD_DEV: f64 = 2.0;
-// const ISLAND_LOWERBOUND: f64 = 2.0;
-// const ISLAND_UPPERBOUND: f64 = 50.0;
-// const ISLAND_STEP: f64 = 0.2;
-
-// pub struct Island {
-//     pub tiles: Vec<Vec<Tile>>,
-// }
-
-// impl Island {
-//     pub fn new() -> Self {
-//         let island_size = generate_island_size();
-//         let perlin_arr = generate_perlin(island_size, ISLAND_STEP);
-//         let mut temp_tiles = vec![vec![TileType::Air; island_size]; island_size];
-//         for i in 0..temp_tiles.len() {
-//             for j in 0..temp_tiles[i].len() {
-//                 let num = perlin_arr[i][j];
-//                 if num < 0.0 {
-//                     temp_tiles[i][j] = TileType::Grass;
-//                 } else {
-//                     temp_tiles[i][j] = TileType::Water;
-//                 }
-//             }
-//         }
-//         Island { tiles: temp_tiles }
-//     }
-// }
-
-// need to fix so edge is weighted 0 and middle is weighted 1
-// fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
-//     let mut circle_arr = vec![vec![0.0; size]; size];
-//     let sizef = size as f64;
-//     let middle: f64 = sizef / 2.0;
-//     for i in 0..size {
-//         for j in 0..size {
-//             let x: f64 = middle - i as f64;
-//             let x = x * x;
-//             let y: f64 = middle - j as f64;
-//             let y = y * y;
-//             circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
-//         }
-//     }
-//     circle_arr
-// }
-
-// fn generate_island_size() -> usize {
-//     let mut normal = distributions::normal::Normal::new(ISLAND_MEAN, ISLAND_STANDERD_DEV);
-//     let mut island_size = normal.sample(&mut thread_rng());
-//     while island_size <= ISLAND_LOWERBOUND && island_size >= ISLAND_UPPERBOUND {
-//         island_size = normal.sample(&mut thread_rng());
-//     }
-//     let island_size = island_size as usize;
-//     island_size
-// }
-
 const MAP_WIDTH: usize = 50;
 const MAP_HEIGHT: usize = 50;
 
@@ -138,3 +80,62 @@ fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
     }
     worley_arr
 }
+
+
+// Maybe relevant?
+
+// const ISLAND_MEAN: f64 = 10.0;
+// const ISLAND_STANDERD_DEV: f64 = 2.0;
+// const ISLAND_LOWERBOUND: f64 = 2.0;
+// const ISLAND_UPPERBOUND: f64 = 50.0;
+// const ISLAND_STEP: f64 = 0.2;
+
+// pub struct Island {
+//     pub tiles: Vec<Vec<Tile>>,
+// }
+
+// impl Island {
+//     pub fn new() -> Self {
+//         let island_size = generate_island_size();
+//         let perlin_arr = generate_perlin(island_size, ISLAND_STEP);
+//         let mut temp_tiles = vec![vec![TileType::Air; island_size]; island_size];
+//         for i in 0..temp_tiles.len() {
+//             for j in 0..temp_tiles[i].len() {
+//                 let num = perlin_arr[i][j];
+//                 if num < 0.0 {
+//                     temp_tiles[i][j] = TileType::Grass;
+//                 } else {
+//                     temp_tiles[i][j] = TileType::Water;
+//                 }
+//             }
+//         }
+//         Island { tiles: temp_tiles }
+//     }
+// }
+
+// need to fix so edge is weighted 0 and middle is weighted 1
+// fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
+//     let mut circle_arr = vec![vec![0.0; size]; size];
+//     let sizef = size as f64;
+//     let middle: f64 = sizef / 2.0;
+//     for i in 0..size {
+//         for j in 0..size {
+//             let x: f64 = middle - i as f64;
+//             let x = x * x;
+//             let y: f64 = middle - j as f64;
+//             let y = y * y;
+//             circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
+//         }
+//     }
+//     circle_arr
+// }
+
+// fn generate_island_size() -> usize {
+//     let mut normal = distributions::normal::Normal::new(ISLAND_MEAN, ISLAND_STANDERD_DEV);
+//     let mut island_size = normal.sample(&mut thread_rng());
+//     while island_size <= ISLAND_LOWERBOUND && island_size >= ISLAND_UPPERBOUND {
+//         island_size = normal.sample(&mut thread_rng());
+//     }
+//     let island_size = island_size as usize;
+//     island_size
+// }

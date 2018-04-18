@@ -123,6 +123,7 @@ impl Game {
                         graphics,
                     );
 
+                    // Draw map.
                     for i in 0..self.map.tiles.len() {
                         if i as f64 * IMAGE_SIZE + IMAGE_SIZE > self.player.x - w_width / 2.0
                             && i as f64 * IMAGE_SIZE < self.player.x + w_width / 2.0
@@ -145,7 +146,7 @@ impl Game {
                                                     .trans(trans_x, trans_y),
                                                 graphics,
                                             );
-                                        }
+                                        },
                                         TileMaterial::Stone => {
                                             image(
                                                 textures.get("floor_stone").unwrap(),
@@ -158,7 +159,7 @@ impl Game {
                                                     .trans(trans_x, trans_y),
                                                 graphics,
                                             );
-                                        }
+                                        },
                                         TileMaterial::Grass => {
                                             image(
                                                 textures.get("floor_grass").unwrap(),
@@ -171,7 +172,7 @@ impl Game {
                                                     .trans(trans_x, trans_y),
                                                 graphics,
                                             );
-                                        }
+                                        },
                                         TileMaterial::Dirt => {
                                             image(
                                                 textures.get("floor_dirt").unwrap(),
@@ -207,7 +208,7 @@ impl Game {
                                             .trans(trans_x, trans_y),
                                         graphics,
                                     );
-                                }
+                                },
                                 TileMaterial::Wheel => {
                                     image(
                                         textures.get("boards").unwrap(),
@@ -238,12 +239,6 @@ impl Game {
                     }
 
                     for i in 0..self.items_in_game.len() {
-                        // let item_x = self.items_in_game[i].x;
-                        // let item_y = self.items_in_game[i].y;
-                        // if self.is_on_ship(item_x, item_y) {
-                        //     self.items_in_game[i].x += self.ship.self_vel_x;
-                        //     self.items_in_game[i].y += self.ship.self_vel_y;
-                        // }
                         match self.items_in_game[i].item_type {
                             ItemType::Food(FoodType::Bisket) => {
                                 image(
@@ -259,7 +254,7 @@ impl Game {
                         }
                     }
 
-                    // Player animation
+                    // Begin player animation.
 
                     // Draw the player texture at player's x and y position.
                     image(
@@ -276,14 +271,15 @@ impl Game {
                         graphics,
                     );
 
+                    // Handle "frame rate" for animation.
                     if self.frames_since_last_draw > ANIMATION_RATE {
                         self.frames_since_last_draw = 0;
                         self.player.sprite_index = (self.player.sprite_index + 1) % 4;
                     }
                     self.frames_since_last_draw += 1;
 
-                    // End player animation
-                }
+                    // End player animation.
+                },
 
                 GameState::Title => {
                     let title_img = textures.get("title_img").unwrap();
@@ -306,6 +302,7 @@ impl Game {
                         ),
                         graphics,
                     );
+                    // Draw title text on background.
                     image(
                         title_txt,
                         context
@@ -317,10 +314,8 @@ impl Game {
                             .scale(scale, scale),
                         graphics,
                     );
-                }
+                },
                 GameState::InMenu => {
-                    //let MenuOption m = MenuOption::Main;
-                    //while(m != MenuOption::Exit) {
                     let transform = context.transform.trans(100.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(

@@ -1,3 +1,7 @@
+/**
+    Ship manages the tile set, positions, movement, and generation of the player's ship.
+*/
+
 use tile::*;
 use misc::*;
 use piston_window::{ButtonState, Key};

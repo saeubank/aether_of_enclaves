@@ -117,9 +117,9 @@ fn main() {
     textures.insert("water".to_string(), water);
     textures.insert("title_img".to_string(), title_img);
     textures.insert("title_text".to_string(), title_txt);
-    let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
 
     // Import all player sprites
+    let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
     for j in 0..dirs.len() {
         for i in 1..4 {
             let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
@@ -131,7 +131,7 @@ fn main() {
                 &TextureSettings::new(),
             ).unwrap();
             textures.insert(map_name, sprite);
-            // TODO clean this shit up lol
+            // Create duplicate of sprite #2 for animation.
             if i == 2 {
                 let sprite_2 = Texture::from_path(
                     &mut window.factory,
@@ -139,8 +139,8 @@ fn main() {
                     Flip::None,
                     &TextureSettings::new(),
                 ).unwrap();
-                let mut double = format!("{}{}{}", "mc_", dirs[j], "_0");
-                textures.insert(double, sprite_2);
+                let mut duplicate = format!("{}{}{}", "mc_", dirs[j], "_0");
+                textures.insert(duplicate, sprite_2);
             }
         }
     }
