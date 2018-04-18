@@ -124,13 +124,13 @@ impl Game {
                     );
 
                     for i in 0..self.map.tiles.len() {
-                        if i as f64 * IMAGE_SIZE + IMAGE_SIZE > self.player.x - w_height / 2.0
-                            && i as f64 * IMAGE_SIZE < self.player.x + w_height / 2.0
+                        if i as f64 * IMAGE_SIZE + IMAGE_SIZE > self.player.x - w_width / 2.0
+                            && i as f64 * IMAGE_SIZE < self.player.x + w_width / 2.0
                         {
                             for j in 0..self.map.tiles[i].len() {
                                 if j as f64 * IMAGE_SIZE + IMAGE_SIZE
-                                    > self.player.y - w_width / 2.0
-                                    && j as f64 * IMAGE_SIZE < self.player.y + w_width / 2.0
+                                    > self.player.y - w_height / 2.0
+                                    && j as f64 * IMAGE_SIZE < self.player.y + w_height / 2.0
                                 {
                                     match self.map.tiles[i][j].material {
                                         TileMaterial::Water => {
