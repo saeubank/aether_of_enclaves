@@ -68,12 +68,6 @@ impl Item {
             x: x,
             y: y,
             ..self.clone()
-            // item_type: self.item_type,
-            // damage: self.damage,
-            // pickupable: self.pickupable,
-            // x_vel: self.x_vel,
-            // y_vel: self.y_vel,
-            // weight: self.weight,
         }
     }
 }

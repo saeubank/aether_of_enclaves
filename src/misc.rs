@@ -7,13 +7,27 @@ pub trait Moveable {
     fn update_self_velocity(&mut self);
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
+    N, E, S, W, NE, NW, SE, SW
 }
+
+
+pub fn direction_to_string(d: Direction) -> String {
+    let mut s;
+    match d {
+        Direction::N => s = "N",
+        Direction::S => s = "S",
+        Direction::W => s = "W",
+        Direction::E => s = "E",
+        Direction::NE => s = "NE",
+        Direction::SE => s = "SE",
+        Direction::SW => s = "SW",
+        Direction::NW => s = "NW",
+    }
+    s.to_string()
+}
+
 /*
 player inventory 
 array size 3 or vec size 3?

@@ -1,7 +1,8 @@
 use misc::*;
 // use game::Game;
-use piston_window::{ButtonState, Key};
+use piston_window::*;
 use item::Item;
+use std::collections::HashMap;
 
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
@@ -46,6 +47,9 @@ pub struct Creature {
     pub speed: f64,
     pub health: i32,
     pub inventory: [Option<Item>; 3],
+    pub dir: Direction,
+    pub sprite_index: i32,
+    //pub graphics_map: HashMap<Direction, [G2dTexture; 3]>,
 }
 
 impl Creature {
@@ -64,6 +68,8 @@ impl Creature {
             speed: 3.0,
             health: 1,
             inventory: [None, None, None],
+            dir: Direction::S,
+            sprite_index: 2,
         }
     }
 
@@ -118,7 +124,7 @@ impl Moveable for Creature {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
         match key {
             Some(Key::W) => {
-                let dir = Direction::Up;
+                let dir = Direction::N;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -130,7 +136,7 @@ impl Moveable for Creature {
                 }
             }
             Some(Key::A) => {
-                let dir = Direction::Left;
+                let dir = Direction::W;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -142,7 +148,7 @@ impl Moveable for Creature {
                 }
             }
             Some(Key::S) => {
-                let dir = Direction::Down;
+                let dir = Direction::S;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -154,7 +160,7 @@ impl Moveable for Creature {
                 }
             }
             Some(Key::D) => {
-                let dir = Direction::Right;
+                let dir = Direction::E;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -188,10 +194,11 @@ impl Moveable for Creature {
 
         for dir in &self.directions {
             match *dir {
-                Direction::Up => dy -= self.speed,
-                Direction::Down => dy += self.speed,
-                Direction::Left => dx -= self.speed,
-                Direction::Right => dx += self.speed,
+                Direction::N => dy -= self.speed,
+                Direction::S => dy += self.speed,
+                Direction::W => dx -= self.speed,
+                Direction::E => dx += self.speed,
+                _ => {}
             }
         }
 

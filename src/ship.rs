@@ -86,7 +86,7 @@ impl Moveable for Ship {
     fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
         match key {
             Some(Key::W) => {
-                let dir = Direction::Up;
+                let dir = Direction::N;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -98,7 +98,7 @@ impl Moveable for Ship {
                 }
             }
             Some(Key::A) => {
-                let dir = Direction::Left;
+                let dir = Direction::W;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -110,7 +110,7 @@ impl Moveable for Ship {
                 }
             }
             Some(Key::S) => {
-                let dir = Direction::Down;
+                let dir = Direction::S;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -122,7 +122,7 @@ impl Moveable for Ship {
                 }
             }
             Some(Key::D) => {
-                let dir = Direction::Right;
+                let dir = Direction::E;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
                     if state == ButtonState::Release {
                         self.directions.remove(index);
@@ -151,10 +151,11 @@ impl Moveable for Ship {
         // Control which direction ship accelerates in.
         for dir in &self.directions {
             match *dir {
-                Direction::Up => dy -= self.acc,
-                Direction::Down => dy += self.acc,
-                Direction::Left => dx -= self.acc,
-                Direction::Right => dx += self.acc,
+                Direction::N => dy -= self.acc,
+                Direction::S => dy += self.acc,
+                Direction::W => dx -= self.acc,
+                Direction::E => dx += self.acc,
+                _ => {}
             }
         }
 

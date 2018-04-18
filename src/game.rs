@@ -76,7 +76,7 @@ impl Game {
         &mut self,
         e: Event,
         window: &mut PistonWindow,
-        textures: &HashMap<&str, G2dTexture>,
+        textures: &HashMap<String, G2dTexture>,
     ) {
         // Font locating.
         let assets = Search::ParentsThenKids(3, 3).for_folder("fonts").unwrap();
@@ -94,6 +94,7 @@ impl Game {
                 GameState::InGame => {
                     let trans_x = w_width / 2.0 - self.player.x;
                     let trans_y = w_height / 2.0  - self.player.y;
+
                     image(
                         textures.get("sky").unwrap(),
                         context.transform.scale(w_width, w_height),
@@ -159,9 +160,47 @@ impl Game {
                     }
 
 
+                    // Player animation 
+
+                    let mut dir: String = "".to_string();
+
+                    // TODO fuckin fix this mess
+                    if self.player.self_vel_y != 0.0 || self.player.self_vel_x != 0.0 {
+                        if self.player.directions.len() > 1 {
+                            let dir_1 = direction_to_string(self.player.directions[0]);
+                            let dir_2 = direction_to_string(self.player.directions[1]);
+
+                            if dir_1 == "N".to_string() || dir_2 == "N".to_string() {
+                                if dir_1 == "E".to_string() || dir_2 == "E".to_string() {
+                                    dir = "NE".to_string();
+                                }
+                                else {
+                                    dir = "NW".to_string();
+                                }
+                            }
+                            else if dir_1 == "S".to_string() || dir_2 == "S".to_string() {
+                                if dir_1 == "E".to_string() || dir_2 == "E".to_string() {
+                                    dir = "SE".to_string();
+                                }
+                                else {
+                                    dir = "SW".to_string();
+                                }
+                            }
+                        }
+                        else {
+                            dir = direction_to_string(self.player.directions[0]);
+                            self.player.dir = self.player.directions[0];
+                        }
+                    }
+                    else {
+                        // Not moving
+                        dir = direction_to_string(self.player.dir);
+                        self.player.sprite_index = 2;
+                    }
+
                     // Draw the player texture at player's x and y position.
                     image(
-                        textures.get("mc").unwrap(),
+                        textures.get(&format!("{}{}{}{}", "mc_", dir, "_", self.player.sprite_index.to_string())).unwrap(),
                         context.transform.trans(
                             w_width / 2.0,
                             w_height / 2.0,
@@ -169,7 +208,13 @@ impl Game {
                         graphics,
                     );
 
+                    // TODO framerate stuff
+                    self.player.sprite_index = (self.player.sprite_index + 1) % 4;
+
+                    // End player animation
+
                 }
+
                 GameState::Title => {
                     let transform = context.transform.trans(w_width / 2.0, w_height / 2.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
@@ -203,7 +248,7 @@ impl Game {
     // The game loop. Displays the screen and updates events.
     // @param window The PistonWindow that is drawn to.
     // @param textures HashMap of graphics textures.
-    pub fn run(&mut self, window: &mut PistonWindow, textures: HashMap<&str, G2dTexture>) {
+    pub fn run(&mut self, window: &mut PistonWindow, textures: &HashMap<String, G2dTexture>) {
         self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
         self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE);
 
@@ -237,7 +282,7 @@ impl Game {
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
-                    self.display(e, window, &textures);
+                    self.display(e, window, textures);
                 }
                 _ => {}
             }

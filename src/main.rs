@@ -68,13 +68,41 @@ fn main() {
         &TextureSettings::new(),
     ).unwrap();
 
-    let mut textures = HashMap::new();
-    textures.insert("sky", sky);
-    textures.insert("boards", boards);
-    textures.insert("mc", mc);
-    textures.insert("wheel", wheel);
-    textures.insert("bisket", bisket);
+    let mut textures: HashMap<String, G2dTexture> = HashMap::new();
+    textures.insert("sky".to_string(), sky);
+    textures.insert("boards".to_string(), boards);
+    textures.insert("mc".to_string(), mc);
+    textures.insert("wheel".to_string(), wheel);
+    textures.insert("bisket".to_string(), bisket);
+
+    let dirs = ["N","W","S","E","NE","NW","SE","SW"];
+
+    // Import all player sprites
+    for j in 0..dirs.len() {
+        for i in 1..4 {
+            let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
+            let mut map_name = format!("{}{}{}{}", "mc_", dirs[j], "_", i.to_string());
+            let sprite = Texture::from_path(
+                &mut window.factory,
+                assets.join(&filename),
+                Flip::None,
+                &TextureSettings::new(),
+            ).unwrap();
+            textures.insert(map_name, sprite);
+            // TODO clean this shit up lol
+            if i == 2 {
+                let sprite_2 = Texture::from_path(
+                    &mut window.factory,
+                    assets.join(&filename),
+                    Flip::None,
+                    &TextureSettings::new(),
+                ).unwrap();
+                let mut double = format!("{}{}{}", "mc_", dirs[j], "_0");
+                textures.insert(double, sprite_2);
+            }
+        }
+    }
 
     let mut game = Game::new();
-    game.run(&mut window, textures);
+    game.run(&mut window, &textures);
 }
