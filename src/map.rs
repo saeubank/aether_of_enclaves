@@ -83,8 +83,8 @@ fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
 //     island_size
 // }
 
-const MAP_WIDTH: usize = 20;
-const MAP_HEIGHT: usize = 20;
+const MAP_WIDTH: usize = 50;
+const MAP_HEIGHT: usize = 50;
 
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
@@ -104,13 +104,13 @@ impl Map {
 
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
-                let num = worley_arr[i][j] * perlin_arr[i][j];
+                let num = worley_arr[i][j] + perlin_arr[i][j];
                 // let num = perlin_arr[i][j];
-                if num <= -0.5 {
+                if num <= -1.0 {
                     map_tiles[i][j] = water.clone();
                 } else if num <= 0.0 {
                     map_tiles[i][j] = floor_dirt.clone();
-                } else if num <= 0.5 {
+                } else if num <= 1.0 {
                     map_tiles[i][j] = floor_grass.clone();
                 } else {
                     map_tiles[i][j] = floor_stone.clone();

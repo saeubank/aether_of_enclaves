@@ -124,49 +124,70 @@ impl Game {
                     );
 
                     for i in 0..self.map.tiles.len() {
-                        for j in 0..self.map.tiles[i].len() {
-                            match self.map.tiles[i][j].material {
-                                TileMaterial::Water => {
-                                    image(
-                                        textures.get("water").unwrap(),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
+                        if i as f64 * IMAGE_SIZE + IMAGE_SIZE > self.player.x - w_height / 2.0
+                            && i as f64 * IMAGE_SIZE < self.player.x + w_height / 2.0
+                        {
+                            for j in 0..self.map.tiles[i].len() {
+                                if j as f64 * IMAGE_SIZE + IMAGE_SIZE
+                                    > self.player.y - w_width / 2.0
+                                    && j as f64 * IMAGE_SIZE < self.player.y + w_width / 2.0
+                                {
+                                    match self.map.tiles[i][j].material {
+                                        TileMaterial::Water => {
+                                            image(
+                                                textures.get("water").unwrap(),
+                                                context
+                                                    .transform
+                                                    .trans(
+                                                        i as f64 * IMAGE_SIZE,
+                                                        j as f64 * IMAGE_SIZE,
+                                                    )
+                                                    .trans(trans_x, trans_y),
+                                                graphics,
+                                            );
+                                        }
+                                        TileMaterial::Stone => {
+                                            image(
+                                                textures.get("floor_stone").unwrap(),
+                                                context
+                                                    .transform
+                                                    .trans(
+                                                        i as f64 * IMAGE_SIZE,
+                                                        j as f64 * IMAGE_SIZE,
+                                                    )
+                                                    .trans(trans_x, trans_y),
+                                                graphics,
+                                            );
+                                        }
+                                        TileMaterial::Grass => {
+                                            image(
+                                                textures.get("floor_grass").unwrap(),
+                                                context
+                                                    .transform
+                                                    .trans(
+                                                        i as f64 * IMAGE_SIZE,
+                                                        j as f64 * IMAGE_SIZE,
+                                                    )
+                                                    .trans(trans_x, trans_y),
+                                                graphics,
+                                            );
+                                        }
+                                        TileMaterial::Dirt => {
+                                            image(
+                                                textures.get("floor_dirt").unwrap(),
+                                                context
+                                                    .transform
+                                                    .trans(
+                                                        i as f64 * IMAGE_SIZE,
+                                                        j as f64 * IMAGE_SIZE,
+                                                    )
+                                                    .trans(trans_x, trans_y),
+                                                graphics,
+                                            );
+                                        }
+                                        _ => {}
+                                    }
                                 }
-                                TileMaterial::Stone => {
-                                    image(
-                                        textures.get("floor_stone").unwrap(),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                TileMaterial::Grass => {
-                                    image(
-                                        textures.get("floor_grass").unwrap(),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                TileMaterial::Dirt => {
-                                    image(
-                                        textures.get("floor_dirt").unwrap(),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                _ => {}
                             }
                         }
                     }
