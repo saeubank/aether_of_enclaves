@@ -89,6 +89,56 @@ impl Creature {
         self.y += self.self_vel_y;
     }
 
+    pub fn update_direction(&mut self) {
+        let mut dir_y = None;
+        let mut dir_x = None;
+        if !(self.self_vel_y == 0.0 && self.self_vel_x == 0.0) {
+            if self.self_vel_y > 0.0 {
+                dir_y = Some(Direction::S);
+            }
+            else if self.self_vel_y < 0.0 {
+                dir_y = Some(Direction::N);
+            }
+
+            if self.self_vel_x > 0.0 {
+                dir_x = Some(Direction::E);
+            }
+            else if self.self_vel_x < 0.0 {
+                dir_x = Some(Direction::W);
+            }
+
+            match dir_y {
+                Some(Direction::N) => {
+                    match dir_x {
+                        Some(Direction::W) => self.dir = Direction::NW,
+                        Some(Direction::E) => self.dir = Direction::NE,
+                        None => self.dir = Direction::N,
+                        _ => {}
+                    }
+                },
+                Some(Direction::S) => {
+                    match dir_x {
+                        Some(Direction::W) => self.dir = Direction::SW,
+                        Some(Direction::E) => self.dir = Direction::SE,
+                        None => self.dir = Direction::S,
+                        _ => {}
+                    }
+                },
+                None => {
+                    match dir_x {
+                        Some(Direction::W) => self.dir = Direction::W,
+                        Some(Direction::E) => self.dir = Direction::E,
+                        _ => {}
+                    }
+                },
+                _ => {}
+            }
+        }
+        else {
+            self.sprite_index = 2;
+        }
+    }
+
     // Determines where the creature is about to move.
     pub fn x_to_be_location(&mut self) -> f64 {
         self.x + self.self_vel_x
