@@ -39,22 +39,7 @@ const STEP_SIZE: f64 = 0.2;
 //     }
 // }
 
-fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
-    let perlin = Perlin::new();
-    let mut rng = thread_rng();
-    let perlin = perlin.set_seed(rng.gen::<usize>());
-    let mut xpos = 0.0;
-    let mut ypos = 0.0;
-    let mut perlin_arr = vec![vec![0.0; size]; size];
-    for i in 0..perlin_arr.len() {
-        for j in 0..perlin_arr[i].len() {
-            perlin_arr[i][j] = perlin.get([xpos, ypos]);
-            xpos += step;
-        }
-        ypos += step;
-    }
-    perlin_arr
-}
+
 
 // need to fix so edge is weighted 0 and middle is weighted 1
 fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
@@ -111,7 +96,7 @@ impl Map {
                 } else if num <= 0.0 {
                     map_tiles[i][j] = floor_dirt.clone();
                 } else if num <= 1.0 {
-                    map_tiles[i][j] = floor_grass.clone();
+                    map_tiles[i][j]= floor_grass.clone();
                 } else {
                     map_tiles[i][j] = floor_stone.clone();
                 }
@@ -119,6 +104,24 @@ impl Map {
         }
         Map { tiles: map_tiles }
     }
+}
+
+fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
+    let perlin = Perlin::new();
+    let mut rng = thread_rng();
+    let perlin = perlin.set_seed(rng.gen::<usize>());
+    let mut xpos = 0.0;
+    let mut ypos = 0.0;
+    let mut perlin_arr = vec![vec![0.0; size]; size];
+    for i in 0..perlin_arr.len() {
+        for j in 0..perlin_arr[i].len() {
+            perlin_arr[i][j] = perlin.get([xpos, ypos]);
+            xpos += step;
+        }
+        xpos = 0.0;
+        ypos += step;
+    }
+    perlin_arr
 }
 
 fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
@@ -133,6 +136,7 @@ fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
             worley_arr[i][j] = worley.get([xpos, ypos]);
             xpos += step;
         }
+        xpos = 0.0;
         ypos += step;
     }
     worley_arr
