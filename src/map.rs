@@ -63,13 +63,11 @@ fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
     let middle: f64 = sizef / 2.0;
     for i in 0..size {
         for j in 0..size {
-            println!("{:?}, {:?}, {:?}", middle, i, j);
             let x: f64 = middle - i as f64;
             let x = x * x;
             let y: f64 = middle - j as f64;
             let y = y * y;
             circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
-            println!("{:?}", circle_arr[i][j]);
         }
     }
     circle_arr
@@ -107,12 +105,13 @@ impl Map {
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
                 let num = worley_arr[i][j] * perlin_arr[i][j];
-                if num < -0.5 {
+                // let num = perlin_arr[i][j];
+                if num <= -0.5 {
                     map_tiles[i][j] = water.clone();
-                } else if num < 0.0 {
+                } else if num <= 0.0 {
                     map_tiles[i][j] = floor_dirt.clone();
-                } else if num < 0.5 {
-                    map_tiles[i][i] = floor_grass.clone();
+                } else if num <= 0.5 {
+                    map_tiles[i][j] = floor_grass.clone();
                 } else {
                     map_tiles[i][j] = floor_stone.clone();
                 }
