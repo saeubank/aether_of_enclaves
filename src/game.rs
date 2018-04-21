@@ -146,7 +146,7 @@ impl Game {
                                                     .trans(trans_x, trans_y),
                                                 graphics,
                                             );
-                                        },
+                                        }
                                         TileMaterial::Stone => {
                                             image(
                                                 textures.get("floor_stone").unwrap(),
@@ -159,7 +159,7 @@ impl Game {
                                                     .trans(trans_x, trans_y),
                                                 graphics,
                                             );
-                                        },
+                                        }
                                         TileMaterial::Grass => {
                                             image(
                                                 textures.get("floor_grass").unwrap(),
@@ -172,7 +172,7 @@ impl Game {
                                                     .trans(trans_x, trans_y),
                                                 graphics,
                                             );
-                                        },
+                                        }
                                         TileMaterial::Dirt => {
                                             image(
                                                 textures.get("floor_dirt").unwrap(),
@@ -208,7 +208,7 @@ impl Game {
                                             .trans(trans_x, trans_y),
                                         graphics,
                                     );
-                                },
+                                }
                                 TileMaterial::Wheel => {
                                     image(
                                         textures.get("boards").unwrap(),
@@ -279,7 +279,7 @@ impl Game {
                     self.frames_since_last_draw += 1;
 
                     // End player animation.
-                },
+                }
 
                 GameState::Title => {
                     let title_img = textures.get("title_img").unwrap();
@@ -314,7 +314,7 @@ impl Game {
                             .scale(scale, scale),
                         graphics,
                     );
-                },
+                }
                 GameState::InMenu => {
                     let transform = context.transform.trans(100.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)

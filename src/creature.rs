@@ -93,46 +93,37 @@ impl Creature {
         if !(self.self_vel_y == 0.0 && self.self_vel_x == 0.0) {
             if self.self_vel_y > 0.0 {
                 dir_y = Some(Direction::S);
-            }
-            else if self.self_vel_y < 0.0 {
+            } else if self.self_vel_y < 0.0 {
                 dir_y = Some(Direction::N);
             }
 
             if self.self_vel_x > 0.0 {
                 dir_x = Some(Direction::E);
-            }
-            else if self.self_vel_x < 0.0 {
+            } else if self.self_vel_x < 0.0 {
                 dir_x = Some(Direction::W);
             }
 
             match dir_y {
-                Some(Direction::N) => {
-                    match dir_x {
-                        Some(Direction::W) => self.dir = Direction::NW,
-                        Some(Direction::E) => self.dir = Direction::NE,
-                        None => self.dir = Direction::N,
-                        _ => {}
-                    }
+                Some(Direction::N) => match dir_x {
+                    Some(Direction::W) => self.dir = Direction::NW,
+                    Some(Direction::E) => self.dir = Direction::NE,
+                    None => self.dir = Direction::N,
+                    _ => {}
                 },
-                Some(Direction::S) => {
-                    match dir_x {
-                        Some(Direction::W) => self.dir = Direction::SW,
-                        Some(Direction::E) => self.dir = Direction::SE,
-                        None => self.dir = Direction::S,
-                        _ => {}
-                    }
+                Some(Direction::S) => match dir_x {
+                    Some(Direction::W) => self.dir = Direction::SW,
+                    Some(Direction::E) => self.dir = Direction::SE,
+                    None => self.dir = Direction::S,
+                    _ => {}
                 },
-                None => {
-                    match dir_x {
-                        Some(Direction::W) => self.dir = Direction::W,
-                        Some(Direction::E) => self.dir = Direction::E,
-                        _ => {}
-                    }
+                None => match dir_x {
+                    Some(Direction::W) => self.dir = Direction::W,
+                    Some(Direction::E) => self.dir = Direction::E,
+                    _ => {}
                 },
                 _ => {}
             }
-        }
-        else {
+        } else {
             // Override sprite when creature isn't moving.
             self.sprite_index = 2;
         }

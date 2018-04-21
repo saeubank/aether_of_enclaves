@@ -35,7 +35,6 @@ pub fn direction_to_string(d: Direction) -> String {
     s.to_string()
 }
 
-
 // More notes.
 
 /*

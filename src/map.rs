@@ -81,7 +81,6 @@ fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
     worley_arr
 }
 
-
 // Maybe relevant?
 
 // const ISLAND_MEAN: f64 = 10.0;
