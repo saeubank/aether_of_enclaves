@@ -31,97 +31,46 @@ fn main() {
     let mut window: PistonWindow = WindowSettings::new("AOE", (650, 650))
         .exit_on_esc(true)
         .build()
-        .unwrap();
+        .expect("Error building window");
 
     window.set_max_fps(60);
     let mut window = window.ups(60);
 
     // Collect the graphics ("textures").
-    let assets = Search::ParentsThenKids(3, 3).for_folder("images").unwrap();
-    let sky = Texture::from_path(
-        &mut window.factory,
-        assets.join("sky.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let boards = Texture::from_path(
-        &mut window.factory,
-        assets.join("boards.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let mc = Texture::from_path(
-        &mut window.factory,
-        assets.join("player.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let wheel = Texture::from_path(
-        &mut window.factory,
-        assets.join("wheel.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let bisket = Texture::from_path(
-        &mut window.factory,
-        assets.join("bisket.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let floor_stone = Texture::from_path(
-        &mut window.factory,
-        assets.join("stone.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let floor_grass = Texture::from_path(
-        &mut window.factory,
-        assets.join("grass.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let floor_dirt = Texture::from_path(
-        &mut window.factory,
-        assets.join("dirt.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let water = Texture::from_path(
-        &mut window.factory,
-        assets.join("water.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let title_img = Texture::from_path(
-        &mut window.factory,
-        assets.join("title_no_text.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
-    let title_txt = Texture::from_path(
-        &mut window.factory,
-        assets.join("title_text.png"),
-        Flip::None,
-        &TextureSettings::new(),
-    ).unwrap();
+    let assets = Search::ParentsThenKids(3, 3).for_folder("images").expect("Error finding folder");
+    let image_names = [
+            "err",
+            "sky",
+            "floor_boards",
+            "player",
+            "wheel",
+            "bisket",
+            "floor_stone",
+            "floor_grass",
+            "floor_dirt",
+            "water",
+            "title_no_text",
+            "title_text",
+        ];
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
-    textures.insert("sky".to_string(), sky);
-    textures.insert("boards".to_string(), boards);
-    textures.insert("mc".to_string(), mc);
-    textures.insert("wheel".to_string(), wheel);
-    textures.insert("bisket".to_string(), bisket);
-    textures.insert("floor_stone".to_string(), floor_stone);
-    textures.insert("floor_dirt".to_string(), floor_dirt);
-    textures.insert("floor_grass".to_string(), floor_grass);
-    textures.insert("water".to_string(), water);
-    textures.insert("title_img".to_string(), title_img);
-    textures.insert("title_text".to_string(), title_txt);
+
+        for image_name in image_names.into_iter() {
+            let filename = image_name.to_owned().to_owned() + ".png";
+            let img = Texture::from_path(
+                &mut window.factory,
+                assets.join(filename.clone()),
+                Flip::None,
+                &TextureSettings::new(),
+            ).expect(&format!("Not found: {:?}", filename));
+
+            textures.insert(image_name.to_string(), img);
+        }
 
     // Import all player sprites
     let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
     for j in 0..dirs.len() {
-        for i in 1..4 {
+        for i in 0..4 {
             let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
             let mut map_name = format!("{}{}{}{}", "mc_", dirs[j], "_", i.to_string());
             let sprite = Texture::from_path(
@@ -129,19 +78,8 @@ fn main() {
                 assets.join(&filename),
                 Flip::None,
                 &TextureSettings::new(),
-            ).unwrap();
+            ).expect(&format!("Not found: {:?}", filename));
             textures.insert(map_name, sprite);
-            // Create duplicate of sprite #2 for animation.
-            if i == 2 {
-                let sprite_2 = Texture::from_path(
-                    &mut window.factory,
-                    assets.join(&filename),
-                    Flip::None,
-                    &TextureSettings::new(),
-                ).unwrap();
-                let mut duplicate = format!("{}{}{}", "mc_", dirs[j], "_0");
-                textures.insert(duplicate, sprite_2);
-            }
         }
     }
 

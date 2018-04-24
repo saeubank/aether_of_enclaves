@@ -48,7 +48,7 @@ impl Map {
 fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
     let perlin = Perlin::new();
     let mut rng = thread_rng();
-    let perlin = perlin.set_seed(rng.gen::<usize>());
+    let perlin = perlin.set_seed(rng.gen::<u32>());
     let mut xpos = 0.0;
     let mut ypos = 0.0;
     let mut perlin_arr = vec![vec![0.0; size]; size];
@@ -64,9 +64,9 @@ fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
 }
 
 fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
-    let worley: Worley<f64> = Worley::new();
+    let worley: Worley = Worley::new();
     let mut rng = thread_rng();
-    let worley = worley.set_seed(rng.gen::<usize>());
+    let worley = worley.set_seed(rng.gen::<u32>());
     let mut xpos = 0.0;
     let mut ypos = 0.0;
     let mut worley_arr = vec![vec![0.0; size]; size];
