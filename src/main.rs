@@ -10,7 +10,6 @@
 */
 extern crate find_folder;
 extern crate noise;
-extern crate piston;
 extern crate piston_window;
 extern crate rand;
 mod game;
@@ -37,35 +36,37 @@ fn main() {
     let mut window = window.ups(60);
 
     // Collect the graphics ("textures").
-    let assets = Search::ParentsThenKids(3, 3).for_folder("images").expect("Error finding folder");
+    let assets = Search::ParentsThenKids(3, 3)
+        .for_folder("images")
+        .expect("Error finding folder");
     let image_names = [
-            "err",
-            "sky",
-            "floor_boards",
-            "player",
-            "wheel",
-            "bisket",
-            "floor_stone",
-            "floor_grass",
-            "floor_dirt",
-            "water",
-            "title_no_text",
-            "title_text",
-        ];
+        "err",
+        "sky",
+        "floor_boards",
+        "player",
+        "wheel",
+        "bisket",
+        "floor_stone",
+        "floor_grass",
+        "floor_dirt",
+        "water",
+        "title_no_text",
+        "title_text",
+    ];
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
 
-        for image_name in image_names.into_iter() {
-            let filename = image_name.to_owned().to_owned() + ".png";
-            let img = Texture::from_path(
-                &mut window.factory,
-                assets.join(filename.clone()),
-                Flip::None,
-                &TextureSettings::new(),
-            ).expect(&format!("Not found: {:?}", filename));
+    for image_name in image_names.into_iter() {
+        let filename = image_name.to_owned().to_owned() + ".png";
+        let img = Texture::from_path(
+            &mut window.factory,
+            assets.join(filename.clone()),
+            Flip::None,
+            &TextureSettings::new(),
+        ).expect(&format!("Not found: {:?}", filename));
 
-            textures.insert(image_name.to_string(), img);
-        }
+        textures.insert(image_name.to_string(), img);
+    }
 
     // Import all player sprites
     let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];

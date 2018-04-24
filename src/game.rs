@@ -101,10 +101,13 @@ impl Game {
         textures: &HashMap<String, G2dTexture>,
     ) {
         // Font locating.
-        let assets = Search::ParentsThenKids(3, 3).for_folder("fonts").expect("Error finding folder");
+        let assets = Search::ParentsThenKids(3, 3)
+            .for_folder("fonts")
+            .expect("Error finding folder");
         let ref font = assets.join("Inconsolata-Regular.ttf");
         let factory = window.factory.clone();
-        let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
+        let mut glyphs =
+            Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
 
         let window_size = window.draw_size();
 
@@ -137,7 +140,9 @@ impl Game {
                                         TileMaterial::Water => {
                                             let img = "water";
                                             image(
-                                                textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                                textures
+                                                    .get(img)
+                                                    .expect(&format!("Not found: {:?}", img)),
                                                 context
                                                     .transform
                                                     .trans(
@@ -151,7 +156,9 @@ impl Game {
                                         TileMaterial::Stone => {
                                             let img = "floor_stone";
                                             image(
-                                                textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                                textures
+                                                    .get(img)
+                                                    .expect(&format!("Not found: {:?}", img)),
                                                 context
                                                     .transform
                                                     .trans(
@@ -165,7 +172,9 @@ impl Game {
                                         TileMaterial::Grass => {
                                             let img = "floor_grass";
                                             image(
-                                                textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                                textures
+                                                    .get(img)
+                                                    .expect(&format!("Not found: {:?}", img)),
                                                 context
                                                     .transform
                                                     .trans(
@@ -179,7 +188,9 @@ impl Game {
                                         TileMaterial::Dirt => {
                                             let img = "floor_dirt";
                                             image(
-                                                textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                                textures
+                                                    .get(img)
+                                                    .expect(&format!("Not found: {:?}", img)),
                                                 context
                                                     .transform
                                                     .trans(
@@ -266,16 +277,14 @@ impl Game {
 
                     // Draw the player texture at player's x and y position.
                     let img = &format!(
-                                "{}{}{}{}",
-                                "mc_",
-                                direction_to_string(self.player.dir),
-                                "_",
-                                self.player.sprite_index.to_string()
-                            );
+                        "{}{}{}{}",
+                        "mc_",
+                        direction_to_string(self.player.dir),
+                        "_",
+                        self.player.sprite_index.to_string()
+                    );
                     image(
-                        textures
-                            .get(img)
-                            .expect(&format!("Not found: {:?}", img)),
+                        textures.get(img).expect(&format!("Not found: {:?}", img)),
                         context.transform.trans(w_width / 2.0, w_height / 2.0),
                         graphics,
                     );
