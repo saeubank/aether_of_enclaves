@@ -10,6 +10,8 @@ use map::Map;
 
 const IMAGE_SIZE: f64 = 32.0;
 const ANIMATION_RATE: u32 = 4;
+const MAP_WIDTH: usize = 500;
+const MAP_HEIGHT: usize = 500;
 
 #[derive(Debug, PartialEq)]
 
@@ -85,7 +87,7 @@ impl Game {
             game_state: GameState::Title,
             item_prototypes: prototypes,
             items_in_game: vec![],
-            map: Map::new(),
+            map: Map::new(MAP_WIDTH, MAP_HEIGHT),
             frames_since_last_draw: 0,
         }
     }

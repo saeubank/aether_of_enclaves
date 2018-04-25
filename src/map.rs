@@ -6,35 +6,33 @@ use noise::*;
 use rand::{thread_rng, Rng};
 use tile::{Tile, TileMaterial, TileType};
 
-const STEP_SIZE: f64 = 0.2;
-const MAP_WIDTH: usize = 500;
-const MAP_HEIGHT: usize = 500;
+const STEP_SIZE: f64 = 0.1;
 
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
 }
 
 impl Map {
-    pub fn new() -> Self {
+    pub fn new(width: usize, height: usize) -> Self {
         let air = Tile::new(TileType::Special, TileMaterial::Air);
         let floor_grass = Tile::new(TileType::Floor, TileMaterial::Grass);
         let water = Tile::new(TileType::Special, TileMaterial::Water);
         let floor_dirt = Tile::new(TileType::Floor, TileMaterial::Dirt);
         let floor_stone = Tile::new(TileType::Floor, TileMaterial::Stone);
 
-        let mut map_tiles = vec![vec![air.clone(); MAP_HEIGHT]; MAP_WIDTH];
-        let worley_arr = generate_worley(MAP_WIDTH, STEP_SIZE);
-        let perlin_arr = generate_perlin(MAP_WIDTH, STEP_SIZE);
+        let mut map_tiles = vec![vec![air.clone(); height]; width];
+        let worley_arr = generate_worley(width, height, STEP_SIZE);
+        let perlin_arr = generate_perlin(width, height, STEP_SIZE);
 
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
-                let num = worley_arr[i][j] + perlin_arr[i][j];
+                let num = (worley_arr[i][j] + perlin_arr[i][j]) / 2.0;
                 // let num = perlin_arr[i][j];
-                if num <= -1.0 {
+                if num <= -0.5 {
                     map_tiles[i][j] = water.clone();
                 } else if num <= 0.0 {
                     map_tiles[i][j] = floor_dirt.clone();
-                } else if num <= 1.0 {
+                } else if num <= 0.5 {
                     map_tiles[i][j] = floor_grass.clone();
                 } else {
                     map_tiles[i][j] = floor_stone.clone();
@@ -45,72 +43,40 @@ impl Map {
     }
 }
 
-fn generate_perlin(size: usize, step: f64) -> Vec<Vec<f64>> {
-    let perlin = Perlin::new();
+fn generate_perlin(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     let mut rng = thread_rng();
-    let perlin = perlin.set_seed(rng.gen::<u32>());
+    let noise = Perlin::new().set_seed(rng.gen::<u32>());
     let mut xpos = 0.0;
     let mut ypos = 0.0;
-    let mut perlin_arr = vec![vec![0.0; size]; size];
-    for i in 0..perlin_arr.len() {
-        for j in 0..perlin_arr[i].len() {
-            perlin_arr[i][j] = perlin.get([xpos, ypos]);
+    let mut arr = vec![vec![0.0; height]; width];
+    for i in 0..width {
+        for j in 0..height {
+            arr[i][j] = noise.get([xpos, ypos]);
             xpos += step;
         }
         xpos = 0.0;
         ypos += step;
     }
-    perlin_arr
+    arr
 }
 
-fn generate_worley(size: usize, step: f64) -> Vec<Vec<f64>> {
-    let worley: Worley = Worley::new();
+fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     let mut rng = thread_rng();
-    let worley = worley.set_seed(rng.gen::<u32>());
+    let noise = Worley::new().set_seed(rng.gen::<u32>()).enable_range(true);
     let mut xpos = 0.0;
     let mut ypos = 0.0;
-    let mut worley_arr = vec![vec![0.0; size]; size];
-    for i in 0..worley_arr.len() {
-        for j in 0..worley_arr[i].len() {
-            worley_arr[i][j] = worley.get([xpos, ypos]);
+    let mut arr = vec![vec![0.0; height]; width];
+    for i in 0..width {
+        for j in 0..height {
+            arr[i][j] = noise.get([xpos, ypos]);
             xpos += step;
         }
         xpos = 0.0;
         ypos += step;
     }
-    worley_arr
+    arr
 }
 
-// Maybe relevant?
-
-// const ISLAND_MEAN: f64 = 10.0;
-// const ISLAND_STANDERD_DEV: f64 = 2.0;
-// const ISLAND_LOWERBOUND: f64 = 2.0;
-// const ISLAND_UPPERBOUND: f64 = 50.0;
-// const ISLAND_STEP: f64 = 0.2;
-
-// pub struct Island {
-//     pub tiles: Vec<Vec<Tile>>,
-// }
-
-// impl Island {
-//     pub fn new() -> Self {
-//         let island_size = generate_island_size();
-//         let perlin_arr = generate_perlin(island_size, ISLAND_STEP);
-//         let mut temp_tiles = vec![vec![TileType::Air; island_size]; island_size];
-//         for i in 0..temp_tiles.len() {
-//             for j in 0..temp_tiles[i].len() {
-//                 let num = perlin_arr[i][j];
-//                 if num < 0.0 {
-//                     temp_tiles[i][j] = TileType::Grass;
-//                 } else {
-//                     temp_tiles[i][j] = TileType::Water;
-//                 }
-//             }
-//         }
-//         Island { tiles: temp_tiles }
-//     }
-// }
 
 // need to fix so edge is weighted 0 and middle is weighted 1
 // fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
