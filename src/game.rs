@@ -2,6 +2,7 @@ use piston_window::*;
 use find_folder::Search;
 use creature::{Creature, CreatureState, CreatureType};
 use std::collections::HashMap;
+use std::cmp;
 use ship::Ship;
 use tile::*;
 use misc::*;
@@ -10,8 +11,8 @@ use map::Map;
 
 const IMAGE_SIZE: f64 = 32.0;
 const ANIMATION_RATE: u32 = 4;
-const MAP_WIDTH: usize = 500;
-const MAP_HEIGHT: usize = 500;
+const MAP_WIDTH: usize = 50;
+const MAP_HEIGHT: usize = 50;
 
 #[derive(Debug, PartialEq)]
 
@@ -35,15 +36,15 @@ pub enum GameState {
     @field game_state The Game State (see above). 
 */
 pub struct Game {
-    pub player: Creature,
-    pub ship: Ship,
-    pub game_state: GameState,
-    pub item_prototypes: HashMap<String, Item>,
-    pub items_in_game: Vec<Item>,
-    pub map: Map,
-    pub glyphs: Glyphs,
-    pub textures: HashMap<String, G2dTexture>,
-    pub frames_since_last_draw: u32,
+    player: Creature,
+    ship: Ship,
+    game_state: GameState,
+    item_prototypes: HashMap<String, Item>,
+    items_in_game: Vec<Item>,
+    map: Map,
+    glyphs: Glyphs,
+    textures: HashMap<String, G2dTexture>,
+    frames_since_last_draw: u32,
 }
 
 impl Game {
@@ -60,90 +61,15 @@ impl Game {
             vec![1, 1, 1, 1, 1, 1, 1],
         ];
 
-        let mut prototypes: HashMap<String, Item> = HashMap::new();
-        prototypes.insert(
-            "bisket".to_string(),
-            Item::new(ItemType::Food(FoodType::Bisket), 1, true, 1.0),
-        );
-        prototypes.insert(
-            "sword".to_string(),
-            Item::new(
-                ItemType::Interactable(InteractableType::Sword),
-                10,
-                true,
-                5.0,
-            ),
-        );
-        prototypes.insert(
-            "grune".to_string(),
-            Item::new(ItemType::Resource(ResourceType::Grune), 1, true, 0.5),
-        );
-        prototypes.insert(
-            "logs".to_string(),
-            Item::new(ItemType::Resource(ResourceType::Logs), 5, true, 8.0),
-        );
-
-        let assets = Search::ParentsThenKids(3, 3)
-            .for_folder("fonts")
-            .expect("Error finding folder");
-        let ref font = assets.join("Inconsolata-Regular.ttf");
-        let factory = window.factory.clone();
-        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
-
-        // Collect the graphics ("textures").
-        let assets = Search::ParentsThenKids(3, 3)
-            .for_folder("images")
-            .expect("Error finding folder");
-        let image_names = [
-            "err",
-            "sky",
-            "floor_boards",
-            "player",
-            "wheel",
-            "bisket",
-            "floor_stone",
-            "floor_grass",
-            "floor_dirt",
-            "water",
-            "title_no_text",
-            "title_text",
-        ];
-
-        let mut textures: HashMap<String, G2dTexture> = HashMap::new();
-
-        for image_name in image_names.into_iter() {
-            let filename = image_name.to_owned().to_owned() + ".png";
-            let img = Texture::from_path(
-                &mut window.factory,
-                assets.join(filename.clone()),
-                Flip::None,
-                &TextureSettings::new(),
-            ).expect(&format!("Not found: {:?}", filename));
-
-            textures.insert(image_name.to_string(), img);
-        }
-
-        // Import all player sprites
-        let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
-        for j in 0..dirs.len() {
-            for i in 0..4 {
-                let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
-                let mut map_name = format!("{}{}{}{}", "mc_", dirs[j], "_", i.to_string());
-                let sprite = Texture::from_path(
-                    &mut window.factory,
-                    assets.join(&filename),
-                    Flip::None,
-                    &TextureSettings::new(),
-                ).expect(&format!("Not found: {:?}", filename));
-                textures.insert(map_name, sprite);
-            }
-        }
+        let item_prototypes = generate_item_prototypes();
+        let glyphs = generate_glyphs(window);
+        let textures = generate_textures(window);
 
         Game {
             player: Creature::new(CreatureType::Player),
             ship: Ship::new(ship_tiles),
             game_state: GameState::Title,
-            item_prototypes: prototypes,
+            item_prototypes: item_prototypes,
             items_in_game: vec![],
             map: Map::new(MAP_WIDTH, MAP_HEIGHT),
             glyphs: glyphs,
@@ -179,83 +105,72 @@ impl Game {
                     );
 
                     // Draw map.
-                    for i in 0..self.map.tiles.len() {
-                        if i as f64 * IMAGE_SIZE + IMAGE_SIZE > self.player.x - w_width / 2.0
-                            && i as f64 * IMAGE_SIZE < self.player.x + w_width / 2.0
-                        {
-                            for j in 0..self.map.tiles[i].len() {
-                                if j as f64 * IMAGE_SIZE + IMAGE_SIZE
-                                    > self.player.y - w_height / 2.0
-                                    && j as f64 * IMAGE_SIZE < self.player.y + w_height / 2.0
-                                {
-                                    match self.map.tiles[i][j].material {
-                                        TileMaterial::Water => {
-                                            let img = "water";
-                                            image(
-                                                self.textures
-                                                    .get(img)
-                                                    .expect(&format!("Not found: {:?}", img)),
-                                                context
-                                                    .transform
-                                                    .trans(
-                                                        i as f64 * IMAGE_SIZE,
-                                                        j as f64 * IMAGE_SIZE,
-                                                    )
-                                                    .trans(trans_x, trans_y),
-                                                graphics,
-                                            );
-                                        }
-                                        TileMaterial::Stone => {
-                                            let img = "floor_stone";
-                                            image(
-                                                self.textures
-                                                    .get(img)
-                                                    .expect(&format!("Not found: {:?}", img)),
-                                                context
-                                                    .transform
-                                                    .trans(
-                                                        i as f64 * IMAGE_SIZE,
-                                                        j as f64 * IMAGE_SIZE,
-                                                    )
-                                                    .trans(trans_x, trans_y),
-                                                graphics,
-                                            );
-                                        }
-                                        TileMaterial::Grass => {
-                                            let img = "floor_grass";
-                                            image(
-                                                self.textures
-                                                    .get(img)
-                                                    .expect(&format!("Not found: {:?}", img)),
-                                                context
-                                                    .transform
-                                                    .trans(
-                                                        i as f64 * IMAGE_SIZE,
-                                                        j as f64 * IMAGE_SIZE,
-                                                    )
-                                                    .trans(trans_x, trans_y),
-                                                graphics,
-                                            );
-                                        }
-                                        TileMaterial::Dirt => {
-                                            let img = "floor_dirt";
-                                            image(
-                                                self.textures
-                                                    .get(img)
-                                                    .expect(&format!("Not found: {:?}", img)),
-                                                context
-                                                    .transform
-                                                    .trans(
-                                                        i as f64 * IMAGE_SIZE,
-                                                        j as f64 * IMAGE_SIZE,
-                                                    )
-                                                    .trans(trans_x, trans_y),
-                                                graphics,
-                                            );
-                                        }
-                                        _ => {}
-                                    }
+                    let draw_start_i = ((self.player.x - w_width / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
+                    let draw_start_j = ((self.player.y - w_height / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
+                    let draw_start_i = cmp::max(0, draw_start_i as i32) as usize;
+                    let draw_start_j = cmp::max(0, draw_start_j as i32) as usize;
+                    for i in draw_start_i..self.map.tiles.len() {
+                        if i as f64 * IMAGE_SIZE > self.player.x + w_width / 2.0 {
+                            break;
+                        }
+                        for j in draw_start_j..self.map.tiles[i].len() {
+                            if j as f64 * IMAGE_SIZE > self.player.y + w_height / 2.0 {
+                                break;
+                            }
+                            match self.map.tiles[i][j].material {
+                                TileMaterial::Water => {
+                                    let img = "water";
+                                    image(
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
                                 }
+                                TileMaterial::Stone => {
+                                    let img = "floor_stone";
+                                    image(
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                TileMaterial::Grass => {
+                                    let img = "floor_grass";
+                                    image(
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                TileMaterial::Dirt => {
+                                    let img = "floor_dirt";
+                                    image(
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
+                                        context
+                                            .transform
+                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                            .trans(trans_x, trans_y),
+                                        graphics,
+                                    );
+                                }
+                                _ => {}
                             }
                         }
                     }
@@ -580,4 +495,92 @@ impl Game {
             }
         }
     }
+}
+
+fn generate_item_prototypes() -> HashMap<String, Item> {
+    let mut prototypes: HashMap<String, Item> = HashMap::new();
+    prototypes.insert(
+        "bisket".to_string(),
+        Item::new(ItemType::Food(FoodType::Bisket), 1, true, 1.0),
+    );
+    prototypes.insert(
+        "sword".to_string(),
+        Item::new(
+            ItemType::Interactable(InteractableType::Sword),
+            10,
+            true,
+            5.0,
+        ),
+    );
+    prototypes.insert(
+        "grune".to_string(),
+        Item::new(ItemType::Resource(ResourceType::Grune), 1, true, 0.5),
+    );
+    prototypes.insert(
+        "logs".to_string(),
+        Item::new(ItemType::Resource(ResourceType::Logs), 5, true, 8.0),
+    );
+    prototypes
+}
+
+fn generate_glyphs(window: &mut PistonWindow) -> Glyphs {
+    let assets = Search::ParentsThenKids(3, 3)
+        .for_folder("fonts")
+        .expect("Error finding folder");
+    let ref font = assets.join("Inconsolata-Regular.ttf");
+    let factory = window.factory.clone();
+    let glyphs = Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
+    glyphs
+}
+
+fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
+    // Collect the graphics ("textures").
+    let assets = Search::ParentsThenKids(3, 3)
+        .for_folder("images")
+        .expect("Error finding folder");
+    let image_names = [
+        "err",
+        "sky",
+        "floor_boards",
+        "player",
+        "wheel",
+        "bisket",
+        "floor_stone",
+        "floor_grass",
+        "floor_dirt",
+        "water",
+        "title_no_text",
+        "title_text",
+    ];
+
+    let mut textures: HashMap<String, G2dTexture> = HashMap::new();
+
+    for image_name in image_names.into_iter() {
+        let filename = image_name.to_owned().to_owned() + ".png";
+        let img = Texture::from_path(
+            &mut window.factory,
+            assets.join(filename.clone()),
+            Flip::None,
+            &TextureSettings::new(),
+        ).expect(&format!("Not found: {:?}", filename));
+
+        textures.insert(image_name.to_string(), img);
+    }
+
+    // Import all player sprites
+    let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
+    for j in 0..dirs.len() {
+        for i in 0..4 {
+            let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
+            let mut map_name = format!("{}{}{}{}", "mc_", dirs[j], "_", i.to_string());
+            let sprite = Texture::from_path(
+                &mut window.factory,
+                assets.join(&filename),
+                Flip::None,
+                &TextureSettings::new(),
+            ).expect(&format!("Not found: {:?}", filename));
+            textures.insert(map_name, sprite);
+        }
+    }
+    textures
 }

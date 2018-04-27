@@ -80,9 +80,9 @@ impl Ship {
     // TODO
     // fn change_tile() {}
 
-    pub fn update(&mut self) {
-        self.update_position();
-    }
+    // pub fn update(&mut self) {
+    //     self.update_position();
+    // }
 }
 
 impl Moveable for Ship {
