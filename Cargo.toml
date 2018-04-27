@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["samuel", "kenzie"]
 
 [dependencies]
-piston_window = "0.77.0"
+piston_window = "0.79.0"
 noise = "0.5.1"
 find_folder = "*"
 rand = "0.4"

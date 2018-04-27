@@ -77,7 +77,6 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     arr
 }
 
-
 // need to fix so edge is weighted 0 and middle is weighted 1
 // fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
 //     let mut circle_arr = vec![vec![0.0; size]; size];

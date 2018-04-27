@@ -41,12 +41,14 @@ pub struct Game {
     pub item_prototypes: HashMap<String, Item>,
     pub items_in_game: Vec<Item>,
     pub map: Map,
+    pub glyphs: Glyphs,
+    pub textures: HashMap<String, G2dTexture>,
     pub frames_since_last_draw: u32,
 }
 
 impl Game {
     // Constructor of the Game.
-    pub fn new() -> Self {
+    pub fn new(window: &mut PistonWindow) -> Self {
         let ship_tiles: Vec<Vec<i32>> = vec![
             vec![0, 0, 1, 1, 1, 0, 0],
             vec![0, 1, 1, 1, 1, 1, 0],
@@ -81,6 +83,62 @@ impl Game {
             Item::new(ItemType::Resource(ResourceType::Logs), 5, true, 8.0),
         );
 
+        let assets = Search::ParentsThenKids(3, 3)
+            .for_folder("fonts")
+            .expect("Error finding folder");
+        let ref font = assets.join("Inconsolata-Regular.ttf");
+        let factory = window.factory.clone();
+        let glyphs = Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
+
+        // Collect the graphics ("textures").
+        let assets = Search::ParentsThenKids(3, 3)
+            .for_folder("images")
+            .expect("Error finding folder");
+        let image_names = [
+            "err",
+            "sky",
+            "floor_boards",
+            "player",
+            "wheel",
+            "bisket",
+            "floor_stone",
+            "floor_grass",
+            "floor_dirt",
+            "water",
+            "title_no_text",
+            "title_text",
+        ];
+
+        let mut textures: HashMap<String, G2dTexture> = HashMap::new();
+
+        for image_name in image_names.into_iter() {
+            let filename = image_name.to_owned().to_owned() + ".png";
+            let img = Texture::from_path(
+                &mut window.factory,
+                assets.join(filename.clone()),
+                Flip::None,
+                &TextureSettings::new(),
+            ).expect(&format!("Not found: {:?}", filename));
+
+            textures.insert(image_name.to_string(), img);
+        }
+
+        // Import all player sprites
+        let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
+        for j in 0..dirs.len() {
+            for i in 0..4 {
+                let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
+                let mut map_name = format!("{}{}{}{}", "mc_", dirs[j], "_", i.to_string());
+                let sprite = Texture::from_path(
+                    &mut window.factory,
+                    assets.join(&filename),
+                    Flip::None,
+                    &TextureSettings::new(),
+                ).expect(&format!("Not found: {:?}", filename));
+                textures.insert(map_name, sprite);
+            }
+        }
+
         Game {
             player: Creature::new(CreatureType::Player),
             ship: Ship::new(ship_tiles),
@@ -88,6 +146,8 @@ impl Game {
             item_prototypes: prototypes,
             items_in_game: vec![],
             map: Map::new(MAP_WIDTH, MAP_HEIGHT),
+            glyphs: glyphs,
+            textures: textures,
             frames_since_last_draw: 0,
         }
     }
@@ -96,20 +156,8 @@ impl Game {
     // @param e The graphics event for drawing.
     // @param window The PistonWindow that is drawn to.
     // @param textures A HashMap of texture graphics.
-    fn display(
-        &mut self,
-        e: Event,
-        window: &mut PistonWindow,
-        textures: &HashMap<String, G2dTexture>,
-    ) {
+    fn display(&mut self, e: Event, window: &mut PistonWindow) {
         // Font locating.
-        let assets = Search::ParentsThenKids(3, 3)
-            .for_folder("fonts")
-            .expect("Error finding folder");
-        let ref font = assets.join("Inconsolata-Regular.ttf");
-        let factory = window.factory.clone();
-        let mut glyphs =
-            Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
 
         let window_size = window.draw_size();
 
@@ -123,7 +171,9 @@ impl Game {
                     let trans_y = w_height / 2.0 - self.player.y;
                     let img = "sky";
                     image(
-                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                        self.textures
+                            .get(img)
+                            .expect(&format!("Not found: {:?}", img)),
                         context.transform.scale(w_width, w_height),
                         graphics,
                     );
@@ -142,7 +192,7 @@ impl Game {
                                         TileMaterial::Water => {
                                             let img = "water";
                                             image(
-                                                textures
+                                                self.textures
                                                     .get(img)
                                                     .expect(&format!("Not found: {:?}", img)),
                                                 context
@@ -158,7 +208,7 @@ impl Game {
                                         TileMaterial::Stone => {
                                             let img = "floor_stone";
                                             image(
-                                                textures
+                                                self.textures
                                                     .get(img)
                                                     .expect(&format!("Not found: {:?}", img)),
                                                 context
@@ -174,7 +224,7 @@ impl Game {
                                         TileMaterial::Grass => {
                                             let img = "floor_grass";
                                             image(
-                                                textures
+                                                self.textures
                                                     .get(img)
                                                     .expect(&format!("Not found: {:?}", img)),
                                                 context
@@ -190,7 +240,7 @@ impl Game {
                                         TileMaterial::Dirt => {
                                             let img = "floor_dirt";
                                             image(
-                                                textures
+                                                self.textures
                                                     .get(img)
                                                     .expect(&format!("Not found: {:?}", img)),
                                                 context
@@ -216,7 +266,9 @@ impl Game {
                                 TileMaterial::Wood => {
                                     let img = "floor_boards";
                                     image(
-                                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
                                         context
                                             .transform
                                             .trans(
@@ -230,7 +282,9 @@ impl Game {
                                 TileMaterial::Wheel => {
                                     let img = "floor_boards";
                                     image(
-                                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
                                         context
                                             .transform
                                             .trans(
@@ -242,7 +296,9 @@ impl Game {
                                     );
                                     let img = "wheel";
                                     image(
-                                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                        self.textures
+                                            .get(img)
+                                            .expect(&format!("Not found: {:?}", img)),
                                         context
                                             .transform
                                             .trans(
@@ -263,7 +319,9 @@ impl Game {
                             ItemType::Food(FoodType::Bisket) => {
                                 let img = "bisket";
                                 image(
-                                    textures.get(img).expect(&format!("Not found: {:?}", img)),
+                                    self.textures
+                                        .get(img)
+                                        .expect(&format!("Not found: {:?}", img)),
                                     context
                                         .transform
                                         .trans(self.items_in_game[i].x, self.items_in_game[i].y)
@@ -286,7 +344,9 @@ impl Game {
                         self.player.sprite_index.to_string()
                     );
                     image(
-                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                        self.textures
+                            .get(img)
+                            .expect(&format!("Not found: {:?}", img)),
                         context.transform.trans(w_width / 2.0, w_height / 2.0),
                         graphics,
                     );
@@ -303,11 +363,15 @@ impl Game {
 
                 GameState::Title => {
                     let img = "title_no_text";
-                    let title_img = textures.get(img).expect(&format!("Not found: {:?}", img));
+                    let title_img = self.textures
+                        .get(img)
+                        .expect(&format!("Not found: {:?}", img));
 
                     // For scaling / positioning text.
                     let img = "title_text";
-                    let title_txt = textures.get(img).expect(&format!("Not found: {:?}", img));
+                    let title_txt = self.textures
+                        .get(img)
+                        .expect(&format!("Not found: {:?}", img));
                     let mut scale;
                     if w_height < w_width {
                         scale = w_height / title_txt.get_width() as f64;
@@ -342,7 +406,7 @@ impl Game {
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
                             "Inventory",
-                            &mut glyphs,
+                            &mut self.glyphs,
                             &context.draw_state,
                             transform,
                             graphics,
@@ -356,7 +420,7 @@ impl Game {
     // The game loop. Displays the screen and updates events.
     // @param window The PistonWindow that is drawn to.
     // @param textures HashMap of graphics textures.
-    pub fn run(&mut self, window: &mut PistonWindow, textures: &HashMap<String, G2dTexture>) {
+    pub fn run(&mut self, window: &mut PistonWindow) {
         self.ship.x = 1500.0;
         self.ship.y = 1500.0;
         self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
@@ -397,7 +461,7 @@ impl Game {
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
-                    self.display(e, window, textures);
+                    self.display(e, window);
                 }
                 _ => {}
             }
