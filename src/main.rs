@@ -25,7 +25,6 @@ use game::Game;
 fn main() {
     let mut window: PistonWindow = WindowSettings::new("AOE", (650, 650))
         .exit_on_esc(true)
-        .opengl(OpenGL::V4_5)
         .build()
         .expect("Error building window");
 
