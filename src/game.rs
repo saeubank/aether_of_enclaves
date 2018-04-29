@@ -387,15 +387,17 @@ impl Game {
     // @param x Some x coordinate.
     // @param y Some y coordinate.
     fn is_on_ship(&mut self, x: f64, y: f64) -> bool {
+        let ship_x = self.ship.x + self.ship.self_vel_x;
+        let ship_y = self.ship.y + self.ship.self_vel_y;
         // Check edges.
         let is_in_x =
-            x >= self.ship.x && x + IMAGE_SIZE <= self.ship.x + self.ship.width * IMAGE_SIZE;
+            x >= ship_x && x + IMAGE_SIZE <= ship_x + self.ship.width * IMAGE_SIZE;
         let is_in_y =
-            y >= self.ship.y && y + IMAGE_SIZE <= self.ship.y + self.ship.height * IMAGE_SIZE;
+            y >= ship_y && y + IMAGE_SIZE <= ship_y + self.ship.height * IMAGE_SIZE;
         if is_in_x && is_in_y {
             // Check specific tiles.
-            let ship_tile_x = (x - self.ship.x) / IMAGE_SIZE;
-            let ship_tile_y = (y - self.ship.y) / IMAGE_SIZE;
+            let ship_tile_x = (x - ship_x) / IMAGE_SIZE;
+            let ship_tile_y = (y - ship_y) / IMAGE_SIZE;
             if !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable
                 || !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize]
                     .passable
@@ -422,12 +424,12 @@ impl Game {
         match button {
             Button::Keyboard(key) => match key {
                 // Action button.
-                Return => self.execute_action(state, None),
+                Return => self.execute_main_menu(state, None),
                 // Menu toggle.
                 Tab => self.execute_open_menu(state, None),
                 // Move.
                 W | A | S | D => self.execute_move(state, Some(key)),
-                V => self.execute_change_control_state(state, None),
+                V => self.execute_action(state, None),
                 _ => {}
             },
             _ => {}
@@ -451,8 +453,7 @@ impl Game {
         }
     }
 
-    // Action button is pressed.
-    fn execute_action(&mut self, state: ButtonState, _key: Option<Key>) {
+    fn execute_main_menu(&mut self, state: ButtonState, _key: Option<Key>) {
         if state == ButtonState::Press {
             match self.game_state {
                 GameState::Title => {
@@ -481,17 +482,10 @@ impl Game {
     }
 
     // Change of player's control state.
-    fn execute_change_control_state(&mut self, state: ButtonState, _key: Option<Key>) {
+    fn execute_action(&mut self, state: ButtonState, _key: Option<Key>) {
         if self.game_state == GameState::InGame {
             if state == ButtonState::Press {
-                match self.player.creature_state {
-                    CreatureState::Normal => {
-                        self.player.creature_state = CreatureState::ControllingShip;
-                    }
-                    _ => {
-                        self.player.creature_state = CreatureState::Normal;
-                    }
-                }
+                self.player.action();
             }
         }
     }

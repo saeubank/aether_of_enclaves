@@ -2,6 +2,8 @@ use misc::*;
 use piston_window::*;
 use item::Item;
 
+// const MAX_INVENTORY_SIZE: usize = 3;
+
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
     the Player, but default functionality is also implemented for Monsters and Crew.
@@ -18,6 +20,13 @@ pub enum CreatureType {
 pub enum CreatureState {
     Normal,
     ControllingShip,
+    // Still,
+    // Moving,
+    // Jumping,
+    // Attacking,
+    // Throwing,
+    // Interacting,
+
 }
 
 /**
@@ -48,7 +57,7 @@ pub struct Creature {
     pub other_vel_y: f64,
     pub speed: f64,
     pub health: i32,
-    pub inventory: [Option<Item>; 3],
+    pub inventory: Vec<Item>,
     pub dir: Direction,
     pub sprite_index: i32,
 }
@@ -68,7 +77,7 @@ impl Creature {
             other_vel_y: 0.0,
             speed: 3.0,
             health: 1,
-            inventory: [None, None, None],
+            inventory: vec![],
             dir: Direction::S,
             sprite_index: 2,
         }
@@ -138,22 +147,41 @@ impl Creature {
     }
 
     // pub fn throw_item(&mut self) {
-    //     if let Some(item) = self.inventory[0] {
-    //         item.throw(self.self_vel_x, self.self_vel_y);
+    //     if self.inventory.len() > 0 {
+    //         self.inventory.pop();
     //     }
     // }
 
-    // pub fn pickup_item(&mut self, item: Item) {
-    //     if let None = self.inventory[0] {
-
-    //     } else if let None = self.inventory[1] {
-
-    //     } else if let None = self.inventory[2] {
-
+    // pub fn pickup_item(&mut self, item: Item) -> bool {
+    //     if self.inventory.len() < MAX_INVENTORY_SIZE {
+    //         self.inventory.push(item);
+    //         return true
     //     }
+    //     false
     // }
+
+    pub fn action(&mut self) {
+        match self.creature_state {
+                    CreatureState::Normal => self.state_normal(),
+                    CreatureState::ControllingShip => self.state_controlling_ship(),
+                }
+    }
+
+    fn state_controlling_ship(&mut self) {
+        self.creature_state = CreatureState::Normal;
+    }
+    
+    fn state_normal(&mut self) {
+        self.directions = vec![];
+        self.self_vel_x = 0.0;
+        self.self_vel_y = 0.0;
+        self.creature_state = CreatureState::ControllingShip;
+    }
 
     // TODO Write collision function.
+    // pub fn update(&mut self, &) {
+
+    // }
 }
 
 // Moving of creature.
