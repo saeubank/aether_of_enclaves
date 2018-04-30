@@ -2,9 +2,7 @@ use piston_window::*;
 use find_folder::Search;
 use creature::{Creature, CreatureState, CreatureType};
 use std::collections::HashMap;
-use std::cmp;
 use ship::Ship;
-use tile::*;
 use misc::*;
 use item::*;
 use map::Map;
@@ -101,97 +99,29 @@ impl Game {
                         graphics,
                     );
 
-                    // Draw map.
-                    let draw_start_i = ((self.player.x - w_width / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
-                    let draw_start_j = ((self.player.y - w_height / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
-                    let draw_start_i = cmp::max(0, draw_start_i as i32) as usize;
-                    let draw_start_j = cmp::max(0, draw_start_j as i32) as usize;
-                    for i in draw_start_i..self.map.tiles.len() {
-                        if i as f64 * IMAGE_SIZE > self.player.x + w_width / 2.0 {
-                            break;
-                        }
-                        for j in draw_start_j..self.map.tiles[i].len() {
-                            if j as f64 * IMAGE_SIZE > self.player.y + w_height / 2.0 {
-                                break;
-                            }
-                            match self.map.tiles[i][j].material {
-                                TileMaterial::Water => {
-                                    let img = "water";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                TileMaterial::Stone => {
-                                    let img = "floor_stone";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                TileMaterial::Grass => {
-                                    let img = "floor_grass";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                TileMaterial::Dirt => {
-                                    let img = "floor_dirt";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                _ => {}
-                            }
-                        }
-                    }
+                    self.map.draw(
+                        &self.textures,
+                        &context,
+                        &mut graphics,
+                        &w_width,
+                        &w_height,
+                        &self.player.x,
+                        &self.player.y,
+                        trans_x,
+                        trans_y,
+                    );
 
                     self.ship
                         .draw(&self.textures, &context, &mut graphics, trans_x, trans_y);
 
                     for i in 0..self.items_in_game.len() {
-                        match self.items_in_game[i].item_type {
-                            ItemType::Food(FoodType::Bisket) => {
-                                let img = "bisket";
-                                image(
-                                    self.textures
-                                        .get(img)
-                                        .expect(&format!("Not found: {:?}", img)),
-                                    context
-                                        .transform
-                                        .trans(self.items_in_game[i].x, self.items_in_game[i].y)
-                                        .trans(trans_x, trans_y),
-                                    graphics,
-                                );
-                            }
-                            _ => {}
-                        }
+                        self.items_in_game[i].draw(
+                            &self.textures,
+                            &context,
+                            &mut graphics,
+                            trans_x,
+                            trans_y,
+                        )
                     }
 
                     // Begin player animation.
@@ -276,8 +206,6 @@ impl Game {
                 .unwrap()
                 .generate_clone(self.ship.x + 128.0, self.ship.y + 128.0),
         );
-        self.items_in_game[0].x_vel = self.ship.self_vel_x;
-        self.items_in_game[0].y_vel = self.ship.self_vel_y;
 
         while let Some(e) = window.next() {
             match e {
@@ -315,8 +243,8 @@ impl Game {
     // @param x Some x coordinate.
     // @param y Some y coordinate.
     fn is_on_ship(&mut self, x: f64, y: f64) -> bool {
-        let ship_x = self.ship.x + self.ship.self_vel_x;
-        let ship_y = self.ship.y + self.ship.self_vel_y;
+        let ship_x = self.ship.x_to_be_location();
+        let ship_y = self.ship.y_to_be_location();
         // Check edges.
         let is_in_x = x >= ship_x && x + IMAGE_SIZE <= ship_x + self.ship.width * IMAGE_SIZE;
         let is_in_y = y >= ship_y && y + IMAGE_SIZE <= ship_y + self.ship.height * IMAGE_SIZE;

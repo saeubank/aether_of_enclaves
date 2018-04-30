@@ -5,6 +5,10 @@
 use noise::*;
 use rand::{thread_rng, Rng};
 use tile::{Tile, TileMaterial, TileType};
+use IMAGE_SIZE;
+use piston_window::*;
+use std::cmp;
+use std::collections::HashMap;
 
 const STEP_SIZE: f64 = 0.1;
 
@@ -40,6 +44,81 @@ impl Map {
             }
         }
         Map { tiles: map_tiles }
+    }
+    pub fn draw(
+        &mut self,
+        textures: &HashMap<String, G2dTexture>,
+        context: &Context,
+        graphics: &mut G2d,
+        w_width: &f64,
+        w_height: &f64,
+        player_x: &f64,
+        player_y: &f64,
+        trans_x: f64,
+        trans_y: f64,
+    ) {
+        // Draw map.
+        let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
+        let draw_start_j = ((player_y - w_height / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
+        let draw_start_i = cmp::max(0, draw_start_i as i32) as usize;
+        let draw_start_j = cmp::max(0, draw_start_j as i32) as usize;
+        for i in draw_start_i..self.tiles.len() {
+            if i as f64 * IMAGE_SIZE > player_x + w_width / 2.0 {
+                break;
+            }
+            for j in draw_start_j..self.tiles[i].len() {
+                if j as f64 * IMAGE_SIZE > player_y + w_height / 2.0 {
+                    break;
+                }
+                match self.tiles[i][j].material {
+                    TileMaterial::Water => {
+                        let img = "water";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                    }
+                    TileMaterial::Stone => {
+                        let img = "floor_stone";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                    }
+                    TileMaterial::Grass => {
+                        let img = "floor_grass";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                    }
+                    TileMaterial::Dirt => {
+                        let img = "floor_dirt";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                    }
+                    _ => {}
+                }
+            }
+        }
     }
 }
 

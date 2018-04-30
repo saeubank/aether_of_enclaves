@@ -1,3 +1,5 @@
+use piston_window::*;
+use std::collections::HashMap;
 /**
     Items have three different types - interactable, food, or resource.
     Resource items are used in crafting. Interactable items are used by the
@@ -65,6 +67,29 @@ impl Item {
             x_vel: 0.0,
             y_vel: 0.0,
             weight: w,
+        }
+    }
+    pub fn draw(
+        &mut self,
+        textures: &HashMap<String, G2dTexture>,
+        context: &Context,
+        graphics: &mut G2d,
+        trans_x: f64,
+        trans_y: f64,
+    ) {
+        match self.item_type {
+            ItemType::Food(FoodType::Bisket) => {
+                let img = "bisket";
+                image(
+                    textures.get(img).expect(&format!("Not found: {:?}", img)),
+                    context
+                        .transform
+                        .trans(self.x, self.y)
+                        .trans(trans_x, trans_y),
+                    graphics,
+                );
+            }
+            _ => {}
         }
     }
 

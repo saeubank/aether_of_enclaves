@@ -28,10 +28,10 @@ pub struct Ship {
     pub y: f64,
     pub self_vel_x: f64,
     pub self_vel_y: f64,
-    pub directions: Vec<Direction>,
-    pub speed: f64,
-    pub acc: f64,
-    pub health: i32,
+    directions: Vec<Direction>,
+    speed: f64,
+    acc: f64,
+    health: i32,
     pub width: f64,
     pub height: f64,
 }
@@ -72,6 +72,13 @@ impl Ship {
             width: w as f64,
             height: h as f64,
         }
+    }
+
+    pub fn x_to_be_location(&mut self) -> f64 {
+        self.x + self.self_vel_x
+    }
+    pub fn y_to_be_location(&mut self) -> f64 {
+        self.y + self.self_vel_y
     }
 
     // @param change The change in health.
