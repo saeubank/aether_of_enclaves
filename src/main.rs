@@ -5,7 +5,6 @@
 
     2018 Samuel Eubanks, McKenzie Weller
 */
-
 extern crate find_folder;
 extern crate noise;
 extern crate piston_window;
@@ -21,6 +20,8 @@ mod item;
 
 use piston_window::*;
 use game::Game;
+
+const IMAGE_SIZE: f64 = 32.0;
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new("AOE", (650, 650))

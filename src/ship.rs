@@ -4,7 +4,9 @@
 
 use tile::*;
 use misc::*;
-use piston_window::{ButtonState, Key};
+use piston_window::*;
+use IMAGE_SIZE;
+use std::collections::HashMap;
 
 /**
     Implementation of the Ship object.
@@ -83,6 +85,63 @@ impl Ship {
     // pub fn update(&mut self) {
     //     self.update_position();
     // }
+
+    pub fn draw(
+        &mut self,
+        textures: &HashMap<String, G2dTexture>,
+        context: &Context,
+        graphics: &mut G2d,
+        trans_x: f64,
+        trans_y: f64,
+    ) {
+        for i in 0..self.tiles.len() {
+            for j in 0..self.tiles[i].len() {
+                match self.tiles[i][j].material {
+                    TileMaterial::Wood => {
+                        let img = "floor_boards";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(
+                                    self.x + i as f64 * IMAGE_SIZE,
+                                    self.y + j as f64 * IMAGE_SIZE,
+                                )
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                    }
+                    TileMaterial::Wheel => {
+                        let img = "floor_boards";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(
+                                    self.x + i as f64 * IMAGE_SIZE,
+                                    self.y + j as f64 * IMAGE_SIZE,
+                                )
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                        let img = "wheel";
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(
+                                    self.x + i as f64 * IMAGE_SIZE,
+                                    self.y + j as f64 * IMAGE_SIZE,
+                                )
+                                .trans(trans_x, trans_y),
+                            graphics,
+                        );
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
 }
 
 impl Moveable for Ship {

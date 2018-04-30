@@ -8,9 +8,8 @@ use tile::*;
 use misc::*;
 use item::*;
 use map::Map;
+use IMAGE_SIZE;
 
-const IMAGE_SIZE: f64 = 32.0;
-const ANIMATION_RATE: u32 = 4;
 const MAP_WIDTH: usize = 50;
 const MAP_HEIGHT: usize = 50;
 
@@ -44,7 +43,6 @@ pub struct Game {
     map: Map,
     glyphs: Glyphs,
     textures: HashMap<String, G2dTexture>,
-    frames_since_last_draw: u32,
 }
 
 impl Game {
@@ -74,7 +72,6 @@ impl Game {
             map: Map::new(MAP_WIDTH, MAP_HEIGHT),
             glyphs: glyphs,
             textures: textures,
-            frames_since_last_draw: 0,
         }
     }
 
@@ -87,7 +84,7 @@ impl Game {
 
         let window_size = window.draw_size();
 
-        window.draw_2d(&e, |context, graphics| {
+        window.draw_2d(&e, |context, mut graphics| {
             let w_width = window_size.width as f64;
             let w_height = window_size.height as f64;
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
@@ -175,59 +172,8 @@ impl Game {
                         }
                     }
 
-                    for i in 0..self.ship.tiles.len() {
-                        for j in 0..self.ship.tiles[i].len() {
-                            match self.ship.tiles[i][j].material {
-                                TileMaterial::Wood => {
-                                    let img = "floor_boards";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(
-                                                self.ship.x + i as f64 * IMAGE_SIZE,
-                                                self.ship.y + j as f64 * IMAGE_SIZE,
-                                            )
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                TileMaterial::Wheel => {
-                                    let img = "floor_boards";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(
-                                                self.ship.x + i as f64 * IMAGE_SIZE,
-                                                self.ship.y + j as f64 * IMAGE_SIZE,
-                                            )
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                    let img = "wheel";
-                                    image(
-                                        self.textures
-                                            .get(img)
-                                            .expect(&format!("Not found: {:?}", img)),
-                                        context
-                                            .transform
-                                            .trans(
-                                                self.ship.x + i as f64 * IMAGE_SIZE,
-                                                self.ship.y + j as f64 * IMAGE_SIZE,
-                                            )
-                                            .trans(trans_x, trans_y),
-                                        graphics,
-                                    );
-                                }
-                                _ => {}
-                            }
-                        }
-                    }
+                    self.ship
+                        .draw(&self.textures, &context, &mut graphics, trans_x, trans_y);
 
                     for i in 0..self.items_in_game.len() {
                         match self.items_in_game[i].item_type {
@@ -251,27 +197,9 @@ impl Game {
                     // Begin player animation.
 
                     // Draw the player texture at player's x and y position.
-                    let img = &format!(
-                        "{}{}{}{}",
-                        "mc_",
-                        direction_to_string(self.player.dir),
-                        "_",
-                        self.player.sprite_index.to_string()
-                    );
-                    image(
-                        self.textures
-                            .get(img)
-                            .expect(&format!("Not found: {:?}", img)),
-                        context.transform.trans(w_width / 2.0, w_height / 2.0),
-                        graphics,
-                    );
 
-                    // Handle "frame rate" for animation.
-                    if self.frames_since_last_draw > ANIMATION_RATE {
-                        self.frames_since_last_draw = 0;
-                        self.player.sprite_index = (self.player.sprite_index + 1) % 4;
-                    }
-                    self.frames_since_last_draw += 1;
+                    self.player
+                        .draw(&self.textures, &context, &mut graphics, &w_width, &w_height);
 
                     // End player animation.
                 }
@@ -390,10 +318,8 @@ impl Game {
         let ship_x = self.ship.x + self.ship.self_vel_x;
         let ship_y = self.ship.y + self.ship.self_vel_y;
         // Check edges.
-        let is_in_x =
-            x >= ship_x && x + IMAGE_SIZE <= ship_x + self.ship.width * IMAGE_SIZE;
-        let is_in_y =
-            y >= ship_y && y + IMAGE_SIZE <= ship_y + self.ship.height * IMAGE_SIZE;
+        let is_in_x = x >= ship_x && x + IMAGE_SIZE <= ship_x + self.ship.width * IMAGE_SIZE;
+        let is_in_y = y >= ship_y && y + IMAGE_SIZE <= ship_y + self.ship.height * IMAGE_SIZE;
         if is_in_x && is_in_y {
             // Check specific tiles.
             let ship_tile_x = (x - ship_x) / IMAGE_SIZE;

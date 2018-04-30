@@ -1,6 +1,7 @@
 use misc::*;
 use piston_window::*;
 use item::Item;
+use std::collections::HashMap;
 
 // const MAX_INVENTORY_SIZE: usize = 3;
 
@@ -26,7 +27,6 @@ pub enum CreatureState {
     // Attacking,
     // Throwing,
     // Interacting,
-
 }
 
 /**
@@ -60,6 +60,8 @@ pub struct Creature {
     pub inventory: Vec<Item>,
     pub dir: Direction,
     pub sprite_index: i32,
+    frames_since_last_draw: i32,
+    animation_rate: i32,
 }
 
 impl Creature {
@@ -80,6 +82,8 @@ impl Creature {
             inventory: vec![],
             dir: Direction::S,
             sprite_index: 2,
+            frames_since_last_draw: 0,
+            animation_rate: 4,
         }
     }
 
@@ -146,6 +150,34 @@ impl Creature {
         self.y + self.self_vel_y
     }
 
+    pub fn draw(
+        &mut self,
+        textures: &HashMap<String, G2dTexture>,
+        context: &Context,
+        graphics: &mut G2d,
+        w_width: &f64,
+        w_height: &f64,
+    ) {
+        let img = &format!(
+            "{}{}{}{}",
+            "mc_",
+            direction_to_string(self.dir),
+            "_",
+            self.sprite_index.to_string()
+        );
+        image(
+            textures.get(img).expect(&format!("Not found: {:?}", img)),
+            context.transform.trans(w_width / 2.0, w_height / 2.0),
+            graphics,
+        );
+
+        // Handle "frame rate" for animation.
+        if self.frames_since_last_draw > self.animation_rate {
+            self.frames_since_last_draw = 0;
+            self.sprite_index = (self.sprite_index + 1) % 4;
+        }
+        self.frames_since_last_draw += 1;
+    }
     // pub fn throw_item(&mut self) {
     //     if self.inventory.len() > 0 {
     //         self.inventory.pop();
@@ -162,15 +194,15 @@ impl Creature {
 
     pub fn action(&mut self) {
         match self.creature_state {
-                    CreatureState::Normal => self.state_normal(),
-                    CreatureState::ControllingShip => self.state_controlling_ship(),
-                }
+            CreatureState::Normal => self.state_normal(),
+            CreatureState::ControllingShip => self.state_controlling_ship(),
+        }
     }
 
     fn state_controlling_ship(&mut self) {
         self.creature_state = CreatureState::Normal;
     }
-    
+
     fn state_normal(&mut self) {
         self.directions = vec![];
         self.self_vel_x = 0.0;
