@@ -30,7 +30,6 @@ pub struct Ship {
     pub self_vel_y: f64,
     directions: Vec<Direction>,
     speed: f64,
-    acc: f64,
     health: i32,
     pub width: f64,
     pub height: f64,
@@ -67,7 +66,6 @@ impl Ship {
             self_vel_y: 0.0,
             directions: vec![],
             speed: 6.0,
-            acc: 1.0,
             health: 1,
             width: w as f64,
             height: h as f64,
@@ -79,6 +77,10 @@ impl Ship {
     }
     pub fn y_to_be_location(&mut self) -> f64 {
         self.y + self.self_vel_y
+    }
+
+    pub fn reset_dir(&mut self) {
+        self.directions = vec![];
     }
 
     // @param change The change in health.
@@ -221,10 +223,10 @@ impl Moveable for Ship {
         // Control which direction ship accelerates in.
         for dir in &self.directions {
             match *dir {
-                Direction::N => dy -= self.acc,
-                Direction::S => dy += self.acc,
-                Direction::W => dx -= self.acc,
-                Direction::E => dx += self.acc,
+                Direction::N => dy -= self.speed,
+                Direction::S => dy += self.speed,
+                Direction::W => dx -= self.speed,
+                Direction::E => dx += self.speed,
                 _ => {}
             }
         }

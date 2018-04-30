@@ -30,13 +30,12 @@ impl Map {
 
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
-                let num = (worley_arr[i][j] + perlin_arr[i][j]) / 2.0;
-                // let num = perlin_arr[i][j];
-                if num <= -0.5 {
+                let num = (worley_arr[i][j] * perlin_arr[i][j]);
+                if num <= -0.3 {
                     map_tiles[i][j] = water.clone();
                 } else if num <= 0.0 {
                     map_tiles[i][j] = floor_dirt.clone();
-                } else if num <= 0.5 {
+                } else if num <= 0.3 {
                     map_tiles[i][j] = floor_grass.clone();
                 } else {
                     map_tiles[i][j] = floor_stone.clone();
@@ -156,6 +155,43 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     arr
 }
 
+// fn snip_off(vec: Vec<Vec<f64>>) -> Vec<Vec<f64>>{
+//     let mut arr = vec![vec![0.0;vec[0].len()]; vec.len()];
+//     for i in 0..vec.len() {
+//         for j in 0..vec[i].len() {
+//             if vec[i][j] > 0.0 {
+//                 arr[i][j] = vec[i][j];
+//             }
+//         }
+//     }
+//     arr
+// }
+
+enum IslandType {
+    Plains,
+    Water,
+    // Ice,
+    // Lavae,
+    // Civilization,
+}
+
+struct Island {
+    pub island_type: IslandType,
+    pub tiles: Vec<Vec<Tile>>,
+    pub x: f64,
+    pub y: f64,
+}
+
+impl Island {
+    fn new() -> Self {
+        Island {
+            island_type: IslandType::Plains,
+            tiles: vec![vec![]],
+            x: 0.0,
+            y: 0.0
+        }
+    }
+}
 // need to fix so edge is weighted 0 and middle is weighted 1
 // fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
 //     let mut circle_arr = vec![vec![0.0; size]; size];

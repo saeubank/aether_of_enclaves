@@ -8,8 +8,8 @@ use item::*;
 use map::Map;
 use IMAGE_SIZE;
 
-const MAP_WIDTH: usize = 50;
-const MAP_HEIGHT: usize = 50;
+const MAP_WIDTH: usize = 1000;
+const MAP_HEIGHT: usize = 1000;
 
 #[derive(Debug, PartialEq)]
 
@@ -194,8 +194,8 @@ impl Game {
     // @param window The PistonWindow that is drawn to.
     // @param textures HashMap of graphics textures.
     pub fn run(&mut self, window: &mut PistonWindow) {
-        self.ship.x = 1500.0;
-        self.ship.y = 1500.0;
+        self.ship.x = MAP_WIDTH as f64 * IMAGE_SIZE / 2.0;
+        self.ship.y = MAP_HEIGHT as f64 * IMAGE_SIZE / 2.0;
         self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
         self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE);
 
@@ -215,7 +215,19 @@ impl Game {
 
                 // TODO Add lag handler here
                 Event::Loop(Loop::Update(_args)) => {
-                    // Collision detection.
+                    self.update();
+                }
+
+                Event::Loop(Loop::Render(_args)) => {
+                    self.display(e, window);
+                }
+                _ => {}
+            }
+        }
+    }
+
+    fn update(&mut self) {
+        // Collision detection.
                     // TODO Create separate function.
                     if self.game_state == GameState::InGame {
                         self.player.other_vel_x = self.ship.self_vel_x;
@@ -229,14 +241,6 @@ impl Game {
                         }
                         self.ship.update_position();
                     }
-                }
-
-                Event::Loop(Loop::Render(_args)) => {
-                    self.display(e, window);
-                }
-                _ => {}
-            }
-        }
     }
 
     // Checks whether a specific x,y position is on the ship.
@@ -340,6 +344,7 @@ impl Game {
         if self.game_state == GameState::InGame {
             if state == ButtonState::Press {
                 self.player.action();
+                self.ship.reset_dir();
             }
         }
     }
