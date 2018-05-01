@@ -161,7 +161,7 @@ impl Creature {
         let img = &format!(
             "{}{}{}{}",
             "mc_",
-            direction_to_string(&self.dir),
+            self.dir.direction_to_string(),
             "_",
             self.sprite_index.to_string()
         );
