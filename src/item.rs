@@ -71,7 +71,7 @@ impl Item {
         }
     }
     pub fn draw(
-        &mut self,
+        &self,
         textures: &HashMap<String, G2dTexture>,
         context: &Context,
         graphics: &mut G2d,
@@ -86,7 +86,8 @@ impl Item {
                     context
                         .transform
                         .trans(self.x, self.y)
-                        .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
+                        .trans(trans_x, trans_y)
+                        .scale(IMAGE_SCALE, IMAGE_SCALE),
                     graphics,
                 );
             }

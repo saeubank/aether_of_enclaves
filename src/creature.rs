@@ -103,7 +103,6 @@ impl Creature {
     // Updates the direction that the creature is facing.
     pub fn update_direction(&mut self) {
         if !(self.self_vel_y == 0.0 && self.self_vel_x == 0.0) {
-
             if self.self_vel_x > 0.0 {
                 self.dir = Direction::E;
             } else if self.self_vel_x < 0.0 {
@@ -115,7 +114,6 @@ impl Creature {
             } else if self.self_vel_y < 0.0 {
                 self.dir = Direction::N;
             }
-
         } else {
             // Override sprite when creature isn't moving.
             self.sprite_index = 0;
@@ -148,7 +146,10 @@ impl Creature {
         );
         image(
             textures.get(img).expect(&format!("Not found: {:?}", img)),
-            context.transform.trans(w_width / 2.0, w_height / 2.0).scale(IMAGE_SCALE, IMAGE_SCALE),
+            context
+                .transform
+                .trans(w_width / 2.0, w_height / 2.0)
+                .scale(IMAGE_SCALE, IMAGE_SCALE),
             graphics,
         );
 

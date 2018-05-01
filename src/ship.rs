@@ -96,7 +96,7 @@ impl Ship {
     // }
 
     pub fn draw(
-        &mut self,
+        &self,
         textures: &HashMap<String, G2dTexture>,
         context: &Context,
         graphics: &mut G2d,
@@ -116,7 +116,8 @@ impl Ship {
                                     self.x + i as f64 * IMAGE_SIZE_SCALED,
                                     self.y + j as f64 * IMAGE_SIZE_SCALED,
                                 )
-                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
+                                .trans(trans_x, trans_y)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }
@@ -130,7 +131,8 @@ impl Ship {
                                     self.x + i as f64 * IMAGE_SIZE_SCALED,
                                     self.y + j as f64 * IMAGE_SIZE_SCALED,
                                 )
-                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
+                                .trans(trans_x, trans_y)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                         let img = IMG_WHEEL;
@@ -142,7 +144,8 @@ impl Ship {
                                     self.x + i as f64 * IMAGE_SIZE_SCALED,
                                     self.y + j as f64 * IMAGE_SIZE_SCALED,
                                 )
-                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
+                                .trans(trans_x, trans_y)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }

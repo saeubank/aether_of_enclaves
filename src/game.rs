@@ -274,8 +274,10 @@ impl Game {
         let ship_x = self.ship.x_to_be_location();
         let ship_y = self.ship.y_to_be_location();
         // Check edges.
-        let is_in_x = x >= ship_x && x + IMAGE_SIZE_SCALED <= ship_x + self.ship.width * IMAGE_SIZE_SCALED;
-        let is_in_y = y >= ship_y && y + IMAGE_SIZE_SCALED <= ship_y + self.ship.height * IMAGE_SIZE_SCALED;
+        let is_in_x =
+            x >= ship_x && x + IMAGE_SIZE_SCALED <= ship_x + self.ship.width * IMAGE_SIZE_SCALED;
+        let is_in_y =
+            y >= ship_y && y + IMAGE_SIZE_SCALED <= ship_y + self.ship.height * IMAGE_SIZE_SCALED;
         if is_in_x && is_in_y {
             // Check specific tiles.
             let ship_tile_x = (x - ship_x) / IMAGE_SIZE_SCALED;
@@ -423,70 +425,53 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
         IMG_CLOUD_1,
         IMG_CLOUD_2,
         IMG_WOOD_FLOOR,
-
         IMG_WHEEL,
         IMG_TREE,
         IMG_GRUNE,
-
         IMG_ITEM_BISKET,
         IMG_ITEM_SWORD,
         IMG_ITEM_GRUNE,
         IMG_ITEM_LOGS,
-
         IMG_STONE_WALL,
         IMG_STONE_WALL_TEXTURE,
-
         IMG_STONE_WALL_EDGE_1_SIDE,
         IMG_STONE_WALL_EDGE_2_SIDE,
         IMG_STONE_WALL_EDGE_3_SIDE,
         IMG_STONE_WALL_EDGE_CORNER,
-
         IMG_WATER,
         IMG_WATER_TEXTURE,
-
         IMG_GRASS_FLOOR,
         IMG_GRASS_FLOOR_TEXTURE,
-
         IMG_DIRT_FLOOR,
         IMG_DIRT_FLOOR_TEXTURE,
-
         IMG_GRASS_DIRT_FLOOR_1_SIDE,
         IMG_GRASS_DIRT_FLOOR_2_SIDE,
         IMG_GRASS_DIRT_FLOOR_3_SIDE,
         IMG_GRASS_DIRT_FLOOR_4_SIDE,
         IMG_GRASS_DIRT_FLOOR_CORNER,
-
         IMG_TITLE_NO_TEXT,
         IMG_TITLE_TEXT,
-
         IMG_PLAYER_IDLE_S_0,
         IMG_PLAYER_IDLE_S_1,
         IMG_PLAYER_IDLE_S_2,
-
         IMG_PLAYER_IDLE_N_0,
         IMG_PLAYER_IDLE_N_1,
         IMG_PLAYER_IDLE_N_2,
-
         IMG_PLAYER_IDLE_E_0,
         IMG_PLAYER_IDLE_E_1,
         IMG_PLAYER_IDLE_E_2,
-
         IMG_PLAYER_IDLE_W_0,
         IMG_PLAYER_IDLE_W_1,
         IMG_PLAYER_IDLE_W_2,
-
         IMG_PLAYER_MOVING_S_0,
         IMG_PLAYER_MOVING_S_1,
         IMG_PLAYER_MOVING_S_2,
-
         IMG_PLAYER_MOVING_N_0,
         IMG_PLAYER_MOVING_N_1,
         IMG_PLAYER_MOVING_N_2,
-
         IMG_PLAYER_MOVING_E_0,
         IMG_PLAYER_MOVING_E_1,
         IMG_PLAYER_MOVING_E_2,
-
         IMG_PLAYER_MOVING_W_0,
         IMG_PLAYER_MOVING_W_1,
         IMG_PLAYER_MOVING_W_2,
@@ -494,7 +479,10 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
 
-    let ts = TextureSettings::new().filter(Filter::Nearest).compress(false).generate_mipmap(false);
+    let ts = TextureSettings::new()
+        .filter(Filter::Nearest)
+        .compress(false)
+        .generate_mipmap(false);
 
     for image_name in image_names.into_iter() {
         let filename = image_name.to_owned().to_owned() + ".png";
