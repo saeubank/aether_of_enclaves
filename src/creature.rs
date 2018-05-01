@@ -143,10 +143,10 @@ impl Creature {
     }
 
     // Determines where the creature is about to move.
-    pub fn x_to_be_location(&mut self) -> f64 {
+    pub fn x_to_be_location(&self) -> f64 {
         self.x + self.self_vel_x
     }
-    pub fn y_to_be_location(&mut self) -> f64 {
+    pub fn y_to_be_location(&self) -> f64 {
         self.y + self.self_vel_y
     }
 
@@ -178,6 +178,15 @@ impl Creature {
         }
         self.frames_since_last_draw += 1;
     }
+
+    pub fn is_dead(&self) -> bool {
+        return self.health <= 0;
+    }
+
+    pub fn take_damage(&mut self, damage: i32) {
+        self.health -= damage;
+    }
+
     // pub fn throw_item(&mut self) {
     //     if self.inventory.len() > 0 {
     //         self.inventory.pop();

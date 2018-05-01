@@ -5,7 +5,7 @@
 use tile::*;
 use misc::*;
 use piston_window::*;
-use IMAGE_SIZE;
+use constants::*;
 use std::collections::HashMap;
 
 /**
@@ -30,7 +30,7 @@ pub struct Ship {
     pub self_vel_y: f64,
     directions: Vec<Direction>,
     speed: f64,
-    health: i32,
+    // health: i32,
     pub width: f64,
     pub height: f64,
 }
@@ -40,9 +40,9 @@ impl Ship {
     // @param ship_tiles The 2D tileset of the ship.
     pub fn new(ship_tiles: Vec<Vec<i32>>) -> Self {
         // Populate ship's tileset with proper TileMaterial.
-        let air = Tile::new(TileType::Special, TileMaterial::Air);
-        let floor_wood = Tile::new(TileType::Floor, TileMaterial::Wood);
-        let control = Tile::new(TileType::Special, TileMaterial::Wheel);
+        let air = Tile::new(TileType::Air);
+        let wood_floor = Tile::new(TileType::WoodFloor);
+        let control = Tile::new(TileType::Wheel);
         let w = ship_tiles[0].len();
         let h = ship_tiles.len();
         let mut temp_tiles = vec![vec![air.clone(); h]; w];
@@ -51,7 +51,7 @@ impl Ship {
             for j in 0..ship_tiles[i].len() {
                 match ship_tiles[i][j] {
                     0 => temp_tiles[j][i] = air.clone(),
-                    1 => temp_tiles[j][i] = floor_wood.clone(),
+                    1 => temp_tiles[j][i] = wood_floor.clone(),
                     2 => temp_tiles[j][i] = control.clone(),
                     _ => {}
                 }
@@ -66,16 +66,16 @@ impl Ship {
             self_vel_y: 0.0,
             directions: vec![],
             speed: 6.0,
-            health: 1,
+            // health: 1,
             width: w as f64,
             height: h as f64,
         }
     }
 
-    pub fn x_to_be_location(&mut self) -> f64 {
+    pub fn x_to_be_location(&self) -> f64 {
         self.x + self.self_vel_x
     }
-    pub fn y_to_be_location(&mut self) -> f64 {
+    pub fn y_to_be_location(&self) -> f64 {
         self.y + self.self_vel_y
     }
 
@@ -105,9 +105,9 @@ impl Ship {
     ) {
         for i in 0..self.tiles.len() {
             for j in 0..self.tiles[i].len() {
-                match self.tiles[i][j].material {
-                    TileMaterial::Wood => {
-                        let img = "floor_boards";
+                match self.tiles[i][j].tile_type {
+                    TileType::WoodFloor => {
+                        let img = IMG_WOOD_FLOOR;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
@@ -120,8 +120,8 @@ impl Ship {
                             graphics,
                         );
                     }
-                    TileMaterial::Wheel => {
-                        let img = "floor_boards";
+                    TileType::Wheel => {
+                        let img = IMG_WOOD_FLOOR;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
@@ -133,7 +133,7 @@ impl Ship {
                                 .trans(trans_x, trans_y),
                             graphics,
                         );
-                        let img = "wheel";
+                        let img = IMG_WHEEL;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
