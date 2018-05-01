@@ -155,16 +155,16 @@ impl Ship {
 
 impl Moveable for Ship {
     // Moving controls implemented for the ship
-    fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
-        match key {
+    fn handle_input(&mut self, state: &ButtonState, key: &Option<Key>) {
+        match *key {
             Some(Key::W) => {
                 let dir = Direction::N;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }
@@ -172,11 +172,11 @@ impl Moveable for Ship {
             Some(Key::A) => {
                 let dir = Direction::W;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }
@@ -184,11 +184,11 @@ impl Moveable for Ship {
             Some(Key::S) => {
                 let dir = Direction::S;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }
@@ -196,11 +196,11 @@ impl Moveable for Ship {
             Some(Key::D) => {
                 let dir = Direction::E;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }

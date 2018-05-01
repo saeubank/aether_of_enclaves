@@ -15,9 +15,16 @@ const MAP_HEIGHT: usize = 1000;
 
 pub enum GameState {
     Title,
+    // InGame(InGameState),
     InGame,
     InMenu,
+    GameOver,
 }
+
+// enum InGameState {
+//     OnShip,
+//     InWorld,
+// }
 
 /* pub enum MenuOption {
      Top,
@@ -77,12 +84,12 @@ impl Game {
     // @param e The graphics event for drawing.
     // @param window The PistonWindow that is drawn to.
     // @param textures A HashMap of texture graphics.
-    fn display(&mut self, e: Event, window: &mut PistonWindow) {
+    fn display(&mut self, e: &Event, window: &mut PistonWindow) {
         // Font locating.
 
         let window_size = window.draw_size();
 
-        window.draw_2d(&e, |context, mut graphics| {
+        window.draw_2d(e, |context, mut graphics| {
             let w_width = window_size.width as f64;
             let w_height = window_size.height as f64;
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
@@ -103,10 +110,10 @@ impl Game {
                         &self.textures,
                         &context,
                         &mut graphics,
-                        &w_width,
-                        &w_height,
-                        &self.player.x,
-                        &self.player.y,
+                        w_width,
+                        w_height,
+                        self.player.x,
+                        self.player.y,
                         trans_x,
                         trans_y,
                     );
@@ -129,7 +136,7 @@ impl Game {
                     // Draw the player texture at player's x and y position.
 
                     self.player
-                        .draw(&self.textures, &context, &mut graphics, &w_width, &w_height);
+                        .draw(&self.textures, &context, &mut graphics, w_width, w_height);
 
                     // End player animation.
                 }
@@ -178,13 +185,16 @@ impl Game {
                     let transform = context.transform.trans(100.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
-                            "Inventory",
+                            "GAME OVER",
                             &mut self.glyphs,
                             &context.draw_state,
                             transform,
                             graphics,
                         )
-                        .expect("Error drawing inventory");
+                        .expect("Error drawing GAME OVER");
+                }
+                GameState::GameOver => {
+
                 }
             }
         });
@@ -219,7 +229,7 @@ impl Game {
                 }
 
                 Event::Loop(Loop::Render(_args)) => {
-                    self.display(e, window);
+                    self.display(&e, window);
                 }
                 _ => {}
             }
@@ -282,12 +292,12 @@ impl Game {
         match button {
             Button::Keyboard(key) => match key {
                 // Action button.
-                Return => self.execute_main_menu(state, None),
+                Return => self.execute_main_menu(&state),
                 // Menu toggle.
-                Tab => self.execute_open_menu(state, None),
+                Tab => self.execute_open_menu(&state),
                 // Move.
-                W | A | S | D => self.execute_move(state, Some(key)),
-                V => self.execute_action(state, None),
+                W | A | S | D => self.execute_move(&state, &Some(key)),
+                V => self.execute_action(&state),
                 _ => {}
             },
             _ => {}
@@ -295,8 +305,8 @@ impl Game {
     }
 
     // Opens menu.
-    fn execute_open_menu(&mut self, state: ButtonState, _key: Option<Key>) {
-        if state == ButtonState::Press {
+    fn execute_open_menu(&mut self, state: &ButtonState) {
+        if *state == ButtonState::Press {
             match self.game_state {
                 GameState::InGame => {
                     println!("Menu opened.");
@@ -311,8 +321,8 @@ impl Game {
         }
     }
 
-    fn execute_main_menu(&mut self, state: ButtonState, _key: Option<Key>) {
-        if state == ButtonState::Press {
+    fn execute_main_menu(&mut self, state: &ButtonState) {
+        if *state == ButtonState::Press {
             match self.game_state {
                 GameState::Title => {
                     println!("Changing state to InGame.");
@@ -324,15 +334,15 @@ impl Game {
     }
 
     // Moves creature / ship.
-    fn execute_move(&mut self, state: ButtonState, key: Option<Key>) {
+    fn execute_move(&mut self, state: &ButtonState, key: &Option<Key>) {
         if self.game_state == GameState::InGame {
             match self.player.creature_state {
                 CreatureState::Normal => {
-                    self.player.handle_input(state, key);
+                    self.player.handle_input(&state, &key);
                     self.player.update_self_velocity();
                 }
                 CreatureState::ControllingShip => {
-                    self.ship.handle_input(state, key);
+                    self.ship.handle_input(&state, &key);
                     self.ship.update_self_velocity();
                 }
             }
@@ -340,9 +350,9 @@ impl Game {
     }
 
     // Change of player's control state.
-    fn execute_action(&mut self, state: ButtonState, _key: Option<Key>) {
+    fn execute_action(&mut self, state: &ButtonState) {
         if self.game_state == GameState::InGame {
-            if state == ButtonState::Press {
+            if *state == ButtonState::Press {
                 self.player.action();
                 self.ship.reset_dir();
             }

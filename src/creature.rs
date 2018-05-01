@@ -155,13 +155,13 @@ impl Creature {
         textures: &HashMap<String, G2dTexture>,
         context: &Context,
         graphics: &mut G2d,
-        w_width: &f64,
-        w_height: &f64,
+        w_width: f64,
+        w_height: f64,
     ) {
         let img = &format!(
             "{}{}{}{}",
             "mc_",
-            direction_to_string(self.dir),
+            direction_to_string(&self.dir),
             "_",
             self.sprite_index.to_string()
         );
@@ -218,16 +218,16 @@ impl Creature {
 
 // Moving of creature.
 impl Moveable for Creature {
-    fn handle_input(&mut self, state: ButtonState, key: Option<Key>) {
-        match key {
+    fn handle_input(&mut self, state: &ButtonState, key: &Option<Key>) {
+        match *key {
             Some(Key::W) => {
                 let dir = Direction::N;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }
@@ -235,11 +235,11 @@ impl Moveable for Creature {
             Some(Key::A) => {
                 let dir = Direction::W;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }
@@ -247,11 +247,11 @@ impl Moveable for Creature {
             Some(Key::S) => {
                 let dir = Direction::S;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }
@@ -259,11 +259,11 @@ impl Moveable for Creature {
             Some(Key::D) => {
                 let dir = Direction::E;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
-                    if state == ButtonState::Release {
+                    if *state == ButtonState::Release {
                         self.directions.remove(index);
                     }
                 } else {
-                    if state == ButtonState::Press {
+                    if *state == ButtonState::Press {
                         self.directions.push(dir);
                     }
                 }

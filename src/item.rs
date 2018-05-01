@@ -57,13 +57,13 @@ pub struct Item {
 
 impl Item {
     // Item constructor.
-    pub fn new(item_t: ItemType, dam: i32, pickup: bool, w: f64) -> Self {
+    pub fn new(item_type: ItemType, damage: i32, pickupable: bool, w: f64) -> Self {
         Item {
             x: 0.0,
             y: 0.0,
-            item_type: item_t,
-            damage: dam,
-            pickupable: pickup,
+            item_type: item_type,
+            damage: damage,
+            pickupable: pickupable,
             x_vel: 0.0,
             y_vel: 0.0,
             weight: w,

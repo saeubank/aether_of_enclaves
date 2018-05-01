@@ -30,7 +30,7 @@ impl Map {
 
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
-                let num = (worley_arr[i][j] * perlin_arr[i][j]);
+                let num = worley_arr[i][j] * perlin_arr[i][j];
                 if num <= -0.3 {
                     map_tiles[i][j] = water.clone();
                 } else if num <= 0.0 {
@@ -49,10 +49,10 @@ impl Map {
         textures: &HashMap<String, G2dTexture>,
         context: &Context,
         graphics: &mut G2d,
-        w_width: &f64,
-        w_height: &f64,
-        player_x: &f64,
-        player_y: &f64,
+        w_width: f64,
+        w_height: f64,
+        player_x: f64,
+        player_y: f64,
         trans_x: f64,
         trans_y: f64,
     ) {
@@ -167,31 +167,31 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
 //     arr
 // }
 
-enum IslandType {
-    Plains,
-    Water,
-    // Ice,
-    // Lavae,
-    // Civilization,
-}
+// enum IslandType {
+//     Plains,
+//     Water,
+//     // Ice,
+//     // Lavae,
+//     // Civilization,
+// }
 
-struct Island {
-    pub island_type: IslandType,
-    pub tiles: Vec<Vec<Tile>>,
-    pub x: f64,
-    pub y: f64,
-}
+// struct Island {
+//     pub island_type: IslandType,
+//     pub tiles: Vec<Vec<Tile>>,
+//     pub x: f64,
+//     pub y: f64,
+// }
 
-impl Island {
-    fn new() -> Self {
-        Island {
-            island_type: IslandType::Plains,
-            tiles: vec![vec![]],
-            x: 0.0,
-            y: 0.0
-        }
-    }
-}
+// impl Island {
+//     fn new() -> Self {
+//         Island {
+//             island_type: IslandType::Plains,
+//             tiles: vec![vec![]],
+//             x: 0.0,
+//             y: 0.0
+//         }
+//     }
+// }
 // need to fix so edge is weighted 0 and middle is weighted 1
 // fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
 //     let mut circle_arr = vec![vec![0.0; size]; size];
