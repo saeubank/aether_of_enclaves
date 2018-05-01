@@ -2,6 +2,7 @@ use misc::*;
 use piston_window::*;
 use item::Item;
 use std::collections::HashMap;
+use constants::IMAGE_SCALE;
 
 // const MAX_INVENTORY_SIZE: usize = 3;
 
@@ -77,13 +78,13 @@ impl Creature {
             directions: vec![],
             other_vel_x: 0.0,
             other_vel_y: 0.0,
-            speed: 3.0,
+            speed: 2.0,
             health: 1,
             inventory: vec![],
             dir: Direction::S,
             sprite_index: 0,
             frames_since_last_draw: 0,
-            animation_rate: 1,
+            animation_rate: 5,
         }
     }
 
@@ -147,7 +148,7 @@ impl Creature {
         );
         image(
             textures.get(img).expect(&format!("Not found: {:?}", img)),
-            context.transform.trans(w_width / 2.0, w_height / 2.0),
+            context.transform.trans(w_width / 2.0, w_height / 2.0).scale(IMAGE_SCALE, IMAGE_SCALE),
             graphics,
         );
 

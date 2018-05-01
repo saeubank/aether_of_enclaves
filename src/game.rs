@@ -215,10 +215,10 @@ impl Game {
     // @param window The PistonWindow that is drawn to.
     // @param textures HashMap of graphics textures.
     pub fn run(&mut self, window: &mut PistonWindow) {
-        self.ship.x = MAP_WIDTH as f64 * IMAGE_SIZE / 2.0;
-        self.ship.y = MAP_HEIGHT as f64 * IMAGE_SIZE / 2.0;
-        self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE);
-        self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE);
+        self.ship.x = MAP_WIDTH as f64 * IMAGE_SIZE_SCALED / 2.0;
+        self.ship.y = MAP_HEIGHT as f64 * IMAGE_SIZE_SCALED / 2.0;
+        self.player.x = self.ship.x + ((self.ship.width / 2.0) * IMAGE_SIZE_SCALED);
+        self.player.y = self.ship.y + ((self.ship.height / 2.0) * IMAGE_SIZE_SCALED);
 
         // Temporary
         self.items_in_game.push(
@@ -274,12 +274,12 @@ impl Game {
         let ship_x = self.ship.x_to_be_location();
         let ship_y = self.ship.y_to_be_location();
         // Check edges.
-        let is_in_x = x >= ship_x && x + IMAGE_SIZE <= ship_x + self.ship.width * IMAGE_SIZE;
-        let is_in_y = y >= ship_y && y + IMAGE_SIZE <= ship_y + self.ship.height * IMAGE_SIZE;
+        let is_in_x = x >= ship_x && x + IMAGE_SIZE_SCALED <= ship_x + self.ship.width * IMAGE_SIZE_SCALED;
+        let is_in_y = y >= ship_y && y + IMAGE_SIZE_SCALED <= ship_y + self.ship.height * IMAGE_SIZE_SCALED;
         if is_in_x && is_in_y {
             // Check specific tiles.
-            let ship_tile_x = (x - ship_x) / IMAGE_SIZE;
-            let ship_tile_y = (y - ship_y) / IMAGE_SIZE;
+            let ship_tile_x = (x - ship_x) / IMAGE_SIZE_SCALED;
+            let ship_tile_y = (y - ship_y) / IMAGE_SIZE_SCALED;
             if !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable
                 || !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize]
                     .passable

@@ -59,16 +59,16 @@ impl Map {
         trans_y: f64,
     ) {
         // Draw map.
-        let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
-        let draw_start_j = ((player_y - w_height / 2.0) - IMAGE_SIZE) / IMAGE_SIZE;
+        let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE_SCALED) / IMAGE_SIZE_SCALED;
+        let draw_start_j = ((player_y - w_height / 2.0) - IMAGE_SIZE_SCALED) / IMAGE_SIZE_SCALED;
         let draw_start_i = cmp::max(0, draw_start_i as i32) as usize;
         let draw_start_j = cmp::max(0, draw_start_j as i32) as usize;
         for i in draw_start_i..self.tiles.len() {
-            if i as f64 * IMAGE_SIZE > player_x + w_width / 2.0 {
+            if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 {
                 break;
             }
             for j in draw_start_j..self.tiles[i].len() {
-                if j as f64 * IMAGE_SIZE > player_y + w_height / 2.0 {
+                if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
                     break;
                 }
                 match self.tiles[i][j].tile_type {
@@ -78,8 +78,8 @@ impl Map {
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
                                 .transform
-                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                .trans(trans_x, trans_y),
+                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }
@@ -89,8 +89,8 @@ impl Map {
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
                                 .transform
-                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                .trans(trans_x, trans_y),
+                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }
@@ -100,8 +100,8 @@ impl Map {
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
                                 .transform
-                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                .trans(trans_x, trans_y),
+                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }
@@ -111,8 +111,8 @@ impl Map {
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
                                 .transform
-                                .trans(i as f64 * IMAGE_SIZE, j as f64 * IMAGE_SIZE)
-                                .trans(trans_x, trans_y),
+                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }

@@ -86,7 +86,7 @@ impl Item {
                     context
                         .transform
                         .trans(self.x, self.y)
-                        .trans(trans_x, trans_y),
+                        .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                     graphics,
                 );
             }
