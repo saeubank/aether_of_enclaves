@@ -1,5 +1,6 @@
 use piston_window::*;
 use std::collections::HashMap;
+use constants::*;
 /**
     Items have three different types - interactable, food, or resource.
     Resource items are used in crafting. Interactable items are used by the
@@ -79,7 +80,7 @@ impl Item {
     ) {
         match self.item_type {
             ItemType::Food(FoodType::Bisket) => {
-                let img = "bisket";
+                let img = IMG_ITEM_BISKET;
                 image(
                     textures.get(img).expect(&format!("Not found: {:?}", img)),
                     context
