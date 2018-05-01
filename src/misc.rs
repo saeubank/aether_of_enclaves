@@ -12,10 +12,6 @@ pub enum Direction {
     E,
     S,
     W,
-    NE,
-    NW,
-    SE,
-    SW,
 }
 
 impl Direction {
@@ -27,10 +23,6 @@ impl Direction {
             Direction::S => "S".to_string(),
             Direction::W => "W".to_string(),
             Direction::E => "E".to_string(),
-            Direction::NE => "NE".to_string(),
-            Direction::SE => "SE".to_string(),
-            Direction::SW => "SW".to_string(),
-            Direction::NW => "NW".to_string(),
         }
     }
 }

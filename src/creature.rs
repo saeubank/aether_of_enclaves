@@ -81,9 +81,9 @@ impl Creature {
             health: 1,
             inventory: vec![],
             dir: Direction::S,
-            sprite_index: 2,
+            sprite_index: 0,
             frames_since_last_draw: 0,
-            animation_rate: 4,
+            animation_rate: 1,
         }
     }
 
@@ -101,44 +101,23 @@ impl Creature {
 
     // Updates the direction that the creature is facing.
     pub fn update_direction(&mut self) {
-        let mut dir_y = None;
-        let mut dir_x = None;
         if !(self.self_vel_y == 0.0 && self.self_vel_x == 0.0) {
-            if self.self_vel_y > 0.0 {
-                dir_y = Some(Direction::S);
-            } else if self.self_vel_y < 0.0 {
-                dir_y = Some(Direction::N);
-            }
 
             if self.self_vel_x > 0.0 {
-                dir_x = Some(Direction::E);
+                self.dir = Direction::E;
             } else if self.self_vel_x < 0.0 {
-                dir_x = Some(Direction::W);
+                self.dir = Direction::W;
             }
 
-            match dir_y {
-                Some(Direction::N) => match dir_x {
-                    Some(Direction::W) => self.dir = Direction::NW,
-                    Some(Direction::E) => self.dir = Direction::NE,
-                    None => self.dir = Direction::N,
-                    _ => {}
-                },
-                Some(Direction::S) => match dir_x {
-                    Some(Direction::W) => self.dir = Direction::SW,
-                    Some(Direction::E) => self.dir = Direction::SE,
-                    None => self.dir = Direction::S,
-                    _ => {}
-                },
-                None => match dir_x {
-                    Some(Direction::W) => self.dir = Direction::W,
-                    Some(Direction::E) => self.dir = Direction::E,
-                    _ => {}
-                },
-                _ => {}
+            if self.self_vel_y > 0.0 {
+                self.dir = Direction::S;
+            } else if self.self_vel_y < 0.0 {
+                self.dir = Direction::N;
             }
+
         } else {
             // Override sprite when creature isn't moving.
-            self.sprite_index = 2;
+            self.sprite_index = 0;
         }
     }
 
@@ -158,12 +137,13 @@ impl Creature {
         w_width: f64,
         w_height: f64,
     ) {
+        let tmp = self.sprite_index + 1;
         let img = &format!(
             "{}{}{}{}",
-            "mc_",
+            "player_moving_",
             self.dir.direction_to_string(),
             "_",
-            self.sprite_index.to_string()
+            tmp.to_string()
         );
         image(
             textures.get(img).expect(&format!("Not found: {:?}", img)),
@@ -174,7 +154,7 @@ impl Creature {
         // Handle "frame rate" for animation.
         if self.frames_since_last_draw > self.animation_rate {
             self.frames_since_last_draw = 0;
-            self.sprite_index = (self.sprite_index + 1) % 4;
+            self.sprite_index = (self.sprite_index + 1) % 3;
         }
         self.frames_since_last_draw += 1;
     }

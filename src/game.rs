@@ -458,37 +458,37 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
         IMG_TITLE_NO_TEXT,
         IMG_TITLE_TEXT,
 
+        IMG_PLAYER_IDLE_S_0,
         IMG_PLAYER_IDLE_S_1,
         IMG_PLAYER_IDLE_S_2,
-        IMG_PLAYER_IDLE_S_3,
 
+        IMG_PLAYER_IDLE_N_0,
         IMG_PLAYER_IDLE_N_1,
         IMG_PLAYER_IDLE_N_2,
-        IMG_PLAYER_IDLE_N_3,
 
+        IMG_PLAYER_IDLE_E_0,
         IMG_PLAYER_IDLE_E_1,
         IMG_PLAYER_IDLE_E_2,
-        IMG_PLAYER_IDLE_E_3,
 
+        IMG_PLAYER_IDLE_W_0,
         IMG_PLAYER_IDLE_W_1,
         IMG_PLAYER_IDLE_W_2,
-        IMG_PLAYER_IDLE_W_3,
 
+        IMG_PLAYER_MOVING_S_0,
         IMG_PLAYER_MOVING_S_1,
         IMG_PLAYER_MOVING_S_2,
-        IMG_PLAYER_MOVING_S_3,
 
+        IMG_PLAYER_MOVING_N_0,
         IMG_PLAYER_MOVING_N_1,
         IMG_PLAYER_MOVING_N_2,
-        IMG_PLAYER_MOVING_N_3,
 
+        IMG_PLAYER_MOVING_E_0,
         IMG_PLAYER_MOVING_E_1,
         IMG_PLAYER_MOVING_E_2,
-        IMG_PLAYER_MOVING_E_3,
 
+        IMG_PLAYER_MOVING_W_0,
         IMG_PLAYER_MOVING_W_1,
         IMG_PLAYER_MOVING_W_2,
-        IMG_PLAYER_MOVING_W_3,
     ];
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();

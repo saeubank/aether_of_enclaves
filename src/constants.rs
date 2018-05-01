@@ -40,34 +40,34 @@ pub const IMG_GRASS_DIRT_FLOOR_CORNER: &str = "grass_dirt_floor_corner";
 pub const IMG_TITLE_NO_TEXT: &str = "title_no_text";
 pub const IMG_TITLE_TEXT: &str = "title_text";
 
-pub const IMG_PLAYER_IDLE_S_1: &str = "player_idle_S_1";
-pub const IMG_PLAYER_IDLE_S_2: &str = "player_idle_S_2";
-pub const IMG_PLAYER_IDLE_S_3: &str = "player_idle_S_3";
+pub const IMG_PLAYER_IDLE_S_0: &str = "player_idle_S_1";
+pub const IMG_PLAYER_IDLE_S_1: &str = "player_idle_S_2";
+pub const IMG_PLAYER_IDLE_S_2: &str = "player_idle_S_3";
 
-pub const IMG_PLAYER_IDLE_N_1: &str = "player_idle_N_1";
-pub const IMG_PLAYER_IDLE_N_2: &str = "player_idle_N_2";
-pub const IMG_PLAYER_IDLE_N_3: &str = "player_idle_N_3";
+pub const IMG_PLAYER_IDLE_N_0: &str = "player_idle_N_1";
+pub const IMG_PLAYER_IDLE_N_1: &str = "player_idle_N_2";
+pub const IMG_PLAYER_IDLE_N_2: &str = "player_idle_N_3";
 
-pub const IMG_PLAYER_IDLE_E_1: &str = "player_idle_E_1";
-pub const IMG_PLAYER_IDLE_E_2: &str = "player_idle_E_2";
-pub const IMG_PLAYER_IDLE_E_3: &str = "player_idle_E_3";
+pub const IMG_PLAYER_IDLE_E_0: &str = "player_idle_E_1";
+pub const IMG_PLAYER_IDLE_E_1: &str = "player_idle_E_2";
+pub const IMG_PLAYER_IDLE_E_2: &str = "player_idle_E_3";
 
-pub const IMG_PLAYER_IDLE_W_1: &str = "player_idle_W_1";
-pub const IMG_PLAYER_IDLE_W_2: &str = "player_idle_W_2";
-pub const IMG_PLAYER_IDLE_W_3: &str = "player_idle_W_3";
+pub const IMG_PLAYER_IDLE_W_0: &str = "player_idle_W_1";
+pub const IMG_PLAYER_IDLE_W_1: &str = "player_idle_W_2";
+pub const IMG_PLAYER_IDLE_W_2: &str = "player_idle_W_3";
 
-pub const IMG_PLAYER_MOVING_S_1: &str = "player_moving_S_1";
-pub const IMG_PLAYER_MOVING_S_2: &str = "player_moving_S_2";
-pub const IMG_PLAYER_MOVING_S_3: &str = "player_moving_S_3";
+pub const IMG_PLAYER_MOVING_S_0: &str = "player_moving_S_1";
+pub const IMG_PLAYER_MOVING_S_1: &str = "player_moving_S_2";
+pub const IMG_PLAYER_MOVING_S_2: &str = "player_moving_S_3";
 
-pub const IMG_PLAYER_MOVING_N_1: &str = "player_moving_N_1";
-pub const IMG_PLAYER_MOVING_N_2: &str = "player_moving_N_2";
-pub const IMG_PLAYER_MOVING_N_3: &str = "player_moving_N_3";
+pub const IMG_PLAYER_MOVING_N_0: &str = "player_moving_N_1";
+pub const IMG_PLAYER_MOVING_N_1: &str = "player_moving_N_2";
+pub const IMG_PLAYER_MOVING_N_2: &str = "player_moving_N_3";
 
-pub const IMG_PLAYER_MOVING_E_1: &str = "player_moving_E_1";
-pub const IMG_PLAYER_MOVING_E_2: &str = "player_moving_E_2";
-pub const IMG_PLAYER_MOVING_E_3: &str = "player_moving_E_3";
+pub const IMG_PLAYER_MOVING_E_0: &str = "player_moving_E_1";
+pub const IMG_PLAYER_MOVING_E_1: &str = "player_moving_E_2";
+pub const IMG_PLAYER_MOVING_E_2: &str = "player_moving_E_3";
 
-pub const IMG_PLAYER_MOVING_W_1: &str = "player_moving_W_1";
-pub const IMG_PLAYER_MOVING_W_2: &str = "player_moving_W_2";
-pub const IMG_PLAYER_MOVING_W_3: &str = "player_moving_W_3";
+pub const IMG_PLAYER_MOVING_W_0: &str = "player_moving_W_1";
+pub const IMG_PLAYER_MOVING_W_1: &str = "player_moving_W_2";
+pub const IMG_PLAYER_MOVING_W_2: &str = "player_moving_W_3";
