@@ -3,6 +3,8 @@
 */
 
 use noise::*;
+// use rand::{thread_rng, Rng, distributions};
+// use rand::distributions::Sample;
 use rand::{thread_rng, Rng};
 use tile::{Tile, TileType};
 use constants::*;
@@ -155,28 +157,8 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     arr
 }
 
-// fn snip_off(vec: Vec<Vec<f64>>) -> Vec<Vec<f64>>{
-//     let mut arr = vec![vec![0.0;vec[0].len()]; vec.len()];
-//     for i in 0..vec.len() {
-//         for j in 0..vec[i].len() {
-//             if vec[i][j] > 0.0 {
-//                 arr[i][j] = vec[i][j];
-//             }
-//         }
-//     }
-//     arr
-// }
-
-// enum IslandType {
-//     Plains,
-//     Water,
-//     // Ice,
-//     // Lavae,
-//     // Civilization,
-// }
 
 // struct Island {
-//     pub island_type: IslandType,
 //     pub tiles: Vec<Vec<Tile>>,
 //     pub x: f64,
 //     pub y: f64,
@@ -185,14 +167,13 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
 // impl Island {
 //     fn new() -> Self {
 //         Island {
-//             island_type: IslandType::Plains,
 //             tiles: vec![vec![]],
 //             x: 0.0,
 //             y: 0.0
 //         }
 //     }
 // }
-// need to fix so edge is weighted 0 and middle is weighted 1
+
 // fn generate_weighted_circle(size: usize) -> Vec<Vec<f64>> {
 //     let mut circle_arr = vec![vec![0.0; size]; size];
 //     let sizef = size as f64;
@@ -203,12 +184,19 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
 //             let x = x * x;
 //             let y: f64 = middle - j as f64;
 //             let y = y * y;
-//             circle_arr[i][j] = (sizef - (x + y).sqrt()) / sizef;
+//             let val = (middle - (x + y).sqrt()) / middle;
+//             let val = val * 1.5;
+//             let val = val.max(0.0);
+//             let val = val.min(1.0);
+//             circle_arr[i][j] = val;
 //         }
 //     }
 //     circle_arr
 // }
-
+// const ISLAND_MEAN: f64 = 75.0;
+// const ISLAND_STANDERD_DEV: f64 = 10.0;
+// const ISLAND_LOWERBOUND: f64 = 10.0;
+// const ISLAND_UPPERBOUND: f64 = 200.0;
 // fn generate_island_size() -> usize {
 //     let mut normal = distributions::normal::Normal::new(ISLAND_MEAN, ISLAND_STANDERD_DEV);
 //     let mut island_size = normal.sample(&mut thread_rng());

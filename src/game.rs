@@ -1,6 +1,7 @@
 use piston_window::*;
 use find_folder::Search;
 use creature::{Creature, CreatureState, CreatureType};
+use texture::TextureSettings;
 use std::collections::HashMap;
 use ship::Ship;
 use misc::*;
@@ -493,13 +494,15 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
 
+    let ts = TextureSettings::new().filter(Filter::Nearest).compress(false).generate_mipmap(false);
+
     for image_name in image_names.into_iter() {
         let filename = image_name.to_owned().to_owned() + ".png";
         let img = Texture::from_path(
             &mut window.factory,
             assets.join(filename.clone()),
             Flip::None,
-            &TextureSettings::new(),
+            &ts,
         ).expect(&format!("Not found: {:?}", filename));
 
         textures.insert(image_name.to_string(), img);
