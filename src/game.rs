@@ -419,16 +419,76 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
         .expect("Error finding folder");
     let image_names = [
         IMG_SKY,
+        IMG_CLOUD_1,
+        IMG_CLOUD_2,
         IMG_WOOD_FLOOR,
-        IMG_PLAYER,
+
         IMG_WHEEL,
-        IMG_BISKET,
+        IMG_TREE,
+        IMG_GRUNE,
+
+        IMG_ITEM_BISKET,
+        IMG_ITEM_SWORD,
+        IMG_ITEM_GRUNE,
+        IMG_ITEM_LOGS,
+
         IMG_STONE_WALL,
-        IMG_GRASS_FLOOR,
-        IMG_DIRT_FLOOR,
+        IMG_STONE_WALL_TEXTURE,
+
+        IMG_STONE_WALL_EDGE_1_SIDE,
+        IMG_STONE_WALL_EDGE_2_SIDE,
+        IMG_STONE_WALL_EDGE_3_SIDE,
+        IMG_STONE_WALL_EDGE_CORNER,
+
         IMG_WATER,
+        IMG_WATER_TEXTURE,
+
+        IMG_GRASS_FLOOR,
+        IMG_GRASS_FLOOR_TEXTURE,
+
+        IMG_DIRT_FLOOR,
+        IMG_DIRT_FLOOR_TEXTURE,
+
+        IMG_GRASS_DIRT_FLOOR_1_SIDE,
+        IMG_GRASS_DIRT_FLOOR_2_SIDE,
+        IMG_GRASS_DIRT_FLOOR_3_SIDE,
+        IMG_GRASS_DIRT_FLOOR_4_SIDE,
+        IMG_GRASS_DIRT_FLOOR_CORNER,
+
         IMG_TITLE_NO_TEXT,
         IMG_TITLE_TEXT,
+
+        IMG_PLAYER_IDLE_S_1,
+        IMG_PLAYER_IDLE_S_2,
+        IMG_PLAYER_IDLE_S_3,
+
+        IMG_PLAYER_IDLE_N_1,
+        IMG_PLAYER_IDLE_N_2,
+        IMG_PLAYER_IDLE_N_3,
+
+        IMG_PLAYER_IDLE_E_1,
+        IMG_PLAYER_IDLE_E_2,
+        IMG_PLAYER_IDLE_E_3,
+
+        IMG_PLAYER_IDLE_W_1,
+        IMG_PLAYER_IDLE_W_2,
+        IMG_PLAYER_IDLE_W_3,
+
+        IMG_PLAYER_MOVING_S_1,
+        IMG_PLAYER_MOVING_S_2,
+        IMG_PLAYER_MOVING_S_3,
+
+        IMG_PLAYER_MOVING_N_1,
+        IMG_PLAYER_MOVING_N_2,
+        IMG_PLAYER_MOVING_N_3,
+
+        IMG_PLAYER_MOVING_E_1,
+        IMG_PLAYER_MOVING_E_2,
+        IMG_PLAYER_MOVING_E_3,
+
+        IMG_PLAYER_MOVING_W_1,
+        IMG_PLAYER_MOVING_W_2,
+        IMG_PLAYER_MOVING_W_3,
     ];
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
@@ -445,20 +505,20 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
         textures.insert(image_name.to_string(), img);
     }
 
-    // Import all player sprites
-    let dirs = ["N", "W", "S", "E", "NE", "NW", "SE", "SW"];
-    for j in 0..dirs.len() {
-        for i in 0..4 {
-            let filename = format!("{}{}{}{}{}", "mc_", dirs[j], "_", i.to_string(), ".png");
-            let mut map_name = format!("{}{}{}{}", "mc_", dirs[j], "_", i.to_string());
-            let sprite = Texture::from_path(
-                &mut window.factory,
-                assets.join(&filename),
-                Flip::None,
-                &TextureSettings::new(),
-            ).expect(&format!("Not found: {:?}", filename));
-            textures.insert(map_name, sprite);
-        }
-    }
+    // // Import all player sprites
+    // let dirs = ["N", "W", "S", "E"];
+    // for j in 0..dirs.len() {
+    //     for i in 1..4 {
+    //         let filename = format!("{}{}{}{}{}", "player_idle", dirs[j], "_", i.to_string(), ".png");
+    //         let mut map_name = format!("{}{}{}{}", "player_idle", dirs[j], "_", i.to_string());
+    //         let sprite = Texture::from_path(
+    //             &mut window.factory,
+    //             assets.join(&filename),
+    //             Flip::None,
+    //             &TextureSettings::new(),
+    //         ).expect(&format!("Not found: {:?}", filename));
+    //         textures.insert(map_name, sprite);
+    //     }
+    // }
     textures
 }
