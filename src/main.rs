@@ -1,7 +1,7 @@
 /**
     Aether of Enclaves is an exploration game, in which the user controls a main character 
     and travels through the sky with an airship to pick up crew members,
-    discovernew islands, interact with NPCs, and explore.
+    discover islands, interact with NPCs, and explore.
 
     2018 Samuel Eubanks, McKenzie Weller
 */
@@ -17,11 +17,10 @@ mod ship;
 mod misc;
 mod map;
 mod item;
+mod constants;
 
 use piston_window::*;
 use game::Game;
-
-const IMAGE_SIZE: f64 = 32.0;
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new("AOE", (650, 650))

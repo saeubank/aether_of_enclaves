@@ -4,8 +4,8 @@
 
 use noise::*;
 use rand::{thread_rng, Rng};
-use tile::{Tile, TileMaterial, TileType};
-use IMAGE_SIZE;
+use tile::{Tile, TileType};
+use constants::*;
 use piston_window::*;
 use std::cmp;
 use std::collections::HashMap;
@@ -18,11 +18,11 @@ pub struct Map {
 
 impl Map {
     pub fn new(width: usize, height: usize) -> Self {
-        let air = Tile::new(TileType::Special, TileMaterial::Air);
-        let floor_grass = Tile::new(TileType::Floor, TileMaterial::Grass);
-        let water = Tile::new(TileType::Special, TileMaterial::Water);
-        let floor_dirt = Tile::new(TileType::Floor, TileMaterial::Dirt);
-        let floor_stone = Tile::new(TileType::Floor, TileMaterial::Stone);
+        let air = Tile::new(TileType::Air);
+        let grass_floor = Tile::new(TileType::GrassFloor);
+        let water = Tile::new(TileType::Water);
+        let dirt_floor = Tile::new(TileType::DirtFloor);
+        let stone_wall = Tile::new(TileType::StoneWall);
 
         let mut map_tiles = vec![vec![air.clone(); height]; width];
         let worley_arr = generate_worley(width, height, STEP_SIZE);
@@ -34,11 +34,11 @@ impl Map {
                 if num <= -0.3 {
                     map_tiles[i][j] = water.clone();
                 } else if num <= 0.0 {
-                    map_tiles[i][j] = floor_dirt.clone();
+                    map_tiles[i][j] = dirt_floor.clone();
                 } else if num <= 0.3 {
-                    map_tiles[i][j] = floor_grass.clone();
+                    map_tiles[i][j] = grass_floor.clone();
                 } else {
-                    map_tiles[i][j] = floor_stone.clone();
+                    map_tiles[i][j] = stone_wall.clone();
                 }
             }
         }
@@ -69,9 +69,9 @@ impl Map {
                 if j as f64 * IMAGE_SIZE > player_y + w_height / 2.0 {
                     break;
                 }
-                match self.tiles[i][j].material {
-                    TileMaterial::Water => {
-                        let img = "water";
+                match self.tiles[i][j].tile_type {
+                    TileType::Water => {
+                        let img = IMG_WATER;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
@@ -81,8 +81,8 @@ impl Map {
                             graphics,
                         );
                     }
-                    TileMaterial::Stone => {
-                        let img = "floor_stone";
+                    TileType::StoneWall => {
+                        let img = IMG_STONE_WALL;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
@@ -92,8 +92,8 @@ impl Map {
                             graphics,
                         );
                     }
-                    TileMaterial::Grass => {
-                        let img = "floor_grass";
+                    TileType::GrassFloor => {
+                        let img = IMG_GRASS_FLOOR;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context
@@ -103,8 +103,8 @@ impl Map {
                             graphics,
                         );
                     }
-                    TileMaterial::Dirt => {
-                        let img = "floor_dirt";
+                    TileType::DirtFloor => {
+                        let img = IMG_DIRT_FLOOR;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context

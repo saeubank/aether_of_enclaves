@@ -19,18 +19,18 @@ pub enum Direction {
 }
 
 impl Direction {
-// Generates the corresponding string of a direction.
-// @param d The direction.
-pub fn direction_to_string(&self) -> String {
-    match *self {
-        Direction::N => "N".to_string(),
-        Direction::S => "S".to_string(),
-        Direction::W => "W".to_string(),
-        Direction::E => "E".to_string(),
-        Direction::NE => "NE".to_string(),
-        Direction::SE => "SE".to_string(),
-        Direction::SW => "SW".to_string(),
-        Direction::NW => "NW".to_string(),
+    // Generates the corresponding string of a direction.
+    // @param d The direction.
+    pub fn direction_to_string(&self) -> String {
+        match *self {
+            Direction::N => "N".to_string(),
+            Direction::S => "S".to_string(),
+            Direction::W => "W".to_string(),
+            Direction::E => "E".to_string(),
+            Direction::NE => "NE".to_string(),
+            Direction::SE => "SE".to_string(),
+            Direction::SW => "SW".to_string(),
+            Direction::NW => "NW".to_string(),
+        }
     }
-}
 }

@@ -1,0 +1,12 @@
+pub const IMAGE_SIZE: f64 = 32.0;
+pub const IMG_SKY: &str = "sky";
+pub const IMG_WOOD_FLOOR: &str = "floor_boards";
+pub const IMG_PLAYER: &str = "player";
+pub const IMG_WHEEL: &str = "wheel";
+pub const IMG_BISKET: &str = "bisket";
+pub const IMG_STONE_WALL: &str = "floor_stone";
+pub const IMG_GRASS_FLOOR: &str = "floor_grass";
+pub const IMG_DIRT_FLOOR: &str = "floor_dirt";
+pub const IMG_WATER: &str = "water";
+pub const IMG_TITLE_NO_TEXT: &str = "title_no_text";
+pub const IMG_TITLE_TEXT: &str = "title_text";

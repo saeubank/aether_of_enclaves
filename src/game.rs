@@ -6,7 +6,7 @@ use ship::Ship;
 use misc::*;
 use item::*;
 use map::Map;
-use IMAGE_SIZE;
+use constants::*;
 
 const MAP_WIDTH: usize = 1000;
 const MAP_HEIGHT: usize = 1000;
@@ -15,16 +15,15 @@ const MAP_HEIGHT: usize = 1000;
 
 pub enum GameState {
     Title,
-    // InGame(InGameState),
     InGame,
     InMenu,
     GameOver,
 }
 
-// enum InGameState {
-//     OnShip,
-//     InWorld,
-// }
+enum PlayerLocation {
+    OnShip,
+    InWorld,
+}
 
 /* pub enum MenuOption {
      Top,
@@ -43,6 +42,7 @@ pub struct Game {
     player: Creature,
     ship: Ship,
     game_state: GameState,
+    player_location: PlayerLocation,
     item_prototypes: HashMap<String, Item>,
     items_in_game: Vec<Item>,
     map: Map,
@@ -72,6 +72,7 @@ impl Game {
             player: Creature::new(CreatureType::Player),
             ship: Ship::new(ship_tiles),
             game_state: GameState::Title,
+            player_location: PlayerLocation::OnShip,
             item_prototypes: item_prototypes,
             items_in_game: vec![],
             map: Map::new(MAP_WIDTH, MAP_HEIGHT),
@@ -246,20 +247,23 @@ impl Game {
     }
 
     fn update(&mut self) {
+        if self.player.is_dead() {
+            self.game_state = GameState::GameOver;
+        }
         // Collision detection.
-                    // TODO Create separate function.
-                    if self.game_state == GameState::InGame {
-                        self.player.other_vel_x = self.ship.self_vel_x;
-                        self.player.other_vel_y = self.ship.self_vel_y;
-                        self.player.update_position_other();
-                        let x = self.player.x_to_be_location();
-                        let y = self.player.y_to_be_location();
-                        if self.is_on_ship(x, y) {
-                            self.player.update_position_self();
-                            self.player.update_direction();
-                        }
-                        self.ship.update_position();
-                    }
+        // TODO Create separate function.
+        if self.game_state == GameState::InGame {
+            self.player.other_vel_x = self.ship.self_vel_x;
+            self.player.other_vel_y = self.ship.self_vel_y;
+            self.player.update_position_other();
+            let x = self.player.x_to_be_location();
+            let y = self.player.y_to_be_location();
+            if self.is_on_ship(x, y) {
+                self.player.update_position_self();
+                self.player.update_direction();
+            }
+            self.ship.update_position();
+        }
     }
 
     // Checks whether a specific x,y position is on the ship.
@@ -307,6 +311,9 @@ impl Game {
                 // Move.
                 W | A | S | D => self.execute_move(&state, &Some(key)),
                 V => self.execute_action(&state),
+                L => {
+                    self.player.take_damage(1);
+                }
                 _ => {}
             },
             _ => {}
@@ -399,10 +406,7 @@ fn generate_glyphs(window: &mut PistonWindow) -> Glyphs {
     let assets = Search::ParentsThenKids(3, 3)
         .for_folder("fonts")
         .expect("Error finding folder");
-    // let ref font = assets.join("Inconsolata-Regular.ttf");
     let ref font = assets.join("m5x7.ttf");
-    // let ref font = assets.join("BitPotion.ttf");
-    // let ref font = assets.join("game over.ttf");
     let factory = window.factory.clone();
     let glyphs = Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
     glyphs
@@ -414,18 +418,17 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
         .for_folder("images")
         .expect("Error finding folder");
     let image_names = [
-        "err",
-        "sky",
-        "floor_boards",
-        "player",
-        "wheel",
-        "bisket",
-        "floor_stone",
-        "floor_grass",
-        "floor_dirt",
-        "water",
-        "title_no_text",
-        "title_text",
+        IMG_SKY,
+        IMG_WOOD_FLOOR,
+        IMG_PLAYER,
+        IMG_WHEEL,
+        IMG_BISKET,
+        IMG_STONE_WALL,
+        IMG_GRASS_FLOOR,
+        IMG_DIRT_FLOOR,
+        IMG_WATER,
+        IMG_TITLE_NO_TEXT,
+        IMG_TITLE_TEXT,
     ];
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();

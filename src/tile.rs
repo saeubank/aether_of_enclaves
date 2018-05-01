@@ -1,19 +1,11 @@
 #[derive(Clone, Debug, PartialEq)]
 pub enum TileType {
-    Floor,
-    // Wall,
-    Special,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum TileMaterial {
-    Wood,
-    Stone,
-    Grass,
-    // Sand,
-    // long grass,
-    Dirt,
-    // figure out how to add trees
+    WoodFloor,
+    StoneFloor,
+    StoneWall,
+    GrassFloor,
+    DirtFloor,
+    Tree,
     Air,
     Water,
     Wheel,
@@ -22,7 +14,6 @@ pub enum TileMaterial {
 #[derive(Clone)]
 pub struct Tile {
     pub tile_type: TileType,
-    pub material: TileMaterial,
     pub passable: bool,
 }
 
@@ -31,17 +22,13 @@ pub struct Tile {
     Provides permutations of different tile types.
 */
 impl Tile {
-    pub fn new(tile: TileType, mat: TileMaterial) -> Self {
-        let can_pass = match tile.clone() {
-            TileType::Floor => true,
-            TileType::Special => match mat.clone() {
-                TileMaterial::Air => false,
-                _ => true,
-            },
+    pub fn new(tile_type: TileType) -> Self {
+        let can_pass = match tile_type {
+            TileType::Tree | TileType::Water | TileType::StoneWall => false,
+            _ => true,
         };
         Tile {
-            tile_type: tile,
-            material: mat,
+            tile_type: tile_type,
             passable: can_pass,
         }
     }
