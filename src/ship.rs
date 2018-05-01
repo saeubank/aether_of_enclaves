@@ -113,10 +113,10 @@ impl Ship {
                             context
                                 .transform
                                 .trans(
-                                    self.x + i as f64 * IMAGE_SIZE,
-                                    self.y + j as f64 * IMAGE_SIZE,
+                                    self.x + i as f64 * IMAGE_SIZE_SCALED,
+                                    self.y + j as f64 * IMAGE_SIZE_SCALED,
                                 )
-                                .trans(trans_x, trans_y),
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }
@@ -127,10 +127,10 @@ impl Ship {
                             context
                                 .transform
                                 .trans(
-                                    self.x + i as f64 * IMAGE_SIZE,
-                                    self.y + j as f64 * IMAGE_SIZE,
+                                    self.x + i as f64 * IMAGE_SIZE_SCALED,
+                                    self.y + j as f64 * IMAGE_SIZE_SCALED,
                                 )
-                                .trans(trans_x, trans_y),
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                         let img = IMG_WHEEL;
@@ -139,10 +139,10 @@ impl Ship {
                             context
                                 .transform
                                 .trans(
-                                    self.x + i as f64 * IMAGE_SIZE,
-                                    self.y + j as f64 * IMAGE_SIZE,
+                                    self.x + i as f64 * IMAGE_SIZE_SCALED,
+                                    self.y + j as f64 * IMAGE_SIZE_SCALED,
                                 )
-                                .trans(trans_x, trans_y),
+                                .trans(trans_x, trans_y).scale(IMAGE_SCALE, IMAGE_SCALE),
                             graphics,
                         );
                     }
