@@ -185,7 +185,7 @@ impl Game {
                     let transform = context.transform.trans(100.0, 100.0);
                     text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
                         .draw(
-                            "GAME OVER",
+                            "Inventory test 1234567890,.",
                             &mut self.glyphs,
                             &context.draw_state,
                             transform,
@@ -194,7 +194,16 @@ impl Game {
                         .expect("Error drawing GAME OVER");
                 }
                 GameState::GameOver => {
-
+                    let transform = context.transform.trans(100.0, 100.0);
+                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
+                        .draw(
+                            "GAME OVER",
+                            &mut self.glyphs,
+                            &context.draw_state,
+                            transform,
+                            graphics,
+                        )
+                        .expect("Error drawing GAME OVER");
                 }
             }
         });
@@ -390,7 +399,10 @@ fn generate_glyphs(window: &mut PistonWindow) -> Glyphs {
     let assets = Search::ParentsThenKids(3, 3)
         .for_folder("fonts")
         .expect("Error finding folder");
-    let ref font = assets.join("Inconsolata-Regular.ttf");
+    // let ref font = assets.join("Inconsolata-Regular.ttf");
+    let ref font = assets.join("m5x7.ttf");
+    // let ref font = assets.join("BitPotion.ttf");
+    // let ref font = assets.join("game over.ttf");
     let factory = window.factory.clone();
     let glyphs = Glyphs::new(font, factory, TextureSettings::new()).expect("Error with glyphs");
     glyphs
