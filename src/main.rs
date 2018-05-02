@@ -23,7 +23,7 @@ use piston_window::*;
 use game::Game;
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new("AOE", (650, 650))
+    let window: PistonWindow = WindowSettings::new("AOE", (650, 650))
         .exit_on_esc(true)
         .build()
         .expect("Error building window");

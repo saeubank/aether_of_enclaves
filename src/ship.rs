@@ -230,7 +230,6 @@ impl Moveable for Ship {
                 Direction::S => dy += self.speed,
                 Direction::W => dx -= self.speed,
                 Direction::E => dx += self.speed,
-                _ => {}
             }
         }
 

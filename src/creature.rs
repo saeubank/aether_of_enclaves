@@ -11,13 +11,13 @@ use constants::IMAGE_SCALE;
     the Player, but default functionality is also implemented for Monsters and Crew.
 */
 
-pub enum CreatureType {
-    Player,
-    // Fighter,
-    // Cook,
-    // Carpenter,
-    // Monster,
-}
+// pub enum CreatureType {
+//     Player,
+//     // Fighter,
+//     // Cook,
+//     // Carpenter,
+//     // Monster,
+// }
 
 pub enum CreatureState {
     Normal,
@@ -47,7 +47,7 @@ pub enum CreatureState {
 
 */
 pub struct Creature {
-    creature_type: CreatureType,
+    // creature_type: CreatureType,
     pub creature_state: CreatureState,
     pub x: f64,
     pub y: f64,
@@ -67,9 +67,9 @@ pub struct Creature {
 
 impl Creature {
     // Constructor for default Creature.
-    pub fn new(c_type: CreatureType) -> Creature {
+    pub fn new() -> Creature {
         Creature {
-            creature_type: c_type,
+            // creature_type: c_type,
             creature_state: CreatureState::Normal,
             x: 0.0,
             y: 0.0,
@@ -286,7 +286,6 @@ impl Moveable for Creature {
                 Direction::S => dy += self.speed,
                 Direction::W => dx -= self.speed,
                 Direction::E => dx += self.speed,
-                _ => {}
             }
         }
         self.self_vel_x = dx;

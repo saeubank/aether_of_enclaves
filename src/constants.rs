@@ -1,6 +1,9 @@
 pub const IMAGE_SIZE: f64 = 8.0;
 pub const IMAGE_SCALE: f64 = 4.0;
 pub const IMAGE_SIZE_SCALED: f64 = IMAGE_SCALE * IMAGE_SIZE;
+pub const MAP_WIDTH: usize = 1000;
+pub const MAP_HEIGHT: usize = 1000;
+
 pub const IMG_SKY: &str = "sky";
 pub const IMG_CLOUD_1: &str = "cloud_1";
 pub const IMG_CLOUD_2: &str = "cloud_2";
