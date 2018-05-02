@@ -24,7 +24,7 @@ pub struct Tile {
 impl Tile {
     pub fn new(tile_type: TileType) -> Self {
         let can_pass = match tile_type {
-            TileType::Tree | TileType::Water | TileType::StoneWall => false,
+            TileType::Tree | TileType::Water | TileType::StoneWall | TileType::Air => false,
             _ => true,
         };
         Tile {
