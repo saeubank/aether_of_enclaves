@@ -17,7 +17,7 @@ const BASE_WEIGHT: f64 = 0.2;
 
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
-    grass_dirt_map: HashMap<(bool, bool, bool, bool),(Option<String>, f64, f64, f64)>,
+    grass_dirt_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>,
 }
 
 impl Map {
@@ -27,7 +27,7 @@ impl Map {
         let water = Tile::new(TileType::Water);
         let dirt_floor = Tile::new(TileType::DirtFloor);
         let stone_wall = Tile::new(TileType::StoneWall);
-        let tree= Tile::new(TileType::Tree);
+        let tree = Tile::new(TileType::Tree);
 
         let mut map_tiles = vec![vec![air.clone(); height]; width];
         let worley_arr = generate_worley(width, height, STEP_SIZE / 2.0);
@@ -45,8 +45,8 @@ impl Map {
                 } else if num <= 0.6 {
                     if moist[i][j] >= 0.7 {
                         map_tiles[i][j] = tree.clone();
-                    }else{
-                    map_tiles[i][j] = grass_floor.clone();
+                    } else {
+                        map_tiles[i][j] = grass_floor.clone();
                     }
                 } else {
                     map_tiles[i][j] = stone_wall.clone();
@@ -57,7 +57,10 @@ impl Map {
                 }
             }
         }
-        Map { tiles: map_tiles, grass_dirt_map: populate_texture_maps() }
+        Map {
+            tiles: map_tiles,
+            grass_dirt_map: populate_texture_maps(),
+        }
     }
     pub fn draw(
         &self,
@@ -88,14 +91,16 @@ impl Map {
                     if img == IMG_TREE {
                         let grass = IMG_GRASS_FLOOR;
                         image(
-                        textures.get(grass).expect(&format!("Not found: {:?}", grass)),
-                        context
-                            .transform
-                            .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
-                            .trans(trans_x, trans_y)
-                            .scale(IMAGE_SCALE, IMAGE_SCALE),
-                        graphics,
-                    );
+                            textures
+                                .get(grass)
+                                .expect(&format!("Not found: {:?}", grass)),
+                            context
+                                .transform
+                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                                .trans(trans_x, trans_y)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
+                            graphics,
+                        );
                     }
 
                     image(
@@ -109,7 +114,6 @@ impl Map {
                             .rot_deg(rot),
                         graphics,
                     );
-                    
                 }
             }
         }
@@ -117,22 +121,18 @@ impl Map {
 
     fn what_to_draw(&self, x: usize, y: usize) -> (Option<String>, f64, f64, f64) {
         let img;
-        let mut rot = 0.0;
-        let mut shift_x = 0.0;
-        let mut shift_y = 0.0;
+        let rot = 0.0;
+        let shift_x = 0.0;
+        let shift_y = 0.0;
         match self.tiles[x][y].tile_type {
-            TileType::Water => {
-                match self.tiles[x][y].texture {
-                    false => img = Some(IMG_WATER.to_string()),
-                    true => img = Some(IMG_WATER_TEXTURE.to_string()),
-                }
-            }
-            TileType::StoneWall => {
-                match self.tiles[x][y].texture {
-                    false => img = Some(IMG_STONE_WALL.to_string()),
-                    true => img = Some(IMG_STONE_WALL_TEXTURE.to_string()),
-                }
-            }
+            TileType::Water => match self.tiles[x][y].texture {
+                false => img = Some(IMG_WATER.to_string()),
+                true => img = Some(IMG_WATER_TEXTURE.to_string()),
+            },
+            TileType::StoneWall => match self.tiles[x][y].texture {
+                false => img = Some(IMG_STONE_WALL.to_string()),
+                true => img = Some(IMG_STONE_WALL_TEXTURE.to_string()),
+            },
             TileType::GrassFloor => {
                 let mut up = false;
                 let mut left = false;
@@ -160,32 +160,30 @@ impl Map {
                     }
                 }
 
-
                 let key = (right, down, left, up);
-                if let Some(&(ref i, r, sx, sy)) = self.grass_dirt_map.get(&key) {
+                if let Some(&(ref i, _r, _sx, _sy)) = self.grass_dirt_map.get(&key) {
                     if let &Some(ref _i) = i {
-                        let temp = self.grass_dirt_map.get(&key).expect(&format!("Couldn't get {:?}", key)).clone();
-                       return temp;
-                    }
-                    else {
+                        let temp = self.grass_dirt_map
+                            .get(&key)
+                            .expect(&format!("Couldn't get {:?}", key))
+                            .clone();
+                        return temp;
+                    } else {
                         match self.tiles[x][y].texture {
                             false => img = Some(IMG_GRASS_FLOOR.to_string()),
                             true => img = Some(IMG_GRASS_FLOOR_TEXTURE.to_string()),
                         }
                     }
-                }
-                else {
+                } else {
                     img = None;
-                }            
+                }
             }
 
-            TileType::DirtFloor => {
-                match self.tiles[x][y].texture {
-                    false => img = Some(IMG_DIRT_FLOOR.to_string()),
-                    true => img = Some(IMG_DIRT_FLOOR_TEXTURE.to_string()),
-                }
-            }
-            TileType::Tree =>{
+            TileType::DirtFloor => match self.tiles[x][y].texture {
+                false => img = Some(IMG_DIRT_FLOOR.to_string()),
+                true => img = Some(IMG_DIRT_FLOOR_TEXTURE.to_string()),
+            },
+            TileType::Tree => {
                 img = Some(IMG_TREE.to_string());
             }
             _ => img = None,
@@ -240,38 +238,133 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     arr
 }
 
-fn populate_texture_maps() -> HashMap<(bool, bool, bool, bool),(Option<String>, f64, f64, f64)> {
-    let mut dirt_grass_map: HashMap<(bool, bool, bool, bool),(Option<String>, f64, f64, f64)> = HashMap::new();
+fn populate_texture_maps() -> HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> {
+    let mut dirt_grass_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> =
+        HashMap::new();
 
     // Right, Down, Left, Up
-    dirt_grass_map.insert((true,false,false,false),(Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()), 0.0, 0.0, 0.0));
-    dirt_grass_map.insert((false,true,false,false),(Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()), 90.0, IMAGE_SIZE_SCALED, 0.0));
-    dirt_grass_map.insert((false,false,true,false),(Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()), 180.0, IMAGE_SIZE_SCALED, IMAGE_SIZE_SCALED));
-    dirt_grass_map.insert((false,false,false,true),(Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()), 270.0, 0.0, IMAGE_SIZE_SCALED));
+    dirt_grass_map.insert(
+        (true, false, false, false),
+        (Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()), 0.0, 0.0, 0.0),
+    );
+    dirt_grass_map.insert(
+        (false, true, false, false),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()),
+            90.0,
+            IMAGE_SIZE_SCALED,
+            0.0,
+        ),
+    );
+    dirt_grass_map.insert(
+        (false, false, true, false),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()),
+            180.0,
+            IMAGE_SIZE_SCALED,
+            IMAGE_SIZE_SCALED,
+        ),
+    );
+    dirt_grass_map.insert(
+        (false, false, false, true),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_1_SIDE.to_string()),
+            270.0,
+            0.0,
+            IMAGE_SIZE_SCALED,
+        ),
+    );
 
     // Corners
-    dirt_grass_map.insert((true,false,false,true),(Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()), 0.0, 0.0, 0.0));
-    dirt_grass_map.insert((true,true,false,false),(Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()), 90.0, IMAGE_SIZE_SCALED, 0.0));
-    dirt_grass_map.insert((false,true,true,false),(Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()), 180.0, IMAGE_SIZE_SCALED, IMAGE_SIZE_SCALED));
-    dirt_grass_map.insert((false,false,true,true),(Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()), 270.0, 0.0, IMAGE_SIZE_SCALED));
+    dirt_grass_map.insert(
+        (true, false, false, true),
+        (Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()), 0.0, 0.0, 0.0),
+    );
+    dirt_grass_map.insert(
+        (true, true, false, false),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()),
+            90.0,
+            IMAGE_SIZE_SCALED,
+            0.0,
+        ),
+    );
+    dirt_grass_map.insert(
+        (false, true, true, false),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()),
+            180.0,
+            IMAGE_SIZE_SCALED,
+            IMAGE_SIZE_SCALED,
+        ),
+    );
+    dirt_grass_map.insert(
+        (false, false, true, true),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_CORNER.to_string()),
+            270.0,
+            0.0,
+            IMAGE_SIZE_SCALED,
+        ),
+    );
 
     // 2 Sides
-    dirt_grass_map.insert((true,false,true,false),(Some(IMG_GRASS_DIRT_FLOOR_2_SIDE.to_string()), 0.0, 0.0, 0.0));
-    dirt_grass_map.insert((false,true,false,true),(Some(IMG_GRASS_DIRT_FLOOR_2_SIDE.to_string()), 90.0, IMAGE_SIZE_SCALED, 0.0));
+    dirt_grass_map.insert(
+        (true, false, true, false),
+        (Some(IMG_GRASS_DIRT_FLOOR_2_SIDE.to_string()), 0.0, 0.0, 0.0),
+    );
+    dirt_grass_map.insert(
+        (false, true, false, true),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_2_SIDE.to_string()),
+            90.0,
+            IMAGE_SIZE_SCALED,
+            0.0,
+        ),
+    );
 
     // 3 Sides
-    dirt_grass_map.insert((true,false,true,true),(Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()), 0.0, 0.0, 0.0));
-    dirt_grass_map.insert((true,true,false,true),(Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()), 90.0, IMAGE_SIZE_SCALED, 0.0));
-    dirt_grass_map.insert((true,true,true,false),(Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()), 180.0, IMAGE_SIZE_SCALED, IMAGE_SIZE_SCALED));
-    dirt_grass_map.insert((false,true,true,true),(Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()), 270.0, 0.0, IMAGE_SIZE_SCALED));
+    dirt_grass_map.insert(
+        (true, false, true, true),
+        (Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()), 0.0, 0.0, 0.0),
+    );
+    dirt_grass_map.insert(
+        (true, true, false, true),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()),
+            90.0,
+            IMAGE_SIZE_SCALED,
+            0.0,
+        ),
+    );
+    dirt_grass_map.insert(
+        (true, true, true, false),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()),
+            180.0,
+            IMAGE_SIZE_SCALED,
+            IMAGE_SIZE_SCALED,
+        ),
+    );
+    dirt_grass_map.insert(
+        (false, true, true, true),
+        (
+            Some(IMG_GRASS_DIRT_FLOOR_3_SIDE.to_string()),
+            270.0,
+            0.0,
+            IMAGE_SIZE_SCALED,
+        ),
+    );
 
     // 4 Sides
-    dirt_grass_map.insert((true,true,true,true),(Some(IMG_GRASS_DIRT_FLOOR_4_SIDE.to_string()), 0.0, 0.0, 0.0));
+    dirt_grass_map.insert(
+        (true, true, true, true),
+        (Some(IMG_GRASS_DIRT_FLOOR_4_SIDE.to_string()), 0.0, 0.0, 0.0),
+    );
 
-    dirt_grass_map.insert((false,false,false,false),(None, 0.0, 0.0, 0.0));
+    dirt_grass_map.insert((false, false, false, false), (None, 0.0, 0.0, 0.0));
 
     dirt_grass_map
-
 }
 
 // struct Island {

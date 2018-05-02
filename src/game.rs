@@ -384,9 +384,10 @@ impl Game {
                 V => self.execute_action(state),
                 L => self.player.take_damage(1),
 
-                F => {self.change_player_location(state);
-                self.player.creature_state = CreatureState::Normal;
-                },
+                F => {
+                    self.change_player_location(state);
+                    self.player.creature_state = CreatureState::Normal;
+                }
                 _ => {}
             },
             _ => {}
