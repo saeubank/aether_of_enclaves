@@ -26,6 +26,10 @@ pub const IMG_STONE_WALL_EDGE_1_SIDE: &str = "stone_wall_edge_1";
 pub const IMG_STONE_WALL_EDGE_2_SIDE: &str = "stone_wall_edge_2";
 pub const IMG_STONE_WALL_EDGE_3_SIDE: &str = "stone_wall_edge_3";
 pub const IMG_STONE_WALL_EDGE_CORNER: &str = "stone_wall_edge_corner";
+pub const IMG_STONE_WALL_FRONT: &str = "stone_wall_front";
+pub const IMG_STONE_WALL_FRONT_R_EDGE: &str = "stone_wall_front_right_edge";
+pub const IMG_STONE_WALL_FRONT_L_EDGE: &str = "stone_wall_front_left_edge";
+pub const IMG_STONE_WALL_FRONT_DEEP: &str = "stone_wall_front_no_top";
 
 pub const IMG_WATER: &str = "water_1";
 pub const IMG_WATER_TEXTURE: &str = "water_2";
