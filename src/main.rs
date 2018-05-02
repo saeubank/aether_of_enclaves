@@ -28,9 +28,7 @@ fn main() {
         .build()
         .expect("Error building window");
 
-    // Not sure if these do anything
-    window.set_max_fps(60);
-    let mut window = window.ups(60);
+    let mut window = window.ups(60).ups_reset(0);
 
     let mut game = Game::new(&mut window);
     game.run(&mut window);

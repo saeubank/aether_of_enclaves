@@ -480,9 +480,7 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
 
     let ts = TextureSettings::new()
-        .filter(Filter::Nearest)
-        .compress(false)
-        .generate_mipmap(false);
+        .filter(Filter::Nearest);
 
     for image_name in image_names.into_iter() {
         let filename = image_name.to_owned().to_owned() + ".png";
