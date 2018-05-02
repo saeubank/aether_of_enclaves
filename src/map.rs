@@ -71,64 +71,77 @@ impl Map {
                 if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
                     break;
                 }
-                match self.tiles[i][j].tile_type {
-                    TileType::Water => {
-                        let img = IMG_WATER;
-                        image(
-                            textures.get(img).expect(&format!("Not found: {:?}", img)),
-                            context
-                                .transform
-                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
-                                .trans(trans_x, trans_y)
-                                .scale(IMAGE_SCALE, IMAGE_SCALE),
-                            graphics,
-                        );
-                    }
-                    TileType::StoneWall => {
-                        let img = IMG_STONE_WALL;
-                        image(
-                            textures.get(img).expect(&format!("Not found: {:?}", img)),
-                            context
-                                .transform
-                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
-                                .trans(trans_x, trans_y)
-                                .scale(IMAGE_SCALE, IMAGE_SCALE),
-                            graphics,
-                        );
-                    }
-                    TileType::GrassFloor => {
-                        let img = IMG_GRASS_FLOOR;
-                        image(
-                            textures.get(img).expect(&format!("Not found: {:?}", img)),
-                            context
-                                .transform
-                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
-                                .trans(trans_x, trans_y)
-                                .scale(IMAGE_SCALE, IMAGE_SCALE),
-                            graphics,
-                        );
-                    }
-                    TileType::DirtFloor => {
-                        let img = IMG_DIRT_FLOOR;
-                        image(
-                            textures.get(img).expect(&format!("Not found: {:?}", img)),
-                            context
-                                .transform
-                                .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
-                                .trans(trans_x, trans_y)
-                                .scale(IMAGE_SCALE, IMAGE_SCALE),
-                            graphics,
-                        );
-                    }
-                    _ => {}
+                if let Some(img) = self.what_to_draw(i, j) {
+                    image(
+                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                        context
+                            .transform
+                            .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                            .trans(trans_x, trans_y)
+                            .scale(IMAGE_SCALE, IMAGE_SCALE),
+                        graphics,
+                    );
                 }
             }
         }
     }
 
-    // fn what_to_draw(&self, x: usize, y: usize) {
+    fn what_to_draw(&self, x: usize, y: usize) -> Option<&str> {
+        let img;
+        match self.tiles[x][y].tile_type {
+            TileType::Water => {
+                img = Some(IMG_WATER);
+            }
+            TileType::StoneWall => {
+                img = Some(IMG_STONE_WALL);
+            }
+            TileType::GrassFloor => {
+                let mut up = false;
+                let mut left = false;
+                let mut right = false;
+                let mut down = false;
 
-    // }
+                if x > 0 {
+                    if self.tiles[x - 1][y].tile_type == TileType::DirtFloor {
+                        left = true;
+                    }
+                }
+                if x < self.tiles.len() - 1 {
+                    if self.tiles[x + 1][y].tile_type == TileType::DirtFloor {
+                        right = true;
+                    }
+                }
+                if y > 0 {
+                    if self.tiles[x][y - 1].tile_type == TileType::DirtFloor {
+                        up = true;
+                    }
+                }
+                if y < self.tiles[x].len() - 1 {
+                    if self.tiles[x][y + 1].tile_type == TileType::DirtFloor {
+                        down = true;
+                    }
+                }
+
+                // if up && left && right && down {
+                //     img = Some()
+                // } else if left && right && down{
+
+                // } else if up && right && down {
+
+                // }
+                if right {
+                    img = Some(IMG_GRASS_DIRT_FLOOR_1_SIDE);
+                } else {
+                    img = Some(IMG_GRASS_FLOOR);
+                }
+            }
+            TileType::DirtFloor => {
+                img = Some(IMG_DIRT_FLOOR);
+            }
+            _ => img = None,
+        }
+        img
+    }
 }
 
 fn generate_perlin(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
