@@ -120,17 +120,23 @@ impl Game {
                         trans_y,
                     );
 
-                    self.ship
-                        .draw(&self.textures, &context, &mut graphics, trans_x, trans_y);
-
-                    for i in 0..self.items_in_game.len() {
-                        self.items_in_game[i].draw(
+                    match self.player_location {
+                        PlayerLocation::OnShip => self.ship.draw(
                             &self.textures,
                             &context,
                             &mut graphics,
                             trans_x,
                             trans_y,
-                        )
+                        ),
+                        PlayerLocation::InWorld => for i in 0..self.items_in_game.len() {
+                            self.items_in_game[i].draw(
+                                &self.textures,
+                                &context,
+                                &mut graphics,
+                                trans_x,
+                                trans_y,
+                            );
+                        },
                     }
 
                     // Begin player animation.
@@ -144,13 +150,13 @@ impl Game {
                 }
 
                 GameState::Title => {
-                    let img = "title_no_text";
+                    let img = IMG_TITLE_NO_TEXT;
                     let title_img = self.textures
                         .get(img)
                         .expect(&format!("Not found: {:?}", img));
 
                     // For scaling / positioning text.
-                    let img = "title_text";
+                    let img = IMG_TITLE_TEXT;
                     let title_txt = self.textures
                         .get(img)
                         .expect(&format!("Not found: {:?}", img));
@@ -185,27 +191,31 @@ impl Game {
                 }
                 GameState::InMenu => {
                     let transform = context.transform.trans(100.0, 100.0);
-                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
-                        .draw(
-                            "Inventory test 1234567890,.",
-                            &mut self.glyphs,
-                            &context.draw_state,
-                            transform,
-                            graphics,
-                        )
-                        .expect("Error drawing GAME OVER");
+                    let draw_text = "Inventory";
+                    let font = 16;
+                    text(
+                        [1.0; 4],
+                        font,
+                        draw_text,
+                        &mut self.glyphs,
+                        transform,
+                        graphics,
+                    ).expect(&format!("Error drawing {}", draw_text));
                 }
                 GameState::GameOver => {
-                    let transform = context.transform.trans(100.0, 100.0);
-                    text::Text::new_color([1.0, 1.0, 1.0, 1.0], 16)
-                        .draw(
-                            "GAME OVER",
-                            &mut self.glyphs,
-                            &context.draw_state,
-                            transform,
-                            graphics,
-                        )
-                        .expect("Error drawing GAME OVER");
+                    let draw_text = "GAME OVER";
+                    let font = 24;
+                    let x = (font * (draw_text.len() as u32)) as f64 / 2.0;
+                    let transform = context.transform.trans(w_width / 2.0 - x, w_height / 2.0);
+
+                    text(
+                        [1.0; 4],
+                        font,
+                        draw_text,
+                        &mut self.glyphs,
+                        transform,
+                        graphics,
+                    ).expect(&format!("Error drawing {}", draw_text));
                 }
             }
         });
@@ -231,7 +241,7 @@ impl Game {
         while let Some(e) = window.next() {
             match e {
                 Event::Input(Input::Button(args)) => {
-                    self.handle_input(args.state, args.button);
+                    self.handle_input(&args.state, &args.button);
                 }
 
                 // TODO Add lag handler here
@@ -254,16 +264,24 @@ impl Game {
         // Collision detection.
         // TODO Create separate function.
         if self.game_state == GameState::InGame {
-            self.player.other_vel_x = self.ship.self_vel_x;
-            self.player.other_vel_y = self.ship.self_vel_y;
-            self.player.update_position_other();
-            let x = self.player.x_to_be_location();
-            let y = self.player.y_to_be_location();
-            if self.is_on_ship(x, y) {
-                self.player.update_position_self();
-                self.player.update_direction();
+            match self.player_location {
+                PlayerLocation::OnShip => {
+                    self.player.other_vel_x = self.ship.self_vel_x;
+                    self.player.other_vel_y = self.ship.self_vel_y;
+                    self.player.update_position_other();
+                    let x = self.player.x_to_be_location();
+                    let y = self.player.y_to_be_location();
+                    if self.is_on_ship(x, y) {
+                        self.player.update_position_self();
+                        self.player.update_direction();
+                    }
+                    self.ship.update_position();
+                }
+                PlayerLocation::InWorld => {
+                    self.player.update_position_self();
+                    self.player.update_direction();
+                }
             }
-            self.ship.update_position();
         }
     }
 
@@ -303,23 +321,32 @@ impl Game {
     // @param button The input button arguments.
     // @param player The player.
     // @param game_state The current Game State.
-    fn handle_input(&mut self, state: ButtonState, button: Button) {
+    fn handle_input(&mut self, state: &ButtonState, button: &Button) {
         use self::Key::*;
-        match button {
+        match *button {
             Button::Keyboard(key) => match key {
                 // Action button.
-                Return => self.execute_main_menu(&state),
+                Return => self.execute_main_menu(state),
                 // Menu toggle.
-                Tab => self.execute_open_menu(&state),
+                Tab => self.execute_open_menu(state),
                 // Move.
-                W | A | S | D => self.execute_move(&state, &Some(key)),
-                V => self.execute_action(&state),
-                L => {
-                    self.player.take_damage(1);
-                }
+                W | A | S | D => self.execute_move(state, &Some(key)),
+                V => self.execute_action(state),
+                L => self.player.take_damage(1),
+
+                F => self.change_player_location(state),
                 _ => {}
             },
             _ => {}
+        }
+    }
+
+    fn change_player_location(&mut self, state: &ButtonState) {
+        if *state == ButtonState::Press {
+            self.player_location = match self.player_location {
+                PlayerLocation::OnShip => PlayerLocation::InWorld,
+                PlayerLocation::InWorld => PlayerLocation::OnShip,
+            }
         }
     }
 
@@ -479,8 +506,7 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
 
     let mut textures: HashMap<String, G2dTexture> = HashMap::new();
 
-    let ts = TextureSettings::new()
-        .filter(Filter::Nearest);
+    let ts = TextureSettings::new().filter(Filter::Nearest);
 
     for image_name in image_names.into_iter() {
         let filename = image_name.to_owned().to_owned() + ".png";
