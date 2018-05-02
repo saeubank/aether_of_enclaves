@@ -49,11 +49,11 @@ pub struct Item {
     pub x: f64,
     pub y: f64,
     pub item_type: ItemType,
-    pub damage: i32, // Damage done when thrown
-    pub pickupable: bool,
-    pub x_vel: f64,
-    pub y_vel: f64,
-    pub weight: f64,
+    damage: i32, // Damage done when thrown
+    pickupable: bool,
+    x_vel: f64,
+    y_vel: f64,
+    weight: f64,
 }
 
 impl Item {
@@ -114,7 +114,3 @@ impl Item {
         }
     }
 }
-
-// Items to add & crafting
-// Wood -> Sword
-// Plant -> Food

@@ -1,6 +1,6 @@
 use piston_window::*;
 use find_folder::Search;
-use creature::{Creature, CreatureState, CreatureType};
+use creature::{Creature, CreatureState};
 use texture::TextureSettings;
 use std::collections::HashMap;
 use ship::Ship;
@@ -68,7 +68,7 @@ impl Game {
         let textures = generate_textures(window);
 
         Game {
-            player: Creature::new(CreatureType::Player),
+            player: Creature::new(),
             ship: Ship::new(ship_tiles),
             game_state: GameState::Title,
             player_location: PlayerLocation::OnShip,
@@ -384,7 +384,9 @@ impl Game {
                 V => self.execute_action(state),
                 L => self.player.take_damage(1),
 
-                F => self.change_player_location(state),
+                F => {self.change_player_location(state);
+                self.player.creature_state = CreatureState::Normal;
+                },
                 _ => {}
             },
             _ => {}

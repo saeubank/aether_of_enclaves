@@ -13,6 +13,7 @@ use std::cmp;
 use std::collections::HashMap;
 
 const STEP_SIZE: f64 = 0.1;
+const BASE_WEIGHT: f64 = 0.2;
 
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
@@ -25,20 +26,27 @@ impl Map {
         let water = Tile::new(TileType::Water);
         let dirt_floor = Tile::new(TileType::DirtFloor);
         let stone_wall = Tile::new(TileType::StoneWall);
+        let tree= Tile::new(TileType::Tree);
 
         let mut map_tiles = vec![vec![air.clone(); height]; width];
-        let worley_arr = generate_worley(width, height, STEP_SIZE);
+        let worley_arr = generate_worley(width, height, STEP_SIZE / 2.0);
         let perlin_arr = generate_perlin(width, height, STEP_SIZE);
+        let perlin_arr = add_base_weight(&perlin_arr, BASE_WEIGHT);
+        let moist = generate_perlin(width, height, STEP_SIZE);
 
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
                 let num = worley_arr[i][j] * perlin_arr[i][j];
-                if num <= -0.3 {
+                if num <= 0.1 {
                     map_tiles[i][j] = water.clone();
-                } else if num <= 0.0 {
+                } else if num <= 0.2 {
                     map_tiles[i][j] = dirt_floor.clone();
-                } else if num <= 0.3 {
+                } else if num <= 0.6 {
+                    if moist[i][j] >= 0.7 {
+                        map_tiles[i][j] = tree.clone();
+                    }else{
                     map_tiles[i][j] = grass_floor.clone();
+                    }
                 } else {
                     map_tiles[i][j] = stone_wall.clone();
                 }
@@ -72,6 +80,18 @@ impl Map {
                     break;
                 }
                 if let Some(img) = self.what_to_draw(i, j) {
+                    if img == IMG_TREE {
+                        let grass = IMG_GRASS_FLOOR;
+                        image(
+                        textures.get(grass).expect(&format!("Not found: {:?}", grass)),
+                        context
+                            .transform
+                            .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                            .trans(trans_x, trans_y)
+                            .scale(IMAGE_SCALE, IMAGE_SCALE),
+                        graphics,
+                    );
+                    }
                     image(
                         textures.get(img).expect(&format!("Not found: {:?}", img)),
                         context
@@ -81,6 +101,7 @@ impl Map {
                             .scale(IMAGE_SCALE, IMAGE_SCALE),
                         graphics,
                     );
+                    
                 }
             }
         }
@@ -138,6 +159,9 @@ impl Map {
             TileType::DirtFloor => {
                 img = Some(IMG_DIRT_FLOOR);
             }
+            TileType::Tree =>{
+                img = Some(IMG_TREE);
+            }
             _ => img = None,
         }
         img
@@ -152,13 +176,25 @@ fn generate_perlin(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     let mut arr = vec![vec![0.0; height]; width];
     for i in 0..width {
         for j in 0..height {
-            arr[i][j] = noise.get([xpos, ypos]);
+            arr[i][j] = (noise.get([xpos, ypos]) + 1.0) / 2.0;
             xpos += step;
         }
         xpos = 0.0;
         ypos += step;
     }
     arr
+}
+
+fn add_base_weight(arr: &Vec<Vec<f64>>, base: f64) -> Vec<Vec<f64>> {
+    let mut weighted = vec![vec![0.0; arr[0].len()]; arr.len()];
+    for i in 0..arr.len() {
+        for j in 0..arr[i].len() {
+            let temp = arr[i][j] + base;
+            let temp = temp.min(1.0);
+            weighted[i][j] = temp;
+        }
+    }
+    weighted
 }
 
 fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
@@ -169,7 +205,7 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     let mut arr = vec![vec![0.0; height]; width];
     for i in 0..width {
         for j in 0..height {
-            arr[i][j] = noise.get([xpos, ypos]);
+            arr[i][j] = (noise.get([xpos, ypos]) + 1.0) / 2.0;
             xpos += step;
         }
         xpos = 0.0;
