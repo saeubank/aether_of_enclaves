@@ -8,9 +8,7 @@ use misc::*;
 use item::*;
 use map::Map;
 use constants::*;
-
-const MAP_WIDTH: usize = 1000;
-const MAP_HEIGHT: usize = 1000;
+use tile::TileType;
 
 #[derive(Debug, PartialEq)]
 
@@ -278,17 +276,70 @@ impl Game {
                     self.ship.update_position();
                 }
                 PlayerLocation::InWorld => {
-                    self.player.update_position_self();
-                    self.player.update_direction();
+                    let x = self.player.x_to_be_location();
+                    let y = self.player.y_to_be_location();
+                    if self.can_go_to(x, y) {
+                        self.player.update_position_self();
+                        self.player.update_direction();
+                    }
                 }
             }
         }
     }
 
+    fn tiletype_under_player(&self) -> Option<TileType> {
+        let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
+        let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
+        let iss = IMAGE_SIZE_SCALED as f64;
+        match self.player_location {
+            PlayerLocation::OnShip => {
+                let is_in_x = x >= self.ship.x && x + iss <= self.ship.x + self.ship.width * iss;
+                let is_in_y = y >= self.ship.y && y + iss <= self.ship.y + self.ship.height * iss;
+                if is_in_x && is_in_y {
+                    return Some(
+                        self.ship.tiles[x.floor() as usize][y.floor() as usize]
+                            .tile_type
+                            .clone(),
+                    );
+                }
+            }
+            PlayerLocation::InWorld => {
+                let is_in_x = x >= 0.0 && x + iss <= MAP_WIDTH as f64 * iss;
+                let is_in_y = y >= 0.0 && y + iss <= MAP_HEIGHT as f64 * iss;
+                if is_in_x && is_in_y {
+                    return Some(
+                        self.map.tiles[x.floor() as usize][y.floor() as usize]
+                            .tile_type
+                            .clone(),
+                    );
+                }
+            }
+        }
+        None
+    }
+
+    fn can_go_to(&self, x: f64, y: f64) -> bool {
+        let iss = IMAGE_SIZE_SCALED as f64;
+        let is_in_x = x >= 0.0 && x + iss <= MAP_WIDTH as f64 * iss;
+        let is_in_y = y >= 0.0 && y + iss <= MAP_HEIGHT as f64 * iss;
+        if is_in_x && is_in_y {
+            let x = x / iss;
+            let y = y / iss;
+            if self.map.tiles[x.floor() as usize][y.floor() as usize].passable
+                && self.map.tiles[x.floor() as usize][y.ceil() as usize].passable
+                && self.map.tiles[x.ceil() as usize][y.floor() as usize].passable
+                && self.map.tiles[x.ceil() as usize][y.ceil() as usize].passable
+            {
+                return true;
+            }
+        }
+        false
+    }
+
     // Checks whether a specific x,y position is on the ship.
     // @param x Some x coordinate.
     // @param y Some y coordinate.
-    fn is_on_ship(&mut self, x: f64, y: f64) -> bool {
+    fn is_on_ship(&self, x: f64, y: f64) -> bool {
         let ship_x = self.ship.x_to_be_location();
         let ship_y = self.ship.y_to_be_location();
         // Check edges.
@@ -300,17 +351,16 @@ impl Game {
             // Check specific tiles.
             let ship_tile_x = (x - ship_x) / IMAGE_SIZE_SCALED;
             let ship_tile_y = (y - ship_y) / IMAGE_SIZE_SCALED;
-            if !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable
-                || !self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize]
+            if self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable
+                && self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.ceil() as usize]
                     .passable
-                || !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.floor() as usize]
+                && self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.floor() as usize]
                     .passable
-                || !self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.ceil() as usize]
+                && self.ship.tiles[ship_tile_x.ceil() as usize][ship_tile_y.ceil() as usize]
                     .passable
             {
-                return false;
+                return true;
             }
-            return true;
         }
         false
     }
