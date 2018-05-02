@@ -15,6 +15,7 @@ pub enum TileType {
 pub struct Tile {
     pub tile_type: TileType,
     pub passable: bool,
+    pub texture: bool,
 }
 
 /**
@@ -30,6 +31,7 @@ impl Tile {
         Tile {
             tile_type: tile_type,
             passable: can_pass,
+            texture: false,
         }
     }
 }
