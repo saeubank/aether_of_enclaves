@@ -219,17 +219,23 @@ impl Game {
                     );
                 }
                 GameState::InMenu => {
-                    let transform = context.transform.trans(100.0, 100.0);
-                    let draw_text = "Inventory";
-                    let font = 16;
+                    let transform_y = 100.0;
+                    let draw_text = ["Controls:",
+                    "W/A/S/D: Movement",
+                    "Tab: Enter/Exit this menu",
+                    "E: Use item/Interact",
+                    "Space: Pickup/Drop item"];
+                    let font = 24;
+                    for i in 0..draw_text.len() {
                     text(
                         [1.0; 4],
                         font,
-                        draw_text,
+                        draw_text[i],
                         &mut self.glyphs,
-                        transform,
+                        context.transform.trans(100.0, transform_y + i as f64 * font as f64),
                         graphics,
-                    ).expect(&format!("Error drawing {}", draw_text));
+                    ).expect(&format!("Error drawing {}", draw_text[i]));
+                    }
                 }
                 GameState::GameOver => {
                     let draw_text = "GAME OVER";
@@ -495,7 +501,7 @@ impl Game {
             match self.game_state {
                 GameState::Title => {
                     println!("Changing state to InGame.");
-                    self.game_state = GameState::InGame;
+                    self.game_state = GameState::InMenu;
                 }
                 _ => {}
             }
