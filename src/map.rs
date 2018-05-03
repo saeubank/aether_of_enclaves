@@ -207,9 +207,10 @@ impl Map {
                 }
                 self.frames_since_last_draw += 1;
                 match self.tiles[x][y].texture {
-                false => img = Some(IMG_WATER.to_string()),
-                true => img = Some(IMG_WATER_TEXTURE.to_string()),
-            }},
+                    false => img = Some(IMG_WATER.to_string()),
+                    true => img = Some(IMG_WATER_TEXTURE.to_string()),
+                }
+            }
 
             // TODO Separate into its own function.
             // Determines the correct stone tile from the stone HashMap.

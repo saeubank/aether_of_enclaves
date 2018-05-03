@@ -27,7 +27,7 @@ mod tests {
 
         test_player.update_position();
 
-         // Player's position should move according to its velocity and velocities acting on it.
+        // Player's position should move according to its velocity and velocities acting on it.
         assert_eq!(test_player.x, 14.0);
         assert_eq!(test_player.y, 18.0);
 
@@ -65,7 +65,6 @@ mod tests {
         drop(test_player);
     }
 
-
     #[test]
     fn control_state_changes() {
         use creature::*;
@@ -91,6 +90,5 @@ mod tests {
         assert_eq!(test_player.creature_state, CreatureState::Normal);
 
         drop(test_player);
-
     }
 }
