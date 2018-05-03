@@ -5,6 +5,7 @@ This is a 2D, 8bit exploration game built with Rust. The player controls an airs
 
 
 ## Screenshot
+![Example of in-game](hw_submissions/game_screenshot.png)
 
 
 ## Compile & Run
