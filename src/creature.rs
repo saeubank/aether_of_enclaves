@@ -219,7 +219,7 @@ impl Creature {
                     self.health += 1;
                     item_used = true;
                 }
-                _ => {item_used = true;}
+                _ => {}
             }
         }
         if item_used {

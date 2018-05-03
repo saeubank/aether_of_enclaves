@@ -382,11 +382,14 @@ impl Game {
                 // Move.
                 W | A | S | D => self.execute_move(state, &Some(key)),
                 V => self.execute_action(state),
-                L => self.player.take_damage(1),
+                L => {if *state == ButtonState::Press {self.player.take_damage(1)}},
 
                 F => {
                     self.change_player_location(state);
                     self.player.creature_state = CreatureState::Normal;
+                }
+                E => {
+                    self.player.use_item();
                 }
                 Space => {
                     self.execute_player_hands(state);
