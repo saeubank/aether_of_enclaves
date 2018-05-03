@@ -11,7 +11,7 @@ use misc::*;
 use item::*;
 use map::Map;
 use constants::*;
-use tile::TileType;
+use tile::*;
 
 #[derive(Debug, PartialEq)]
 
@@ -22,6 +22,7 @@ pub enum GameState {
     GameOver,
 }
 
+#[derive(Clone)]
 enum PlayerLocation {
     OnShip,
     InWorld,
@@ -59,7 +60,7 @@ impl Game {
     pub fn new(window: &mut PistonWindow) -> Self {
         let ship_tiles: Vec<Vec<i32>> = vec![
             // Default ship.
-            vec![0, 0, 1, 1, 1, 0, 0],
+            vec![0, 0, 1, 3, 1, 0, 0],
             vec![0, 1, 1, 1, 1, 1, 0],
             vec![0, 1, 1, 2, 1, 1, 0],
             vec![1, 1, 1, 1, 1, 1, 1],
@@ -328,18 +329,18 @@ impl Game {
         }
     }
 
-    fn tiletype_under_player(&self) -> Option<TileType> {
+    fn tile_under_player(&self, location: PlayerLocation) -> Option<Tile> {
         let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
         let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
         let iss = IMAGE_SIZE_SCALED as f64;
-        match self.player_location {
+        match location {
             PlayerLocation::OnShip => {
                 let is_in_x = x >= self.ship.x && x + iss <= self.ship.x + self.ship.width * iss;
                 let is_in_y = y >= self.ship.y && y + iss <= self.ship.y + self.ship.height * iss;
                 if is_in_x && is_in_y {
                     return Some(
-                        self.ship.tiles[x.floor() as usize][y.floor() as usize]
-                            .tile_type
+                        self.ship.tiles[((x - self.ship.x) / IMAGE_SIZE_SCALED).floor() as usize][((y - self.ship.y) / IMAGE_SIZE_SCALED).floor() as usize]
+                            
                             .clone(),
                     );
                 }
@@ -349,8 +350,8 @@ impl Game {
                 let is_in_y = y >= 0.0 && y + iss <= MAP_HEIGHT as f64 * iss;
                 if is_in_x && is_in_y {
                     return Some(
-                        self.map.tiles[x.floor() as usize][y.floor() as usize]
-                            .tile_type
+                        self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize][(y / IMAGE_SIZE_SCALED).floor() as usize]
+                            
                             .clone(),
                     );
                 }
@@ -420,20 +421,20 @@ impl Game {
                 Return | Tab => self.execute_open_menu(state),
                 // Move.
                 W | A | S | D => self.execute_move(state, &Some(key)),
-                V => self.execute_action(state),
+                E => self.execute_action(state),
                 L => {
                     if *state == ButtonState::Press {
                         self.player.take_damage(1)
                     }
                 }
 
-                F => {
-                    self.change_player_location(state);
-                    self.player.creature_state = CreatureState::Normal;
-                }
-                E => {
-                    self.player.use_item();
-                }
+                // F => {
+                //     self.change_player_location(state);
+                //     self.player.creature_state = CreatureState::Normal;
+                // }
+                // E => {
+                //     self.player.use_item();
+                // }
                 Space => {
                     self.execute_player_hands(state);
                 }
@@ -443,13 +444,13 @@ impl Game {
         }
     }
 
-    fn change_player_location(&mut self, state: &ButtonState) {
-        if *state == ButtonState::Press {
-            self.player_location = match self.player_location {
-                PlayerLocation::OnShip => PlayerLocation::InWorld,
-                PlayerLocation::InWorld => PlayerLocation::OnShip,
-            }
-        }
+    fn change_player_location(&mut self) {
+        self.player_location = match self.player_location {
+            PlayerLocation::OnShip => PlayerLocation::InWorld,
+            PlayerLocation::InWorld => PlayerLocation::OnShip,
+        };
+        self.player.creature_state = CreatureState::Normal;
+    
     }
 
     fn execute_player_hands(&mut self, state: &ButtonState) {
@@ -519,15 +520,39 @@ impl Game {
     fn execute_action(&mut self, state: &ButtonState) {
         if self.game_state == GameState::InGame {
             if *state == ButtonState::Press {
-                match self.tiletype_under_player() {
-                    Some(TileType::Teleport) => {}
-                    Some(TileType::Wheel) => {}
+                let current_location = self.player_location.clone();
+                match self.tile_under_player(current_location) {
+                    Some(t) => {
+                        match t.tile_type {
+                            TileType::Portal => {
+                                match self.player_location {
+                                    PlayerLocation::OnShip => {
+                                        if let Some(tile) = self.tile_under_player(PlayerLocation::InWorld) {
+                                            if tile.passable {
+                                                self.change_player_location();
+                                            }
+                                        }
+                                    }
+                                    PlayerLocation::InWorld => {
+                                        if let Some(tile) = self.tile_under_player(PlayerLocation::OnShip) {
+                                            if tile.passable {
+                                                self.change_player_location();
+                                            }                                }
+                                    }
+                                }
+                            }
+                    
+                    TileType::Wheel => {
+                        self.player.change_control_state();
+                        self.ship.reset_dir();
+                    }
+                    _ =>self.player.use_item()
+                    }
+                    }
                     _ => {
                         self.player.use_item();
                     }
-                }
-                self.player.change_control_state();
-                self.ship.reset_dir();
+                }  
             }
         }
     }

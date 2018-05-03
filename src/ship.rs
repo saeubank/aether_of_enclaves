@@ -43,6 +43,7 @@ impl Ship {
         let air = Tile::new(TileType::Air);
         let wood_floor = Tile::new(TileType::WoodFloor);
         let control = Tile::new(TileType::Wheel);
+        let portal = Tile::new(TileType::Portal);
         let w = ship_tiles[0].len();
         let h = ship_tiles.len();
         let mut temp_tiles = vec![vec![air.clone(); h]; w];
@@ -53,6 +54,7 @@ impl Ship {
                     0 => temp_tiles[j][i] = air.clone(),
                     1 => temp_tiles[j][i] = wood_floor.clone(),
                     2 => temp_tiles[j][i] = control.clone(),
+                    3 => temp_tiles[j][i] = portal.clone(),
                     _ => {}
                 }
             }
@@ -136,6 +138,34 @@ impl Ship {
                             graphics,
                         );
                         let img = IMG_WHEEL;
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(
+                                    self.x + i as f64 * IMAGE_SIZE_SCALED,
+                                    self.y + j as f64 * IMAGE_SIZE_SCALED,
+                                )
+                                .trans(trans_x, trans_y)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
+                            graphics,
+                        );
+                    }
+                    TileType::Portal => {
+                        let img = IMG_WOOD_FLOOR;
+                        image(
+                            textures.get(img).expect(&format!("Not found: {:?}", img)),
+                            context
+                                .transform
+                                .trans(
+                                    self.x + i as f64 * IMAGE_SIZE_SCALED,
+                                    self.y + j as f64 * IMAGE_SIZE_SCALED,
+                                )
+                                .trans(trans_x, trans_y)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
+                            graphics,
+                        );
+                        let img = IMG_PORTAL;
                         image(
                             textures.get(img).expect(&format!("Not found: {:?}", img)),
                             context

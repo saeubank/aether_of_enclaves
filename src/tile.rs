@@ -8,7 +8,7 @@ pub enum TileType {
     Air,
     Water,
     Wheel,
-    Teleport,
+    Portal,
 }
 
 #[derive(Clone)]
