@@ -1,10 +1,7 @@
-/**
-    Map generates and manages the tileset for the map using Perlin and Worley generations.
-*/
+//! Map generates and manages the tileset for the map using Perlin and Worley generations.
+//! Draws the Map with proper tilesets based on generation.
 
 use noise::*;
-// use rand::{thread_rng, Rng, distributions};
-// use rand::distributions::Sample;
 use rand::*;
 use tile::{Tile, TileType};
 use constants::*;
@@ -15,6 +12,13 @@ use std::collections::HashMap;
 const STEP_SIZE: f64 = 0.1;
 const BASE_WEIGHT: f64 = 0.2;
 
+/*
+    Implementation of the Map object.
+
+    @field tiles A 2D vector of all the tiles in the map.
+    @field grass_dirt_map A HashMap used for drawing grass graphics.
+    @field stone_map A HashMap used for drawing stone graphics.
+*/
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
     grass_dirt_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>,
@@ -22,7 +26,15 @@ pub struct Map {
 }
 
 impl Map {
+    /*
+        Map constructor.
+
+        @param width The width of the map.
+        @param height The height of the map.
+        @return Map Returns itself.
+    */
     pub fn new(width: usize, height: usize) -> Self {
+        // Easy reference to tile types.
         let air = Tile::new(TileType::Air);
         let grass_floor = Tile::new(TileType::GrassFloor);
         let water = Tile::new(TileType::Water);
@@ -36,6 +48,7 @@ impl Map {
         let perlin_arr = add_base_weight(&perlin_arr, BASE_WEIGHT);
         let moist = generate_perlin(width, height, STEP_SIZE);
 
+        // Create the 2D vector of TileTypes based on random generation above.
         for i in 0..map_tiles.len() {
             for j in 0..map_tiles[i].len() {
                 let num = worley_arr[i][j] * perlin_arr[i][j];
@@ -58,12 +71,14 @@ impl Map {
                 }
             }
         }
+
         Map {
             tiles: map_tiles,
             grass_dirt_map: populate_grass_dirt_map(),
             stone_map: populate_stone_map(),
         }
     }
+    
     pub fn draw(
         &self,
         textures: &HashMap<String, G2dTexture>,
