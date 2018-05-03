@@ -1,4 +1,4 @@
-//! The Creature object is the template for any NPC in AOE. Currently this is used for 
+//! The Creature object is the template for any NPC in AOE. Currently this is used for
 //! the Player, but default functionality will eventually apply for Monsters and Crew.
 //!
 //! The object handles Creature generation, position and movement, item interaction,
@@ -92,7 +92,8 @@ impl Creature {
     pub fn update_position_self(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
-        if let Some(ref mut item) = self.inventory { // Update inventory position as well.
+        if let Some(ref mut item) = self.inventory {
+            // Update inventory position as well.
             item.x = self.x;
             item.y = self.y;
         }
@@ -148,7 +149,6 @@ impl Creature {
         w_width: f64,
         w_height: f64,
     ) {
-
         // Determine the proper file extension based on Creature moving.
         let pic_index = self.sprite_index + 1;
         let extension;
@@ -211,7 +211,6 @@ impl Creature {
         return self.health <= 0;
     }
 
-
     /*
         Deducts from the Creature's health.
 
@@ -253,7 +252,8 @@ impl Creature {
         let mut item_used = false;
         if let Some(ref item) = self.inventory {
             match item.item_type {
-                ItemType::Food(_) => { // Heal Creature.
+                ItemType::Food(_) => {
+                    // Heal Creature.
                     self.health += 1;
                     item_used = true;
                 }

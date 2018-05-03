@@ -57,7 +57,8 @@ impl Game {
         Game constructor.
     */
     pub fn new(window: &mut PistonWindow) -> Self {
-        let ship_tiles: Vec<Vec<i32>> = vec![ // Default ship.
+        let ship_tiles: Vec<Vec<i32>> = vec![
+            // Default ship.
             vec![0, 0, 1, 1, 1, 0, 0],
             vec![0, 1, 1, 1, 1, 1, 0],
             vec![0, 1, 1, 2, 1, 1, 0],
@@ -142,11 +143,11 @@ impl Game {
                                 trans_y,
                             );
                         }
-
                     }
 
                     match self.player_location {
-                        PlayerLocation::OnShip => self.ship.draw( // Don't draw ship if player isn't on board.
+                        PlayerLocation::OnShip => self.ship.draw(
+                            // Don't draw ship if player isn't on board.
                             &self.textures,
                             &context,
                             &mut graphics,
@@ -159,7 +160,7 @@ impl Game {
                     self.player
                         .draw(&self.textures, &context, &mut graphics, w_width, w_height);
 
-                        // Draw health at top of screen.
+                    // Draw health at top of screen.
                     for i in 0..self.player.health {
                         image(
                             self.textures
@@ -219,21 +220,25 @@ impl Game {
                 }
                 GameState::InMenu => {
                     let transform_y = 100.0;
-                    let draw_text = ["Controls:",
-                    "W/A/S/D: Movement",
-                    "Tab: Enter/Exit this menu",
-                    "E: Use item/Interact",
-                    "Space: Pickup/Drop item"];
+                    let draw_text = [
+                        "Controls:",
+                        "W/A/S/D: Movement",
+                        "Tab: Enter/Exit this menu",
+                        "E: Use item/Interact",
+                        "Space: Pickup/Drop item",
+                    ];
                     let font = 24;
                     for i in 0..draw_text.len() {
-                    text(
-                        [1.0; 4],
-                        font,
-                        draw_text[i],
-                        &mut self.glyphs,
-                        context.transform.trans(100.0, transform_y + i as f64 * font as f64),
-                        graphics,
-                    ).expect(&format!("Error drawing {}", draw_text[i]));
+                        text(
+                            [1.0; 4],
+                            font,
+                            draw_text[i],
+                            &mut self.glyphs,
+                            context
+                                .transform
+                                .trans(100.0, transform_y + i as f64 * font as f64),
+                            graphics,
+                        ).expect(&format!("Error drawing {}", draw_text[i]));
                     }
                 }
                 GameState::GameOver => {
@@ -494,7 +499,6 @@ impl Game {
         }
     }
 
-
     // Moves creature / ship.
     fn execute_move(&mut self, state: &ButtonState, key: &Option<Key>) {
         if self.game_state == GameState::InGame {
@@ -514,16 +518,13 @@ impl Game {
     // Change of player's control state.
     fn execute_action(&mut self, state: &ButtonState) {
         if self.game_state == GameState::InGame {
-            
             if *state == ButtonState::Press {
                 match self.tiletype_under_player() {
-                    Some(TileType::Teleport) => {
-
+                    Some(TileType::Teleport) => {}
+                    Some(TileType::Wheel) => {}
+                    _ => {
+                        self.player.use_item();
                     }
-                    Some(TileType::Wheel) => {
-
-                    }
-                    _ => {                    self.player.use_item();}
                 }
                 self.player.change_control_state();
                 self.ship.reset_dir();
