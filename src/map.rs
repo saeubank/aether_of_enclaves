@@ -78,7 +78,7 @@ impl Map {
             stone_map: populate_stone_map(),
         }
     }
-    
+
     pub fn draw(
         &self,
         textures: &HashMap<String, G2dTexture>,

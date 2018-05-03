@@ -113,7 +113,6 @@ impl Item {
         }
     }
 
-
     /*
         Generates a clone of the item using prototype.
         @param x The x value where the clone is placed.
