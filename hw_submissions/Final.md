@@ -1,6 +1,6 @@
 # Final
 
-[Latest Commit]()
+[Latest Commit](https://github.com/swamulism/aether_of_enclaves/commit/22a3dd41d08646253847eeec759feaedaccbfae3)
 
 [Version 0.1.0 Release](https://github.com/swamulism/aether_of_enclaves/releases/tag/0.1.0)
 
