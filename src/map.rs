@@ -112,16 +112,19 @@ impl Map {
         let draw_start_j = cmp::max(0, draw_start_j as i32) as usize;
 
         for i in draw_start_i..self.tiles.len() {
-            if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 { // Off screen.
+            if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 {
+                // Off screen.
                 break;
             }
             for j in draw_start_j..self.tiles[i].len() {
-                if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 { // Off screen.
+                if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
+                    // Off screen.
                     break;
                 }
                 // Retrieve set of information on what tile to draw, and its rotation/translation.
                 if let (Some(img), rot, shift_x, shift_y) = self.what_to_draw(i, j) {
-                    if img == IMG_TREE { // Special handling to draw grass under trees.
+                    if img == IMG_TREE {
+                        // Special handling to draw grass under trees.
                         if let (Some(grass_img), grass_rot, grass_shift_x, grass_shift_y) =
                             self.get_grass_tile_info(i, j)
                         {
@@ -142,8 +145,7 @@ impl Map {
                                 graphics,
                             );
                         }
-                    }
-                    else if img == IMG_PORTAL {
+                    } else if img == IMG_PORTAL {
                         let under_portal_image = what_to_draw_tile(&self.under_portal.tile_type);
                         if let Some(p_img) = under_portal_image {
                             image(
@@ -162,7 +164,6 @@ impl Map {
                                 graphics,
                             );
                         }
-                        
                     }
 
                     image(
@@ -179,7 +180,7 @@ impl Map {
                 }
             }
         }
-    }   
+    }
 
     /*
         Determines what tile / sprite to draw at a given x,y.
@@ -635,14 +636,13 @@ fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f6
     s_map
 }
 
-    fn what_to_draw_tile(tile_type: &TileType) -> Option<String> {
-
- match *tile_type {
-            TileType::GrassFloor | TileType::Tree => Some(IMG_GRASS_FLOOR.to_string()), 
-            TileType::DirtFloor => Some(IMG_DIRT_FLOOR.to_string()),
-            _ => {None},
-        }
+fn what_to_draw_tile(tile_type: &TileType) -> Option<String> {
+    match *tile_type {
+        TileType::GrassFloor | TileType::Tree => Some(IMG_GRASS_FLOOR.to_string()),
+        TileType::DirtFloor => Some(IMG_DIRT_FLOOR.to_string()),
+        _ => None,
     }
+}
 // struct Island {
 //     pub tiles: Vec<Vec<Tile>>,
 //     pub x: f64,

@@ -265,7 +265,7 @@ impl Moveable for Ship {
 
     /*
         Updates ship velocity based on moving direction.
-    */.
+    */
     fn update_self_velocity(&mut self) {
         let mut dx = 0.0;
         let mut dy = 0.0;
