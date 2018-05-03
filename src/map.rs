@@ -61,7 +61,7 @@ impl Map {
         Map {
             tiles: map_tiles,
             grass_dirt_map: populate_grass_dirt_map(),
-            stone_map: populate_stone_map()
+            stone_map: populate_stone_map(),
         }
     }
     pub fn draw(
@@ -91,14 +91,19 @@ impl Map {
                 }
                 if let (Some(img), rot, shift_x, shift_y) = self.what_to_draw(i, j) {
                     if img == IMG_TREE {
-                        if let (Some(grass_img), grass_rot, grass_shift_x, grass_shift_y) = self.get_grass_tile_info(i,j) {
+                        if let (Some(grass_img), grass_rot, grass_shift_x, grass_shift_y) =
+                            self.get_grass_tile_info(i, j)
+                        {
                             image(
                                 textures
                                     .get(&grass_img)
                                     .expect(&format!("Not found: {:?}", grass_img)),
                                 context
                                     .transform
-                                    .trans(i as f64 * IMAGE_SIZE_SCALED, j as f64 * IMAGE_SIZE_SCALED)
+                                    .trans(
+                                        i as f64 * IMAGE_SIZE_SCALED,
+                                        j as f64 * IMAGE_SIZE_SCALED,
+                                    )
                                     .trans(trans_x, trans_y)
                                     .trans(grass_shift_x, grass_shift_y)
                                     .scale(IMAGE_SCALE, IMAGE_SCALE)
@@ -162,7 +167,6 @@ impl Map {
                     }
                 }
 
-
                 let key = (right, down, left, up);
                 if let Some(&(ref i, _r, _sx, _sy)) = self.stone_map.get(&key) {
                     if let &Some(ref _i) = i {
@@ -180,11 +184,11 @@ impl Map {
                 } else {
                     img = None;
                 }
-            },
+            }
 
             TileType::GrassFloor => {
-                return self.get_grass_tile_info(x,y);
-            },
+                return self.get_grass_tile_info(x, y);
+            }
 
             TileType::DirtFloor => match self.tiles[x][y].texture {
                 false => img = Some(IMG_DIRT_FLOOR.to_string()),
@@ -424,7 +428,6 @@ fn populate_grass_dirt_map() -> HashMap<(bool, bool, bool, bool), (Option<String
     g_d_map
 }
 
-
 fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> {
     let mut s_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> =
         HashMap::new();
@@ -440,15 +443,21 @@ fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f6
     );
     s_map.insert(
         (true, true, false, true),
-        (Some(IMG_STONE_WALL_EDGE_1_SIDE.to_string()), 180.0,
+        (
+            Some(IMG_STONE_WALL_EDGE_1_SIDE.to_string()),
+            180.0,
             IMAGE_SIZE_SCALED,
-            IMAGE_SIZE_SCALED,),
+            IMAGE_SIZE_SCALED,
+        ),
     );
     s_map.insert(
         (true, true, true, false),
-        (Some(IMG_STONE_WALL_EDGE_1_SIDE.to_string()), 270.0,
+        (
+            Some(IMG_STONE_WALL_EDGE_1_SIDE.to_string()),
+            270.0,
             0.0,
-            IMAGE_SIZE_SCALED,),
+            IMAGE_SIZE_SCALED,
+        ),
     );
 
     // Corners
@@ -466,11 +475,13 @@ fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f6
     );
     s_map.insert(
         (true, true, false, false),
-        (Some(IMG_STONE_WALL_EDGE_CORNER.to_string()), 270.0,
+        (
+            Some(IMG_STONE_WALL_EDGE_CORNER.to_string()),
+            270.0,
             0.0,
-            IMAGE_SIZE_SCALED,),
+            IMAGE_SIZE_SCALED,
+        ),
     );
-
 
     // 2 Sides
     s_map.insert(
@@ -481,7 +492,6 @@ fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f6
         (true, false, true, false),
         (Some(IMG_STONE_WALL_FRONT_DEEP.to_string()), 0.0, 0.0, 0.0),
     );
-
 
     // Corners
     s_map.insert(
@@ -511,26 +521,6 @@ fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f6
 
     s_map
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // struct Island {
 //     pub tiles: Vec<Vec<Tile>>,

@@ -118,18 +118,19 @@ impl Game {
                         trans_y,
                     );
                     for i in 0..self.items_in_game.len() {
-                        if self.items_in_game[i].x - self.player.x > -w_width / 2.0 - IMAGE_SIZE_SCALED&& 
-                        self.items_in_game[i].x - self.player.x < w_width / 2.0 &&
-                        self.items_in_game[i].y - self.player.y > -w_width / 2.0 && 
-                        self.items_in_game[i].y - self.player.y < w_width / 2.0
+                        if self.items_in_game[i].x - self.player.x
+                            > -w_width / 2.0 - IMAGE_SIZE_SCALED
+                            && self.items_in_game[i].x - self.player.x < w_width / 2.0
+                            && self.items_in_game[i].y - self.player.y > -w_width / 2.0
+                            && self.items_in_game[i].y - self.player.y < w_width / 2.0
                         {
-self.items_in_game[i].draw(
-                            &self.textures,
-                            &context,
-                            &mut graphics,
-                            trans_x,
-                            trans_y,
-                        );
+                            self.items_in_game[i].draw(
+                                &self.textures,
+                                &context,
+                                &mut graphics,
+                                trans_x,
+                                trans_y,
+                            );
                         }
 
                         // let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE_SCALED) > ;
@@ -142,8 +143,6 @@ self.items_in_game[i].draw(
                         //         if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
                         //             break;
                         //         }
-
-                        
                     }
                     match self.player_location {
                         PlayerLocation::OnShip => self.ship.draw(
@@ -401,7 +400,11 @@ self.items_in_game[i].draw(
                 // Move.
                 W | A | S | D => self.execute_move(state, &Some(key)),
                 V => self.execute_action(state),
-                L => {if *state == ButtonState::Press {self.player.take_damage(1)}},
+                L => {
+                    if *state == ButtonState::Press {
+                        self.player.take_damage(1)
+                    }
+                }
 
                 F => {
                     self.change_player_location(state);
@@ -440,10 +443,12 @@ self.items_in_game[i].draw(
                     for i in 0..self.items_in_game.len() {
                         let diff_x = self.items_in_game[i].x - self.player.x;
                         let diff_y = self.items_in_game[i].y - self.player.y;
-                        if diff_x < IMAGE_SIZE_SCALED && diff_x > -IMAGE_SIZE_SCALED &&
-                            diff_y < IMAGE_SIZE_SCALED && diff_y > -IMAGE_SIZE_SCALED{
-                                place = i as i32;
-                                break;
+                        if diff_x < IMAGE_SIZE_SCALED && diff_x > -IMAGE_SIZE_SCALED
+                            && diff_y < IMAGE_SIZE_SCALED
+                            && diff_y > -IMAGE_SIZE_SCALED
+                        {
+                            place = i as i32;
+                            break;
                         }
                     }
                     if place != -1 {
@@ -452,7 +457,6 @@ self.items_in_game[i].draw(
                     }
                 }
             }
-            
         }
     }
 

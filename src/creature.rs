@@ -4,7 +4,6 @@ use item::*;
 use std::collections::HashMap;
 use constants::*;
 
-
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
     the Player, but default functionality is also implemented for Monsters and Crew.
@@ -136,13 +135,14 @@ impl Creature {
         w_width: f64,
         w_height: f64,
     ) {
-
         for i in 0..self.health {
             image(
-                textures.get(IMG_HEART).expect(&format!("Not found: {:?}", IMG_HEART)),
+                textures
+                    .get(IMG_HEART)
+                    .expect(&format!("Not found: {:?}", IMG_HEART)),
                 context
                     .transform
-                    .trans(25.0 + i as f64 * (IMAGE_SIZE_SCALED+2.0), 25.0)
+                    .trans(25.0 + i as f64 * (IMAGE_SIZE_SCALED + 2.0), 25.0)
                     .scale(IMAGE_SCALE, IMAGE_SCALE),
                 graphics,
             );
@@ -152,9 +152,8 @@ impl Creature {
         let extension;
         if self.self_vel_y != 0.0 || self.self_vel_x != 0.0 {
             extension = "player_moving_";
-        }
-        else {
-           extension = "player_idle_";
+        } else {
+            extension = "player_idle_";
         }
 
         let img = &format!(
@@ -184,19 +183,19 @@ impl Creature {
         if let Some(_) = self.inventory {
             let item = self.inventory.clone().unwrap();
             match item.item_type {
-            ItemType::Food(FoodType::Bisket) => {
-                let img = IMG_ITEM_BISKET;
-                image(
-                    textures.get(img).expect(&format!("Not found: {:?}", img)),
-                    context
-                        .transform
-                        .trans(w_width / 2.0, w_height / 2.0 - IMAGE_SIZE_SCALED * 0.7)
-                        .scale(IMAGE_SCALE, IMAGE_SCALE),
-                    graphics,
-                );
+                ItemType::Food(FoodType::Bisket) => {
+                    let img = IMG_ITEM_BISKET;
+                    image(
+                        textures.get(img).expect(&format!("Not found: {:?}", img)),
+                        context
+                            .transform
+                            .trans(w_width / 2.0, w_height / 2.0 - IMAGE_SIZE_SCALED * 0.7)
+                            .scale(IMAGE_SCALE, IMAGE_SCALE),
+                        graphics,
+                    );
+                }
+                _ => {}
             }
-            _ => {}
-        }
         }
     }
 
