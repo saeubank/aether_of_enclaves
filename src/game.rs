@@ -301,12 +301,13 @@ impl Game {
         }
     }
 
+    /*
+        Handles updating of the Game, mosti mportantly player position.
+    */
     fn update(&mut self) {
         if self.player.is_dead() {
             self.game_state = GameState::GameOver;
         }
-        // Collision detection.
-        // TODO Create separate function.
         if self.game_state == GameState::InGame {
             match self.player_location {
                 PlayerLocation::OnShip => {
@@ -333,6 +334,11 @@ impl Game {
         }
     }
 
+    /*
+        Determines the type of tile the player is standing on.
+
+        @return Option<TileType> Some tile.
+    */
     fn tiletype_under_player(&self) -> Option<TileType> {
         let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
         let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
@@ -364,6 +370,13 @@ impl Game {
         None
     }
 
+    /*
+        Determines whether some x and y can be stepped on.
+
+        @param x Some x coordinate.
+        @param y Some y coordinate.
+        @return bool Whether the respective tile is passable.
+    */
     fn can_go_to(&self, x: f64, y: f64) -> bool {
         let iss = IMAGE_SIZE_SCALED as f64;
         let is_in_x = x >= 0.0 && x + iss <= MAP_WIDTH as f64 * iss;
@@ -371,7 +384,7 @@ impl Game {
         if is_in_x && is_in_y {
             let x = x / iss;
             let y = y / iss;
-            if self.map.tiles[x.floor() as usize][y.floor() as usize].passable
+            if self.map.tiles[x.floor() as usize][y.floor() as usize].passable // Determines where x,y is on the map.
                 && self.map.tiles[x.floor() as usize][y.ceil() as usize].passable
                 && self.map.tiles[x.ceil() as usize][y.floor() as usize].passable
                 && self.map.tiles[x.ceil() as usize][y.ceil() as usize].passable
@@ -382,19 +395,25 @@ impl Game {
         false
     }
 
-    // Checks whether a specific x,y position is on the ship.
-    // @param x Some x coordinate.
-    // @param y Some y coordinate.
+    /*
+        Checks whether a specific x,y position is on the ship.
+        Used for collision detection.
+
+        @param x Some x coordinate.
+        @param y Some y coordinate.
+        @return bool Whether the x,y coordinate is within the ship.
+    */
     fn is_on_ship(&self, x: f64, y: f64) -> bool {
-        let ship_x = self.ship.x_to_be_location();
+        let ship_x = self.ship.x_to_be_location(); // Extraneous for moving ship.
         let ship_y = self.ship.y_to_be_location();
+
         // Check edges.
         let is_in_x =
             x >= ship_x && x + IMAGE_SIZE_SCALED <= ship_x + self.ship.width * IMAGE_SIZE_SCALED;
         let is_in_y =
             y >= ship_y && y + IMAGE_SIZE_SCALED <= ship_y + self.ship.height * IMAGE_SIZE_SCALED;
         if is_in_x && is_in_y {
-            // Check specific tiles.
+            // Check surrounding tiles.
             let ship_tile_x = (x - ship_x) / IMAGE_SIZE_SCALED;
             let ship_tile_y = (y - ship_y) / IMAGE_SIZE_SCALED;
             if self.ship.tiles[ship_tile_x.floor() as usize][ship_tile_y.floor() as usize].passable
@@ -411,19 +430,19 @@ impl Game {
         false
     }
 
-    // Input Handling below.
+    /*
+        Input Handling from user.
 
-    // @param state The ButtonState.
-    // @param button The input button arguments.
-    // @param player The player.
-    // @param game_state The current Game State.
+        @param state The ButtonState.
+        @param button The input button arguments.
+    */
     fn handle_input(&mut self, state: &ButtonState, button: &Button) {
         use self::Key::*;
         match *button {
             Button::Keyboard(key) => match key {
                 // Menu toggle.
                 Return | Tab => self.execute_open_menu(state),
-                // Move.
+                // Moving.
                 W | A | S | D => self.execute_move(state, &Some(key)),
                 V => self.execute_action(state),
                 L => {
@@ -448,6 +467,11 @@ impl Game {
         }
     }
 
+    /*
+        Changes player position in the world.
+
+        @param state State of the toggled button (e.g. pressed).
+    */
     fn change_player_location(&mut self, state: &ButtonState) {
         if *state == ButtonState::Press {
             self.player_location = match self.player_location {
@@ -457,16 +481,21 @@ impl Game {
         }
     }
 
+    /*
+        Handles "pickup" and "drop" for the player.
+
+        @param state The Button State (e.g. pressed).
+    */
     fn execute_player_hands(&mut self, state: &ButtonState) {
         if *state == ButtonState::Press {
             match self.player.inventory {
-                Some(_) => {
+                Some(_) => { // Dropping an item.
                     let item = self.player.drop_item().expect("dropped empty inventory");
                     self.items_in_game.push(item);
                 }
                 None => {
                     let mut place = -1;
-                    for i in 0..self.items_in_game.len() {
+                    for i in 0..self.items_in_game.len() { // Determines if player is in range of item.
                         let diff_x = self.items_in_game[i].x - self.player.x;
                         let diff_y = self.items_in_game[i].y - self.player.y;
                         if diff_x < IMAGE_SIZE_SCALED && diff_x > -IMAGE_SIZE_SCALED
@@ -477,7 +506,7 @@ impl Game {
                             break;
                         }
                     }
-                    if place != -1 {
+                    if place != -1 { // Add item to inventory.
                         let item = self.items_in_game.remove(place as usize);
                         self.player.pickup_item(item);
                     }
@@ -486,7 +515,11 @@ impl Game {
         }
     }
 
-    // Opens menu.
+    /*
+        Opens the menu and changes Game State respectively.
+
+        @param state The Button State (e.g. pressed).
+    */
     fn execute_open_menu(&mut self, state: &ButtonState) {
         if *state == ButtonState::Press {
             match self.game_state {
@@ -504,7 +537,13 @@ impl Game {
         }
     }
 
-    // Moves creature / ship.
+    /*
+        Moves the player / ship, depending on player control state.
+        Calls respective ship / player functionality to handle.
+
+        @param state Button State (e.g. pressed or released).
+        @param key Some key that has been pressed.
+    */
     fn execute_move(&mut self, state: &ButtonState, key: &Option<Key>) {
         if self.game_state == GameState::InGame {
             match self.player.creature_state {
@@ -520,7 +559,11 @@ impl Game {
         }
     }
 
-    // Change of player's control state.
+    /*
+        Handles player general "action" button, with varying results (a sort of catch all).
+
+        @param state The Button State (e.g. pressed).
+    */
     fn execute_action(&mut self, state: &ButtonState) {
         if self.game_state == GameState::InGame {
             if *state == ButtonState::Press {
@@ -538,6 +581,11 @@ impl Game {
     }
 }
 
+/*
+    Creates prototypes of items for prototyping pattern.
+
+    @return HashMap<String, Item> A map of string to items.
+*/
 fn generate_item_prototypes() -> HashMap<String, Item> {
     let mut prototypes: HashMap<String, Item> = HashMap::new();
     prototypes.insert(
@@ -564,6 +612,12 @@ fn generate_item_prototypes() -> HashMap<String, Item> {
     prototypes
 }
 
+/* 
+    Generate glyphs (font) library for the game.
+
+    @param window The game window.
+    @return Glyphs A set of glyphs to be used.
+*/
 fn generate_glyphs(window: &mut PistonWindow) -> Glyphs {
     let assets = Search::ParentsThenKids(3, 3)
         .for_folder("fonts")
@@ -574,6 +628,12 @@ fn generate_glyphs(window: &mut PistonWindow) -> Glyphs {
     glyphs
 }
 
+/*
+    Compiles all of the textures (sprites, etc.) and loads them into a Hash Map.
+
+    @param window The game window.
+    @return HashMap<String, G2dTexture> The mapped images.
+*/
 fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
     // Collect the graphics ("textures").
     let assets = Search::ParentsThenKids(3, 3)
@@ -657,21 +717,5 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
 
         textures.insert(image_name.to_string(), img);
     }
-
-    // // Import all player sprites
-    // let dirs = ["N", "W", "S", "E"];
-    // for j in 0..dirs.len() {
-    //     for i in 1..4 {
-    //         let filename = format!("{}{}{}{}{}", "player_idle", dirs[j], "_", i.to_string(), ".png");
-    //         let mut map_name = format!("{}{}{}{}", "player_idle", dirs[j], "_", i.to_string());
-    //         let sprite = Texture::from_path(
-    //             &mut window.factory,
-    //             assets.join(&filename),
-    //             Flip::None,
-    //             &TextureSettings::new(),
-    //         ).expect(&format!("Not found: {:?}", filename));
-    //         textures.insert(map_name, sprite);
-    //     }
-    // }
     textures
 }

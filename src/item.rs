@@ -1,18 +1,18 @@
+//! The item object classifies the types of items in the game.
+//! Items have three different types - interactable, food, or resource.
+//! Resource items are used in crafting. Interactable items are used by the
+//! creature to fight, gather, etc. Food is to be eaten. Yum.
+
 use piston_window::*;
 use std::collections::HashMap;
 use constants::*;
-/**
-    Items have three different types - interactable, food, or resource.
-    Resource items are used in crafting. Interactable items are used by the
-    creature to fight, gather, etc. Food is to be eaten. Yum.
-*/
 
 #[derive(Clone)]
 pub enum ItemType {
-    Interactable(InteractableType), // Can be thrown or interacted with (intent: used for fighting / interacting with world)
-    Food(FoodType),                 // Can be thrown or consumed (intent: used for healing / buffs)
-    Resource(ResourceType),         // Can be thrown (intent: used for crafting)
-                                    // Other,                           // Can be thrown but provideds passive effect (intent: used for passive effect)
+    Interactable(InteractableType), // Can be thrown or interacted with (intent: used for fighting / interacting with world).
+    Food(FoodType),                 // Can be thrown or consumed (intent: used for healing / buffs).
+    Resource(ResourceType),         // Can be thrown (intent: used for crafting).
+                                    // Other, // Can be thrown but provides passive effect (intent: used for passive effect).
 }
 
 #[derive(Clone)]
@@ -57,7 +57,15 @@ pub struct Item {
 }
 
 impl Item {
-    // Item constructor.
+    /*
+        Item constructor.
+
+        @param item_type The item's type.
+        @param damage The amount of damage the item will do.
+        @param pickupable Whether the item can be picked up.
+        @param w The item's weight.
+        @return Item Returns self.
+    */
     pub fn new(item_type: ItemType, damage: i32, pickupable: bool, w: f64) -> Self {
         Item {
             x: 0.0,
@@ -70,6 +78,16 @@ impl Item {
             weight: w,
         }
     }
+
+    /*
+        Draws the item with its proper sprite.
+
+        @param textures The textures HashMap.
+        @context The drawing context for Piston.
+        @graphics The graphics engine.
+        @trans_x The translation in regards to player position.
+        @trans_y The translation in regards to player position.
+    */
     pub fn draw(
         &self,
         textures: &HashMap<String, G2dTexture>,
@@ -95,17 +113,13 @@ impl Item {
         }
     }
 
-    // fn interact(&mut self, creature: Creature) {
-    // }
-    // fn pick_up() {
-    // }
-    // fn throw() {
-    // }
 
-    // Generates a clone of the item using prototype.
-    // @param x The x value where the clone is placed.
-    // @param y The y value where the clone is placed.
-    // @return Item
+    /*
+        Generates a clone of the item using prototype.
+        @param x The x value where the clone is placed.
+        @param y The y value where the clone is placed.
+        @return Item
+    */
     pub fn generate_clone(&self, x: f64, y: f64) -> Self {
         Item {
             x: x,
