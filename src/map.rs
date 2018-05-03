@@ -19,6 +19,8 @@ const WATER_CHANGE_RATE: i32 = 10;
     @field tiles A 2D vector of all the tiles in the map.
     @field grass_dirt_map A HashMap used for drawing grass graphics.
     @field stone_map A HashMap used for drawing stone graphics.
+    @field under_portal The tile under the portal.
+    @field frames_since_last_draw Used for water animation.
 */
 pub struct Map {
     pub tiles: Vec<Vec<Tile>>,

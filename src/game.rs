@@ -12,9 +12,10 @@ use item::*;
 use map::Map;
 use constants::*;
 use tile::*;
+use rand::*;
+use rand::distributions::Sample;
 
 #[derive(Debug, PartialEq)]
-
 pub enum GameState {
     Title,
     InGame,
@@ -38,8 +39,11 @@ enum PlayerLocation {
     @field item_prototypes Prototyping pattern for cloning items.
     @field items_in_game Set of all items in the game.
     @field map The world map.
-    @glyphs Glyphs library for graphics.
-    @textures HashMap of sprite / tile textures.
+    @field glyphs Glyphs library for graphics.
+    @field textures HashMap of sprite / tile textures.
+    @field updates_since_last_gen Used for generating new items.
+    @field w_width The window width.
+    @field w_height The window height.
 */
 pub struct Game {
     player: Creature,
@@ -51,6 +55,9 @@ pub struct Game {
     map: Map,
     glyphs: Glyphs,
     textures: HashMap<String, G2dTexture>,
+    updates_since_last_gen: i32,
+    w_width: f64,
+    w_height: f64,
 }
 
 impl Game {
@@ -84,6 +91,9 @@ impl Game {
             map: Map::new(MAP_WIDTH, MAP_HEIGHT),
             glyphs: glyphs,
             textures: textures,
+            updates_since_last_gen: 0,
+            w_width: 800.0,
+            w_height: 640.0,
         }
     }
 
@@ -99,6 +109,8 @@ impl Game {
         window.draw_2d(e, |context, mut graphics| {
             let w_width = window_size.width as f64;
             let w_height = window_size.height as f64;
+            self.w_width = w_width;
+            self.w_height = w_height;
             clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen for new draw.
             match self.game_state {
                 GameState::InGame => {
@@ -306,6 +318,25 @@ impl Game {
         Handles updating of the Game, mosti mportantly player position.
     */
     fn update(&mut self) {
+        if self.updates_since_last_gen > 1000 {
+            self.updates_since_last_gen = 0;
+
+            let mut rng = thread_rng();
+            let mut range_x = distributions::Range::new(-1.0 * self.w_width/2.0, self.w_width/2.0);
+            let mut range_y = distributions::Range::new(-1.0 * self.w_height/2.0, self.w_height/2.0);
+
+            let item_x = self.player.x + range_x.sample(&mut rng);
+            let item_y = self.player.y + range_y.sample(&mut rng);
+
+            self.items_in_game.push(
+                self.item_prototypes
+                    .get("bisket")
+                    .unwrap()
+                    .generate_clone(item_x, item_y),
+            );
+        }
+        self.updates_since_last_gen+=1;
+
         if self.player.is_dead() {
             self.game_state = GameState::GameOver;
         }
