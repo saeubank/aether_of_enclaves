@@ -1,8 +1,10 @@
 # Aether of Enclaves
 [![Build Status](https://travis-ci.org/swamulism/aether_of_enclaves.svg?branch=master)](https://travis-ci.org/swamulism/aether_of_enclaves)
 
-This is a 2D exploration game built with Rust.
-For more information, please refer to the design doc.
+This is a 2D, 8bit exploration game built with Rust. The player controls an airship and its captain, flying amongst explorable floating islands. For more information on our design and development plans, please refer to the design document.
+
+
+## Screenshot
 
 
 ## Compile & Run
@@ -21,5 +23,5 @@ cargo run --release
 
 ## Creators
 
-* **Samuel Eubanks**
-* **McKenzie Weller**
+* **Samuel Eubanks** samuel.eubanks@colorado.edu
+* **McKenzie Weller** mckenzie.weller@colorado.edu

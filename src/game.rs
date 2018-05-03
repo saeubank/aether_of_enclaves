@@ -539,6 +539,8 @@ fn generate_textures(window: &mut PistonWindow) -> HashMap<String, G2dTexture> {
         IMG_WHEEL,
         IMG_TREE,
         IMG_GRUNE,
+        IMG_PORTAL,
+        IMG_HEART,
         IMG_ITEM_BISKET,
         IMG_ITEM_SWORD,
         IMG_ITEM_GRUNE,

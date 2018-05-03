@@ -78,7 +78,7 @@ impl Creature {
             other_vel_x: 0.0,
             other_vel_y: 0.0,
             speed: 2.0,
-            health: 1,
+            health: 3,
             inventory: None,
             dir: Direction::S,
             sprite_index: 0,
@@ -139,6 +139,18 @@ impl Creature {
         w_width: f64,
         w_height: f64,
     ) {
+
+        for i in 0..self.health {
+            image(
+                textures.get(IMG_HEART).expect(&format!("Not found: {:?}", IMG_HEART)),
+                context
+                    .transform
+                    .trans(25.0 + i as f64 * (IMAGE_SIZE_SCALED+2.0), 25.0)
+                    .scale(IMAGE_SCALE, IMAGE_SCALE),
+                graphics,
+            );
+        }
+
         let tmp = self.sprite_index + 1;
         let img = &format!(
             "{}{}{}{}",

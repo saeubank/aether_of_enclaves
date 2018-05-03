@@ -13,6 +13,8 @@ pub const IMG_WOOD_FLOOR: &str = "wood_floor";
 pub const IMG_WHEEL: &str = "wheel";
 pub const IMG_TREE: &str = "tree";
 pub const IMG_GRUNE: &str = "grune";
+pub const IMG_PORTAL: &str = "portal";
+pub const IMG_HEART: &str = "heart";
 
 pub const IMG_ITEM_BISKET: &str = "bisket_item";
 pub const IMG_ITEM_SWORD: &str = "sword_item";
