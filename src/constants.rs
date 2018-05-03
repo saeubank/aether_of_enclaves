@@ -1,3 +1,6 @@
+//! The constants used in the game.
+//! These are basically only used for referencing graphics globally.
+
 pub const IMAGE_SIZE: f64 = 8.0;
 pub const IMAGE_SCALE: f64 = 4.0;
 pub const IMAGE_SIZE_SCALED: f64 = IMAGE_SCALE * IMAGE_SIZE;
