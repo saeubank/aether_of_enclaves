@@ -1,3 +1,6 @@
+//! This is the functionality for the game loop, handled using a Game object.
+//! The object maintains updating and graphics rendering for all other components.
+
 use piston_window::*;
 use find_folder::Search;
 use creature::{Creature, CreatureState};
@@ -24,18 +27,18 @@ enum PlayerLocation {
     InWorld,
 }
 
-/* pub enum MenuOption {
-     Top,
-     Inventory, 
-     //Options,
-}*/
-
 /**
     Implementation of the Game object.
 
-    @field input_hnd The Input Handler.
     @field player The main player.
+    @field ship The player's airship.
     @field game_state The Game State (see above). 
+    @field player_location Player's worldly position (see above).
+    @field item_prototypes Prototyping pattern for cloning items.
+    @field items_in_game Set of all items in the game.
+    @field map The world map.
+    @glyphs Glyphs library for graphics.
+    @textures HashMap of sprite / tile textures.
 */
 pub struct Game {
     player: Creature,
@@ -50,9 +53,11 @@ pub struct Game {
 }
 
 impl Game {
-    // Constructor of the Game.
+    /*
+        Game constructor.
+    */
     pub fn new(window: &mut PistonWindow) -> Self {
-        let ship_tiles: Vec<Vec<i32>> = vec![
+        let ship_tiles: Vec<Vec<i32>> = vec![ // Default ship.
             vec![0, 0, 1, 1, 1, 0, 0],
             vec![0, 1, 1, 1, 1, 1, 0],
             vec![0, 1, 1, 2, 1, 1, 0],
@@ -80,28 +85,31 @@ impl Game {
         }
     }
 
-    // The function that draws stuff to the screen
-    // @param e The graphics event for drawing.
-    // @param window The PistonWindow that is drawn to.
-    // @param textures A HashMap of texture graphics.
+    /*
+        Draws graphics to the window.
+    
+        @param e The graphics event for drawing.
+        @param window The PistonWindow that is drawn to.
+    */
     fn display(&mut self, e: &Event, window: &mut PistonWindow) {
-        // Font locating.
-
-        let window_size = window.draw_size();
+        let window_size = window.draw_size(); // Updates screen upon resizing.
 
         window.draw_2d(e, |context, mut graphics| {
             let w_width = window_size.width as f64;
             let w_height = window_size.height as f64;
-            clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen.
+            clear([0.0, 0.0, 0.0, 1.0], graphics); // Clears screen for new draw.
             match self.game_state {
                 GameState::InGame => {
+                    // Translations for objects around the player.
                     let trans_x = w_width / 2.0 - self.player.x;
                     let trans_y = w_height / 2.0 - self.player.y;
-                    let img = "sky";
+
+                    let sky_img_string = "sky";
+                    // Sky background.
                     image(
                         self.textures
-                            .get(img)
-                            .expect(&format!("Not found: {:?}", img)),
+                            .get(sky_img_string)
+                            .expect(&format!("Not found: {:?}", sky_img_string)),
                         context.transform.scale(w_width, w_height),
                         graphics,
                     );
@@ -117,6 +125,8 @@ impl Game {
                         trans_x,
                         trans_y,
                     );
+
+                    // Draw items.
                     for i in 0..self.items_in_game.len() {
                         if self.items_in_game[i].x - self.player.x
                             > -w_width / 2.0 - IMAGE_SIZE_SCALED
@@ -133,19 +143,10 @@ impl Game {
                             );
                         }
 
-                        // let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE_SCALED) > ;
-                        // let draw_start_j = ((player_y - w_height / 2.0) - IMAGE_SIZE_SCALED);
-                        // for i in draw_start_i..self.tiles.len() {
-                        //     if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 {
-                        //         break;
-                        //     }
-                        //     for j in draw_start_j..self.tiles[i].len() {
-                        //         if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
-                        //             break;
-                        //         }
                     }
+
                     match self.player_location {
-                        PlayerLocation::OnShip => self.ship.draw(
+                        PlayerLocation::OnShip => self.ship.draw( // Don't draw ship if player isn't on board.
                             &self.textures,
                             &context,
                             &mut graphics,
@@ -155,30 +156,28 @@ impl Game {
                         PlayerLocation::InWorld => {}
                     }
 
-                    // Begin player animation.
-
-                    // Draw the player texture at player's x and y position.
-
                     self.player
                         .draw(&self.textures, &context, &mut graphics, w_width, w_height);
 
-                        for i in 0..self.player.health {
-                            image(
-                                textures
-                                    .get(IMG_HEART)
-                                    .expect(&format!("Not found: {:?}", IMG_HEART)),
-                                context
-                                    .transform
-                                    .trans(25.0 + i as f64 * (IMAGE_SIZE_SCALED + 2.0), 25.0)
-                                    .scale(IMAGE_SCALE, IMAGE_SCALE),
-                                graphics,
-                            );
-                        }
+                        // Draw health at top of screen.
+                    for i in 0..self.player.health {
+                        image(
+                            textures
+                                .get(IMG_HEART)
+                                .expect(&format!("Not found: {:?}", IMG_HEART)),
+                            context
+                                .transform
+                                .trans(25.0 + i as f64 * (IMAGE_SIZE_SCALED + 2.0), 25.0)
+                                .scale(IMAGE_SCALE, IMAGE_SCALE),
+                            graphics,
+                        );
+                    }
 
-                    // End player animation.
+                    // End in-game graphics.
                 }
 
                 GameState::Title => {
+                    // Draw title screen.
                     let img = IMG_TITLE_NO_TEXT;
                     let title_img = self.textures
                         .get(img)
