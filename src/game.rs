@@ -117,7 +117,34 @@ impl Game {
                         trans_x,
                         trans_y,
                     );
+                    for i in 0..self.items_in_game.len() {
+                        if self.items_in_game[i].x - self.player.x > -w_width / 2.0 - IMAGE_SIZE_SCALED&& 
+                        self.items_in_game[i].x - self.player.x < w_width / 2.0 &&
+                        self.items_in_game[i].y - self.player.y > -w_width / 2.0 && 
+                        self.items_in_game[i].y - self.player.y < w_width / 2.0
+                        {
+self.items_in_game[i].draw(
+                            &self.textures,
+                            &context,
+                            &mut graphics,
+                            trans_x,
+                            trans_y,
+                        );
+                        }
 
+                        // let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE_SCALED) > ;
+                        // let draw_start_j = ((player_y - w_height / 2.0) - IMAGE_SIZE_SCALED);
+                        // for i in draw_start_i..self.tiles.len() {
+                        //     if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 {
+                        //         break;
+                        //     }
+                        //     for j in draw_start_j..self.tiles[i].len() {
+                        //         if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
+                        //             break;
+                        //         }
+
+                        
+                    }
                     match self.player_location {
                         PlayerLocation::OnShip => self.ship.draw(
                             &self.textures,
@@ -126,15 +153,7 @@ impl Game {
                             trans_x,
                             trans_y,
                         ),
-                        PlayerLocation::InWorld => for i in 0..self.items_in_game.len() {
-                            self.items_in_game[i].draw(
-                                &self.textures,
-                                &context,
-                                &mut graphics,
-                                trans_x,
-                                trans_y,
-                            );
-                        },
+                        PlayerLocation::InWorld => {}
                     }
 
                     // Begin player animation.
