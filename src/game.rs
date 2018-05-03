@@ -229,6 +229,7 @@ impl Game {
                         "Tab: Enter/Exit this menu",
                         "E: Use item/Interact",
                         "Space: Pickup/Drop item",
+                        "L: Owie :("
                     ];
                     let font = 24;
                     for i in 0..draw_text.len() {
@@ -605,7 +606,7 @@ impl Game {
 
                                         let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
                                         let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
-                                        
+
                                         self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize]
                                             [(y / IMAGE_SIZE_SCALED).floor() as usize] =
                                             self.map.under_portal.clone();
