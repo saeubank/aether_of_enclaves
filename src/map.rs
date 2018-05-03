@@ -23,6 +23,7 @@ pub struct Map {
     pub tiles: Vec<Vec<Tile>>,
     grass_dirt_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>,
     stone_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>,
+    pub under_portal: Tile,
 }
 
 impl Map {
@@ -76,6 +77,7 @@ impl Map {
             tiles: map_tiles,
             grass_dirt_map: populate_grass_dirt_map(),
             stone_map: populate_stone_map(),
+            under_portal: air,
         }
     }
 
@@ -127,6 +129,27 @@ impl Map {
                             );
                         }
                     }
+                    else if img == IMG_PORTAL {
+                        let under_portal_image = what_to_draw_tile(&self.under_portal.tile_type);
+                        if let Some(p_img) = under_portal_image {
+                            image(
+                                textures
+                                    .get(&p_img)
+                                    .expect(&format!("Not found: {:?}", p_img)),
+                                context
+                                    .transform
+                                    .trans(
+                                        i as f64 * IMAGE_SIZE_SCALED,
+                                        j as f64 * IMAGE_SIZE_SCALED,
+                                    )
+                                    .trans(trans_x, trans_y)
+                                    .trans(shift_x, shift_y)
+                                    .scale(IMAGE_SCALE, IMAGE_SCALE),
+                                graphics,
+                            );
+                        }
+                        
+                    }
 
                     image(
                         textures.get(&img).expect(&format!("Not found: {:?}", img)),
@@ -142,7 +165,7 @@ impl Map {
                 }
             }
         }
-    }
+    }   
 
     fn what_to_draw(&self, x: usize, y: usize) -> (Option<String>, f64, f64, f64) {
         let img;
@@ -211,6 +234,9 @@ impl Map {
             },
             TileType::Tree => {
                 img = Some(IMG_TREE.to_string());
+            }
+            TileType::Portal => {
+                img = Some(IMG_PORTAL.to_string());
             }
             _ => img = None,
         }
@@ -537,6 +563,14 @@ fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f6
     s_map
 }
 
+    fn what_to_draw_tile(tile_type: &TileType) -> Option<String> {
+
+ match *tile_type {
+            TileType::GrassFloor | TileType::Tree => Some(IMG_GRASS_FLOOR.to_string()), 
+            TileType::DirtFloor => Some(IMG_DIRT_FLOOR.to_string()),
+            _ => {None},
+        }
+    }
 // struct Island {
 //     pub tiles: Vec<Vec<Tile>>,
 //     pub x: f64,

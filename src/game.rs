@@ -336,7 +336,7 @@ impl Game {
     }
 
     /*
-        Determines the type of tile the player is standing on.
+        Determines the tile the player is standing on.
 
         @return Option<TileType> Some tile.
     */
@@ -579,6 +579,20 @@ impl Game {
                                 {
                                     if tile.passable {
                                         self.change_player_location();
+                                        let x = (self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0) / IMAGE_SIZE_SCALED;
+                                        let y = (self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0) / IMAGE_SIZE_SCALED;
+                                        self.player.x = x.floor() * IMAGE_SIZE_SCALED;
+                                            
+                                        let temp = 
+                                                self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize]
+                                                    [(y / IMAGE_SIZE_SCALED).floor() as usize]
+                                                    .clone();
+
+                                        let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
+        let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
+                                        self.map.under_portal = temp;
+                                        self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize]
+                                                    [(y / IMAGE_SIZE_SCALED).floor() as usize] = Tile::new(TileType::Portal);
                                     }
                                 }
                             }
