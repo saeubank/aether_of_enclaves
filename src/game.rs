@@ -388,6 +388,9 @@ impl Game {
                     self.change_player_location(state);
                     self.player.creature_state = CreatureState::Normal;
                 }
+                Space => {
+                    self.execute_player_hands(state);
+                }
                 _ => {}
             },
             _ => {}
@@ -400,6 +403,34 @@ impl Game {
                 PlayerLocation::OnShip => PlayerLocation::InWorld,
                 PlayerLocation::InWorld => PlayerLocation::OnShip,
             }
+        }
+    }
+
+    fn execute_player_hands(&mut self, state: &ButtonState) {
+        if *state == ButtonState::Press {
+            match self.player.inventory {
+                Some(_) => {
+                    let item = self.player.drop_item().expect("dropped empty inventory");
+                    self.items_in_game.push(item);
+                }
+                None => {
+                    let mut place = -1;
+                    for i in 0..self.items_in_game.len() {
+                        let diff_x = self.items_in_game[i].x - self.player.x;
+                        let diff_y = self.items_in_game[i].y - self.player.y;
+                        if diff_x < IMAGE_SIZE_SCALED && diff_x > -IMAGE_SIZE_SCALED &&
+                            diff_y < IMAGE_SIZE_SCALED && diff_y > -IMAGE_SIZE_SCALED{
+                                place = i as i32;
+                                break;
+                        }
+                    }
+                    if place != -1 {
+                        let item = self.items_in_game.remove(place as usize);
+                        self.player.pickup_item(item);
+                    }
+                }
+            }
+            
         }
     }
 

@@ -1,10 +1,9 @@
 use misc::*;
 use piston_window::*;
-use item::Item;
+use item::*;
 use std::collections::HashMap;
-use constants::IMAGE_SCALE;
+use constants::*;
 
-// const MAX_INVENTORY_SIZE: usize = 3;
 
 /**
     The Creature object is the template for any NPC in AOE. Primarily this is used for
@@ -58,7 +57,7 @@ pub struct Creature {
     pub other_vel_y: f64,
     speed: f64,
     health: i32,
-    inventory: Vec<Item>,
+    pub inventory: Option<Item>,
     dir: Direction,
     sprite_index: i32,
     frames_since_last_draw: i32,
@@ -80,7 +79,7 @@ impl Creature {
             other_vel_y: 0.0,
             speed: 2.0,
             health: 1,
-            inventory: vec![],
+            inventory: None,
             dir: Direction::S,
             sprite_index: 0,
             frames_since_last_draw: 0,
@@ -98,6 +97,10 @@ impl Creature {
     pub fn update_position_self(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
+        if let Some(ref mut item) = self.inventory {
+            item.x = self.x;
+            item.y = self.y;
+        }
     }
 
     // Updates the direction that the creature is facing.
@@ -159,6 +162,24 @@ impl Creature {
             self.sprite_index = (self.sprite_index + 1) % 3;
         }
         self.frames_since_last_draw += 1;
+
+        if let Some(_) = self.inventory {
+            let item = self.inventory.clone().unwrap();
+            match item.item_type {
+            ItemType::Food(FoodType::Bisket) => {
+                let img = IMG_ITEM_BISKET;
+                image(
+                    textures.get(img).expect(&format!("Not found: {:?}", img)),
+                    context
+                        .transform
+                        .trans(w_width / 2.0, w_height / 2.0 - IMAGE_SIZE_SCALED * 0.7)
+                        .scale(IMAGE_SCALE, IMAGE_SCALE),
+                    graphics,
+                );
+            }
+            _ => {}
+        }
+        }
     }
 
     pub fn is_dead(&self) -> bool {
@@ -169,24 +190,40 @@ impl Creature {
         self.health -= damage;
     }
 
-    // pub fn throw_item(&mut self) {
-    //     if self.inventory.len() > 0 {
-    //         self.inventory.pop();
-    //     }
-    // }
+    pub fn drop_item(&mut self) -> Option<Item> {
+        let temp = self.inventory.clone();
+        self.inventory = None;
+        temp
+    }
 
-    // pub fn pickup_item(&mut self, item: Item) -> bool {
-    //     if self.inventory.len() < MAX_INVENTORY_SIZE {
-    //         self.inventory.push(item);
-    //         return true
-    //     }
-    //     false
-    // }
+    pub fn pickup_item(&mut self, item: Item) -> bool {
+        if let None = self.inventory {
+            self.inventory = Some(item);
+            return true;
+        }
+        false
+    }
 
     pub fn action(&mut self) {
         match self.creature_state {
             CreatureState::Normal => self.state_normal(),
             CreatureState::ControllingShip => self.state_controlling_ship(),
+        }
+    }
+
+    pub fn use_item(&mut self) {
+        let mut item_used = false;
+        if let Some(ref item) = self.inventory {
+            match item.item_type {
+                ItemType::Food(_) => {
+                    self.health += 1;
+                    item_used = true;
+                }
+                _ => {item_used = true;}
+            }
+        }
+        if item_used {
+            self.inventory = None;
         }
     }
 
@@ -200,11 +237,6 @@ impl Creature {
         self.self_vel_y = 0.0;
         self.creature_state = CreatureState::ControllingShip;
     }
-
-    // TODO Write collision function.
-    // pub fn update(&mut self, &) {
-
-    // }
 }
 
 // Moving of creature.
