@@ -451,14 +451,6 @@ impl Game {
                         self.player.take_damage(1)
                     }
                 }
-
-                // F => {
-                //     self.change_player_location(state);
-                //     self.player.creature_state = CreatureState::Normal;
-                // }
-                // E => {
-                //     self.player.use_item();
-                // }
                 Space => {
                     self.execute_player_hands(state);
                 }
@@ -584,14 +576,15 @@ impl Game {
                                         let y = (self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0)
                                             / IMAGE_SIZE_SCALED;
                                         self.player.x = x.floor() * IMAGE_SIZE_SCALED;
+                                        self.player.y = y.floor() * IMAGE_SIZE_SCALED;
 
+                                        let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
+                                        let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
                                         let temp = self.map.tiles
                                             [(x / IMAGE_SIZE_SCALED).floor() as usize]
                                             [(y / IMAGE_SIZE_SCALED).floor() as usize]
                                             .clone();
 
-                                        let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
-                                        let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
                                         self.map.under_portal = temp;
                                         self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize]
                                             [(y / IMAGE_SIZE_SCALED).floor() as usize] =
@@ -603,6 +596,20 @@ impl Game {
                                 if let Some(tile) = self.tile_under_player(PlayerLocation::OnShip) {
                                     if tile.passable {
                                         self.change_player_location();
+                                        let x = (self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0)
+                                            / IMAGE_SIZE_SCALED;
+                                        let y = (self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0)
+                                            / IMAGE_SIZE_SCALED;
+                                        self.player.x = x.floor() * IMAGE_SIZE_SCALED;
+                                        self.player.y = y.floor() * IMAGE_SIZE_SCALED;
+
+                                        let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
+                                        let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
+                                        
+                                        self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize]
+                                            [(y / IMAGE_SIZE_SCALED).floor() as usize] =
+                                            self.map.under_portal.clone();
+                                        self.map.under_portal = Tile::new(TileType::Air);
                                     }
                                 }
                             }

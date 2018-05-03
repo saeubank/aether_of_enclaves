@@ -11,6 +11,7 @@ use std::collections::HashMap;
 
 const STEP_SIZE: f64 = 0.1;
 const BASE_WEIGHT: f64 = 0.2;
+const WATER_CHANGE_RATE: i32 = 10;
 
 /*
     Implementation of the Map object.
@@ -24,6 +25,7 @@ pub struct Map {
     grass_dirt_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>,
     stone_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>,
     pub under_portal: Tile,
+    frames_since_last_draw: i32,
 }
 
 impl Map {
@@ -78,6 +80,7 @@ impl Map {
             grass_dirt_map: populate_grass_dirt_map(),
             stone_map: populate_stone_map(),
             under_portal: air,
+            frames_since_last_draw: 0,
         }
     }
 
@@ -95,7 +98,7 @@ impl Map {
         @trans_y Translation in respect to player position.
     */
     pub fn draw(
-        &self,
+        &mut self,
         textures: &HashMap<String, G2dTexture>,
         context: &Context,
         graphics: &mut G2d,
@@ -189,16 +192,22 @@ impl Map {
         @param y The y location.
         @return A tuple containing the image string for the textures map, the rotation degree, x translation, and y translation.
     */
-    fn what_to_draw(&self, x: usize, y: usize) -> (Option<String>, f64, f64, f64) {
+    fn what_to_draw(&mut self, x: usize, y: usize) -> (Option<String>, f64, f64, f64) {
         let img;
         let rot = 0.0;
         let shift_x = 0.0;
         let shift_y = 0.0;
         match self.tiles[x][y].tile_type {
-            TileType::Water => match self.tiles[x][y].texture {
+            TileType::Water => {
+                if self.frames_since_last_draw > WATER_CHANGE_RATE {
+                    self.tiles[x][y].texture = random();
+                    self.frames_since_last_draw = 0;
+                }
+                self.frames_since_last_draw += 1;
+                match self.tiles[x][y].texture {
                 false => img = Some(IMG_WATER.to_string()),
                 true => img = Some(IMG_WATER_TEXTURE.to_string()),
-            },
+            }},
 
             // TODO Separate into its own function.
             // Determines the correct stone tile from the stone HashMap.
