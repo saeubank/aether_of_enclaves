@@ -399,10 +399,8 @@ impl Game {
         use self::Key::*;
         match *button {
             Button::Keyboard(key) => match key {
-                // Action button.
-                Return => self.execute_main_menu(state),
                 // Menu toggle.
-                Tab => self.execute_open_menu(state),
+                Return | Tab => self.execute_open_menu(state),
                 // Move.
                 W | A | S | D => self.execute_move(state, &Some(key)),
                 V => self.execute_action(state),
@@ -470,12 +468,13 @@ impl Game {
     fn execute_open_menu(&mut self, state: &ButtonState) {
         if *state == ButtonState::Press {
             match self.game_state {
+                GameState::Title => {
+                    self.game_state = GameState::InMenu;
+                }
                 GameState::InGame => {
-                    println!("Menu opened.");
                     self.game_state = GameState::InMenu;
                 }
                 GameState::InMenu => {
-                    println!("Menu closed.");
                     self.game_state = GameState::InGame;
                 }
                 _ => {}
@@ -483,17 +482,6 @@ impl Game {
         }
     }
 
-    fn execute_main_menu(&mut self, state: &ButtonState) {
-        if *state == ButtonState::Press {
-            match self.game_state {
-                GameState::Title => {
-                    println!("Changing state to InGame.");
-                    self.game_state = GameState::InMenu;
-                }
-                _ => {}
-            }
-        }
-    }
 
     // Moves creature / ship.
     fn execute_move(&mut self, state: &ButtonState, key: &Option<Key>) {
@@ -514,10 +502,20 @@ impl Game {
     // Change of player's control state.
     fn execute_action(&mut self, state: &ButtonState) {
         if self.game_state == GameState::InGame {
-            if *state == ButtonState::Press {
+            
+            // if *state == ButtonState::Press {
+            //     match self.tiletype_under_player() {
+            //         Some(TileType::Teleport) => {
+
+            //         }
+            //         Some(TileType::Wheel) => {
+
+            //         }
+            //         _ => {                    self.player.use_item();}
+            //     }
                 self.player.action();
                 self.ship.reset_dir();
-            }
+            // }
         }
     }
 }
