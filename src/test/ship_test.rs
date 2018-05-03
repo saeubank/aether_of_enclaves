@@ -1,6 +1,4 @@
-/**
-    Testing of the Ship object.
-*/
+//! Testing of the Ship object.
 
 #[cfg(test)]
 
@@ -23,11 +21,11 @@ mod tests {
         // Check ship's width, height, and layout.
         assert_eq!(test_ship.width, 5.0);
         assert_eq!(test_ship.height, 4.0);
+
         // Flipped 90 degrees left.
-        assert_eq!(test_ship.tiles[2][0].material, TileMaterial::Wood);
-        assert_eq!(test_ship.tiles[0][0].tile_type, TileType::Special);
+        assert_eq!(test_ship.tiles[2][0].tile_type, TileType::WoodFloor);
+        assert_eq!(test_ship.tiles[0][0].tile_type, TileType::Air);
 
         drop(test_ship);
     }
-
 }

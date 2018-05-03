@@ -7,6 +7,7 @@ mod tests {
     #[test]
     fn position_updates() {
         use creature::*;
+        use misc::Moveable;
         let mut test_player = Creature::new();
 
         // Player's position initialized to 0.0.
@@ -21,44 +22,75 @@ mod tests {
         assert_eq!(test_player.x, 5.0);
         assert_eq!(test_player.y, 7.0);
 
+        test_player.other_vel_x = 4.0;
+        test_player.other_vel_y = 4.0;
+
+        test_player.update_position();
+
+         // Player's position should move according to its velocity and velocities acting on it.
+        assert_eq!(test_player.x, 14.0);
+        assert_eq!(test_player.y, 18.0);
+
+        test_player.self_vel_x = 0.0;
+        test_player.self_vel_y = 0.0;
+
+        test_player.update_position();
+
+        // Player's position should move according only to velocities acting on it.
+        assert_eq!(test_player.x, 18.0);
+        assert_eq!(test_player.y, 22.0);
+
         drop(test_player);
     }
 
     #[test]
-    fn self_velocity_changes() {
+    fn self_velocity_updates() {
         use creature::*;
-        let mut test_player = Creature::new(CreatureType::Player);
+        use misc::*;
+        let mut test_player = Creature::new();
 
         // Player's velocity initialized to 0.0.
         assert_eq!(test_player.self_vel_x, 0.0);
         assert_eq!(test_player.self_vel_y, 0.0);
 
-        test_player.change_self_velocity(-10.0, 5.0);
+        test_player.speed = 3.0;
+        test_player.directions = vec![Direction::N, Direction::E];
 
-        // Player's velocity should be capped at its speed.
-        assert_eq!(test_player.self_vel_x, -1.0 * test_player.speed);
-        assert_eq!(test_player.self_vel_y, test_player.speed);
+        test_player.update_self_velocity();
+
+        // Player's velocity should update based on direction it's moving.
+        assert_eq!(test_player.self_vel_x, 3.0);
+        assert_eq!(test_player.self_vel_y, -3.0);
 
         drop(test_player);
     }
+
 
     #[test]
-    fn self_velocity_resets() {
+    fn control_state_changes() {
         use creature::*;
-        let mut test_player = Creature::new(CreatureType::Player);
+        let mut test_player = Creature::new();
 
-        test_player.self_vel_x = test_player.speed;
-        test_player.self_vel_y = test_player.speed;
+        // Player's state initialized to Normal.
+        assert_eq!(test_player.creature_state, CreatureState::Normal);
 
-        // Set Player's horizontal velocity back to 0.
-        test_player.reset_self_velocity_x();
+        test_player.self_vel_y = 3.0;
+        test_player.self_vel_x = 3.0;
+        test_player.change_control_state();
+
+        // State should toggle.
+        assert_eq!(test_player.creature_state, CreatureState::ControllingShip);
+
+        // If player was moving, should no longer be.
         assert_eq!(test_player.self_vel_x, 0.0);
-
-        // Set Player's vertical velocity back to 0.
-        test_player.reset_self_velocity_y();
         assert_eq!(test_player.self_vel_y, 0.0);
 
-        drop(test_player);
-    }
+        test_player.change_control_state();
 
+        //Toggle again.
+        assert_eq!(test_player.creature_state, CreatureState::Normal);
+
+        drop(test_player);
+
+    }
 }

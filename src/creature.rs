@@ -10,6 +10,7 @@ use misc::*;
 use piston_window::*;
 use std::collections::HashMap;
 
+#[derive(Debug, PartialEq)]
 pub enum CreatureState {
     Normal,
     ControllingShip,
@@ -38,12 +39,12 @@ pub struct Creature {
     pub creature_state: CreatureState,
     pub x: f64,
     pub y: f64,
-    self_vel_x: f64,
-    self_vel_y: f64,
-    directions: Vec<Direction>,
+    pub self_vel_x: f64,
+    pub self_vel_y: f64,
+    pub directions: Vec<Direction>,
     pub other_vel_x: f64,
     pub other_vel_y: f64,
-    speed: f64,
+    pub speed: f64,
     pub health: i32,
     pub inventory: Option<Item>,
     dir: Direction,

@@ -1,5 +1,4 @@
-// Test library.
+//! Test library.
 
-// mod creature_test;
-// mod input_handler_test;
-// mod ship_test;
+mod creature_test;
+mod ship_test;
