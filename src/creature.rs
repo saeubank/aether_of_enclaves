@@ -117,9 +117,6 @@ impl Creature {
             } else if self.self_vel_y < 0.0 {
                 self.dir = Direction::N;
             }
-        } else {
-            // Override sprite when creature isn't moving.
-            self.sprite_index = 0;
         }
     }
 
@@ -151,14 +148,23 @@ impl Creature {
             );
         }
 
-        let tmp = self.sprite_index + 1;
+        let pic_index = self.sprite_index + 1;
+        let extension;
+        if self.self_vel_y != 0.0 || self.self_vel_x != 0.0 {
+            extension = "player_moving_";
+        }
+        else {
+           extension = "player_idle_";
+        }
+
         let img = &format!(
             "{}{}{}{}",
-            "player_moving_",
+            extension,
             self.dir.direction_to_string(),
             "_",
-            tmp.to_string()
+            pic_index.to_string()
         );
+
         image(
             textures.get(img).expect(&format!("Not found: {:?}", img)),
             context
