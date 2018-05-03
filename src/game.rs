@@ -162,6 +162,19 @@ impl Game {
                     self.player
                         .draw(&self.textures, &context, &mut graphics, w_width, w_height);
 
+                        for i in 0..self.player.health {
+                            image(
+                                textures
+                                    .get(IMG_HEART)
+                                    .expect(&format!("Not found: {:?}", IMG_HEART)),
+                                context
+                                    .transform
+                                    .trans(25.0 + i as f64 * (IMAGE_SIZE_SCALED + 2.0), 25.0)
+                                    .scale(IMAGE_SCALE, IMAGE_SCALE),
+                                graphics,
+                            );
+                        }
+
                     // End player animation.
                 }
 
@@ -509,7 +522,7 @@ impl Game {
     fn execute_action(&mut self, state: &ButtonState) {
         if self.game_state == GameState::InGame {
             if *state == ButtonState::Press {
-                self.player.action();
+                self.player.change_control_state();
                 self.ship.reset_dir();
             }
         }
