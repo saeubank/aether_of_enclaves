@@ -1,6 +1,4 @@
-/**
-    Ship manages the tile set, positions, movement, and generation of the player's ship.
-*/
+//! The Ship object manages the tile vector, position, movement, drawing, and generation of the player's ship.
 
 use tile::*;
 use misc::*;
@@ -16,9 +14,8 @@ use std::collections::HashMap;
     @field y Ship's vertical position on screen.
     @field self_vel_x Ship's horizontal velocity.
     @field self_vel_y Ship's vertical velocity.
+    @field directions A vector of the ship's direction.
     @field speed Ship's maximum speed when moving.
-    @field acc Ship's acceleration value.
-    @field health Ship's health.
     @field width Ship's thiccness.
     @field height Ship's height.
 */
@@ -30,14 +27,17 @@ pub struct Ship {
     pub self_vel_y: f64,
     directions: Vec<Direction>,
     speed: f64,
-    // health: i32,
     pub width: f64,
     pub height: f64,
 }
 
 impl Ship {
-    // Ship constructor.
-    // @param ship_tiles The 2D tileset of the ship.
+    /*
+        Ship constructor.
+        
+        @param ship_tiles The 2D tileset of the ship, from Game.
+        @return Ship Returns itself.
+    */
     pub fn new(ship_tiles: Vec<Vec<i32>>) -> Self {
         // Populate ship's tileset with proper TileMaterial.
         let air = Tile::new(TileType::Air);
@@ -68,12 +68,17 @@ impl Ship {
             self_vel_y: 0.0,
             directions: vec![],
             speed: 6.0,
-            // health: 1,
             width: w as f64,
             height: h as f64,
         }
     }
 
+    /*
+        Determines the position the ship is approaching.
+        Used for collision detection.
+
+        @return f64 the x,y coordinates the ship is approaching.
+    */
     pub fn x_to_be_location(&self) -> f64 {
         self.x + self.self_vel_x
     }
@@ -81,22 +86,23 @@ impl Ship {
         self.y + self.self_vel_y
     }
 
+    /*
+        Resets the ship's direction.
+        Currently unused.
+    */
     pub fn reset_dir(&mut self) {
         self.directions = vec![];
     }
 
-    // @param change The change in health.
-    // fn change_health(&mut self, change: i32) {
-    //     self.health += change;
-    // }
+    /*
+        Draws the ship.
 
-    // TODO
-    // fn change_tile() {}
-
-    // pub fn update(&mut self) {
-    //     self.update_position();
-    // }
-
+        @param textures The map of image textures.
+        @param context The drawing context for Piston.
+        @param graphics Graphics engine.
+        @trans_x Translation in regards to player position.
+        @trans_y Translation in regards to player position.
+    */
     pub fn draw(
         &self,
         textures: &HashMap<String, G2dTexture>,
@@ -108,6 +114,7 @@ impl Ship {
         for i in 0..self.tiles.len() {
             for j in 0..self.tiles[i].len() {
                 match self.tiles[i][j].tile_type {
+                    // Draws tiles based on vector of tiles.
                     TileType::WoodFloor => {
                         let img = IMG_WOOD_FLOOR;
                         image(
@@ -187,9 +194,15 @@ impl Ship {
 }
 
 impl Moveable for Ship {
-    // Moving controls implemented for the ship
+    /*
+        Handles input to the ship with player is controlling it.
+
+        @param state The Button State (e.g. pressed).
+        @param key Some key that is pressed (e.g. W, A, S, D).
+    */
     fn handle_input(&mut self, state: &ButtonState, key: &Option<Key>) {
         match *key {
+            // Update movement / velocity based on key.
             Some(Key::W) => {
                 let dir = Direction::N;
                 if let Some(index) = self.directions.iter().position(|&x| x == dir) {
@@ -242,13 +255,17 @@ impl Moveable for Ship {
         }
     }
 
-    // Updates ship position.
+    /*
+        Updates ship position using velocity.
+    */
     fn update_position(&mut self) {
         self.x += self.self_vel_x;
         self.y += self.self_vel_y;
     }
 
-    // Updates ship velocity.
+    /*
+        Updates ship velocity based on moving direction.
+    */.
     fn update_self_velocity(&mut self) {
         let mut dx = 0.0;
         let mut dy = 0.0;
@@ -266,7 +283,7 @@ impl Moveable for Ship {
         self.self_vel_x += dx;
         self.self_vel_y += dy;
 
-        // Speed limiting.
+        // Speed throttling.
         if self.self_vel_x > self.speed {
             self.self_vel_x = self.speed;
         }
@@ -281,3 +298,10 @@ impl Moveable for Ship {
         }
     }
 }
+
+// TODO
+// fn change_tile() {}
+
+// pub fn update(&mut self) {
+//     self.update_position();
+// }

@@ -1,6 +1,4 @@
-/**
-    Testing of the Creature object.
-*/
+//! Testing of the Creature object.
 
 #[cfg(test)]
 
@@ -9,7 +7,7 @@ mod tests {
     #[test]
     fn position_updates() {
         use creature::*;
-        let mut test_player = Creature::new(CreatureType::Player);
+        let mut test_player = Creature::new();
 
         // Player's position initialized to 0.0.
         assert_eq!(test_player.x, 0.0);

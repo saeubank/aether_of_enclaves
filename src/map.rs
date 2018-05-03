@@ -81,6 +81,19 @@ impl Map {
         }
     }
 
+    /*
+        Handles of the drawing of the map tiles.
+
+        @param textures The map of images.
+        @param context The drawing context for Piston.
+        @graphics Graphics engine.
+        @w_width The width of the window.
+        @w_height The height of the window.
+        @player_x The player's x coordinate.
+        @player_y The player's y coordinate.
+        @trans_x Translation in respect to player position.
+        @trans_y Translation in respect to player position.
+    */
     pub fn draw(
         &self,
         textures: &HashMap<String, G2dTexture>,
@@ -93,21 +106,22 @@ impl Map {
         trans_x: f64,
         trans_y: f64,
     ) {
-        // Draw map.
         let draw_start_i = ((player_x - w_width / 2.0) - IMAGE_SIZE_SCALED) / IMAGE_SIZE_SCALED;
         let draw_start_j = ((player_y - w_height / 2.0) - IMAGE_SIZE_SCALED) / IMAGE_SIZE_SCALED;
         let draw_start_i = cmp::max(0, draw_start_i as i32) as usize;
         let draw_start_j = cmp::max(0, draw_start_j as i32) as usize;
+
         for i in draw_start_i..self.tiles.len() {
-            if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 {
+            if i as f64 * IMAGE_SIZE_SCALED > player_x + w_width / 2.0 { // Off screen.
                 break;
             }
             for j in draw_start_j..self.tiles[i].len() {
-                if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 {
+                if j as f64 * IMAGE_SIZE_SCALED > player_y + w_height / 2.0 { // Off screen.
                     break;
                 }
+                // Retrieve set of information on what tile to draw, and its rotation/translation.
                 if let (Some(img), rot, shift_x, shift_y) = self.what_to_draw(i, j) {
-                    if img == IMG_TREE {
+                    if img == IMG_TREE { // Special handling to draw grass under trees.
                         if let (Some(grass_img), grass_rot, grass_shift_x, grass_shift_y) =
                             self.get_grass_tile_info(i, j)
                         {
@@ -167,6 +181,13 @@ impl Map {
         }
     }   
 
+    /*
+        Determines what tile / sprite to draw at a given x,y.
+
+        @param x The x location.
+        @param y The y location.
+        @return A tuple containing the image string for the textures map, the rotation degree, x translation, and y translation.
+    */
     fn what_to_draw(&self, x: usize, y: usize) -> (Option<String>, f64, f64, f64) {
         let img;
         let rot = 0.0;
@@ -178,6 +199,8 @@ impl Map {
                 true => img = Some(IMG_WATER_TEXTURE.to_string()),
             },
 
+            // TODO Separate into its own function.
+            // Determines the correct stone tile from the stone HashMap.
             TileType::StoneWall => {
                 let mut up = false;
                 let mut left = false;
@@ -205,6 +228,7 @@ impl Map {
                     }
                 }
 
+                // Retrieve from map.
                 let key = (right, down, left, up);
                 if let Some(&(ref i, _r, _sx, _sy)) = self.stone_map.get(&key) {
                     if let &Some(ref _i) = i {
@@ -225,6 +249,7 @@ impl Map {
             }
 
             TileType::GrassFloor => {
+                // Separated into a different function.
                 return self.get_grass_tile_info(x, y);
             }
 
@@ -244,6 +269,14 @@ impl Map {
         (img, rot, shift_x, shift_y)
     }
 
+    /*
+        Assuming x,y is a grass tile, determines which grass tile to draw based
+        on surrounding dirt tiles.
+
+        @param x The x position of the tile.
+        @param y The y position of the tile.
+        @return A tuple containing the image string for the textures map, the rotation degree, x translation, and y translation.
+    */
     fn get_grass_tile_info(&self, x: usize, y: usize) -> (Option<String>, f64, f64, f64) {
         let mut up = false;
         let mut left = false;
@@ -271,6 +304,7 @@ impl Map {
             }
         }
 
+        // Retrieve from HashMap.
         let key = (right, down, left, up);
         let img;
         if let Some(&(ref i, _r, _sx, _sy)) = self.grass_dirt_map.get(&key) {
@@ -294,6 +328,14 @@ impl Map {
     }
 }
 
+/*
+    Generates perlin noise to be used in procedural map gen.
+
+    @param width The width of the map.
+    @param height The height of the map.
+    @param step Step value of the noise.
+    @return Vec<Vec<f64>> Used for generating map.
+*/
 fn generate_perlin(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     let mut rng = thread_rng();
     let noise = Perlin::new().set_seed(rng.gen::<u32>());
@@ -311,6 +353,12 @@ fn generate_perlin(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     arr
 }
 
+/*
+    Adds a base weight to 2D map vector.
+
+    @param arr The current 2D vector.
+    @return Vec<Vec<f64>> The updated 2D vector.
+*/
 fn add_base_weight(arr: &Vec<Vec<f64>>, base: f64) -> Vec<Vec<f64>> {
     let mut weighted = vec![vec![0.0; arr[0].len()]; arr.len()];
     for i in 0..arr.len() {
@@ -323,6 +371,14 @@ fn add_base_weight(arr: &Vec<Vec<f64>>, base: f64) -> Vec<Vec<f64>> {
     weighted
 }
 
+/*
+    Generates worley noise to be used in procedural map gen.
+
+    @param width The width of the map.
+    @param height The height of the map.
+    @param step Step value of the noise.
+    @return Vec<Vec<f64>> Used for generating map.
+*/
 fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     let mut rng = thread_rng();
     let noise = Worley::new().set_seed(rng.gen::<u32>()).enable_range(true);
@@ -340,6 +396,14 @@ fn generate_worley(width: usize, height: usize, step: f64) -> Vec<Vec<f64>> {
     arr
 }
 
+/*
+    Creates a HashMap to easily access different tile sprites for complex tile sets.
+    Specific to grass tiles surrounded by dirt.
+
+    @return HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>
+    A HashMap of tuples representing surrounding tiles (Right, Down, Left, Up)
+    mapped to a tuple of specifications for drawing an tile (see draw above).
+*/
 fn populate_grass_dirt_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> {
     let mut g_d_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> =
         HashMap::new();
@@ -469,6 +533,14 @@ fn populate_grass_dirt_map() -> HashMap<(bool, bool, bool, bool), (Option<String
     g_d_map
 }
 
+/*
+    Creates a HashMap to easily access different tile sprites for complex tile sets.
+    Specific to stone tiles.
+
+    @return HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)>
+    A HashMap of tuples representing surrounding tiles (Right, Down, Left, Up)
+    mapped to a tuple of specifications for drawing an tile (see draw above).
+*/
 fn populate_stone_map() -> HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> {
     let mut s_map: HashMap<(bool, bool, bool, bool), (Option<String>, f64, f64, f64)> =
         HashMap::new();

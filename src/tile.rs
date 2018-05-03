@@ -1,3 +1,7 @@
+//! The tile object specifies properties of different tiles in the game.
+//! Floor tiles can be walked on.
+//! Wall tiles cannot be walked on.
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum TileType {
     WoodFloor,
@@ -11,6 +15,14 @@ pub enum TileType {
     Portal,
 }
 
+/* 
+    Implementation of Tile object.
+
+    @field tile_type The tile's type.
+    @field passable Whether the tile can be walked on.
+    @field texture Whether the tile will have extra texture (for graphics).
+*/
+
 #[derive(Clone)]
 pub struct Tile {
     pub tile_type: TileType,
@@ -18,11 +30,13 @@ pub struct Tile {
     pub texture: bool,
 }
 
-/**
-    Implementation of Tile object.
-    Provides permutations of different tile types.
-*/
 impl Tile {
+    /*
+        Tile constructor.
+
+        @param tile_type The type of the tile.
+        @return Tile Returns itself.
+    */
     pub fn new(tile_type: TileType) -> Self {
         let can_pass = match tile_type {
             TileType::Water | TileType::StoneWall | TileType::Air => false,

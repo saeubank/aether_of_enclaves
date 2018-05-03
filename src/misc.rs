@@ -1,3 +1,5 @@
+//! Homes miscellaneous features for the game.
+
 use piston_window::{ButtonState, Key};
 
 pub trait Moveable {
@@ -15,8 +17,12 @@ pub enum Direction {
 }
 
 impl Direction {
-    // Generates the corresponding string of a direction.
-    // @param d The direction.
+    /* 
+        Generates the corresponding string of a direction.
+        
+        @param d The direction.
+        @return String The respective string.
+    */
     pub fn direction_to_string(&self) -> String {
         match *self {
             Direction::N => "N".to_string(),
