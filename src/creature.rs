@@ -9,6 +9,7 @@ use item::*;
 use misc::*;
 use piston_window::*;
 use std::collections::HashMap;
+use std::mem::swap;
 
 #[derive(Debug, PartialEq)]
 pub enum CreatureState {
@@ -227,8 +228,8 @@ impl Creature {
         @return Option<Item> The item that is dropped.
     */
     pub fn drop_item(&mut self) -> Option<Item> {
-        let dropped_item = self.inventory.clone();
-        self.inventory = None;
+        let mut dropped_item = None;
+        swap(&mut self.inventory, &mut dropped_item);
         dropped_item
     }
 

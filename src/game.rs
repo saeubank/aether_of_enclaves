@@ -628,15 +628,11 @@ impl Game {
                                 if let Some(tile) = self.tile_under_player(PlayerLocation::OnShip) {
                                     if tile.passable {
                                         self.change_player_location();
-                                        let x = (self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0)
-                                            / IMAGE_SIZE_SCALED;
-                                        let y = (self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0)
-                                            / IMAGE_SIZE_SCALED;
-                                        self.player.x = x.floor() * IMAGE_SIZE_SCALED;
-                                        self.player.y = y.floor() * IMAGE_SIZE_SCALED;
 
                                         let x = self.player.x + IMAGE_SIZE_SCALED as f64 / 2.0;
                                         let y = self.player.y + IMAGE_SIZE_SCALED as f64 / 2.0;
+                                        self.player.x = self.ship.x + 3.0 * IMAGE_SIZE_SCALED;
+                                        self.player.y = self.ship.y;
 
                                         self.map.tiles[(x / IMAGE_SIZE_SCALED).floor() as usize]
                                             [(y / IMAGE_SIZE_SCALED).floor() as usize] =
